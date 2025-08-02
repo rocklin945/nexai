@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * @ClassName BaseResponse
- * @Description TODO
+ * @Description 统一返回结果
  * @Author: rocklin
  * @Date 2025/8/2 10:31
  * @Version 1.0

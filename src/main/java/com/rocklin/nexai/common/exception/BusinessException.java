@@ -5,7 +5,7 @@ import lombok.Getter;
 
 /**
  * @ClassName BusinessException
- * @Description TODO
+ * @Description 业务异常类
  * @Author: rocklin
  * @Date 2025/8/2 11:22
  * @Version 1.0

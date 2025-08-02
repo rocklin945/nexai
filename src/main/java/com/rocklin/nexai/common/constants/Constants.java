@@ -2,7 +2,7 @@ package com.rocklin.nexai.common.constants;
 
 /**
  * @ClassName Constants
- * @Description TODO
+ * @Description 通用常量
  * @Author: rocklin
  * @Date 2025/8/2 10:37
  * @Version 1.0

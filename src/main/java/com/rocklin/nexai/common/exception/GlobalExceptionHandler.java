@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @ClassName GlobalExceptionHandler
- * @Description TODO
+ * @Description 全局异常处理器
  * @Author: rocklin
  * @Date 2025/8/2 11:28
  * @Version 1.0

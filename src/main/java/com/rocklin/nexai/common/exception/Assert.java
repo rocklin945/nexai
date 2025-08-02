@@ -4,7 +4,7 @@ import com.rocklin.nexai.common.enums.ErrorCode;
 
 /**
  * @ClassName Assert
- * @Description TODO
+ * @Description 自定义断言
  * @Author: rocklin
  * @Date 2025/8/2 11:24
  * @Version 1.0

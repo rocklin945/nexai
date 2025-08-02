@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @ClassName HealthCheckController
- * @Description TODO
+ * @Description 健康检查控制器
  * @Author: rocklin
  * @Date 2025/8/2 9:58
  * @Version 1.0
