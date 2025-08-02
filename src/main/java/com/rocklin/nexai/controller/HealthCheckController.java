@@ -1,5 +1,7 @@
 package com.rocklin.nexai.controller;
 
+import com.rocklin.nexai.common.enums.ErrorCode;
+import com.rocklin.nexai.common.exception.BusinessException;
 import com.rocklin.nexai.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,5 +24,11 @@ public class HealthCheckController {
     @GetMapping("/check")
     public BaseResponse<String> check() {
         return BaseResponse.success("服务正常");
+    }
+
+    @Operation(summary = "异常测试接口", description = "异常测试接口")
+    @GetMapping("/test-error")
+    public BaseResponse<String> error() {
+        throw new RuntimeException("测试异常");
     }
 }
