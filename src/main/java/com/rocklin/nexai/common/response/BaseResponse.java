@@ -33,6 +33,10 @@ public class BaseResponse<T> implements Serializable {
         return new BaseResponse<>(200, data, Constants.SUCCESS);
     }
 
+    public static <T> BaseResponse<T> success() {
+        return new BaseResponse<>(200, null, Constants.SUCCESS);
+    }
+
     public static <T> BaseResponse<T> error(int statusCode, String message) {
         return new BaseResponse<>(statusCode, null, message);
     }
