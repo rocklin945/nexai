@@ -8,4 +8,6 @@ public interface UserService {
     Long register(UserRegisterRequest req);
 
     UserLoginResponse login(UserLoginRequest req);
+
+    UserLoginResponse getCurrentUser(Long userId);
 }

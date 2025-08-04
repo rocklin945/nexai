@@ -63,15 +63,31 @@ public class UserServiceImpl implements UserService {
         String token = jwtUtils.generateToken(queryUser.getId().toString(), queryUser.getUserName());
         
         // 构建响应对象
-        UserLoginResponse response = new UserLoginResponse();
-        response.setUserId(queryUser.getId());
-        response.setUserAccount(queryUser.getUserAccount());
-        response.setUserName(queryUser.getUserName());
-        response.setUserAvatar(queryUser.getUserAvatar());
-        response.setUserProfile(queryUser.getUserProfile());
-        response.setUserRole(queryUser.getUserRole());
+        UserLoginResponse response = buildUserResponse(queryUser);
         response.setToken(token);
+        return response;
+    }
+
+    @Override
+    public UserLoginResponse getCurrentUser(Long userId) {
+        Assert.notNull(userId, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
         
+        User user = userMapper.selectById(userId);
+        Assert.notNull(user, ErrorCode.OPERATION_ERROR, "用户不存在");
+        
+        // 构建响应对象（不返回token，因为获取当前用户时不需要重新生成token）
+        UserLoginResponse response = buildUserResponse(user);
+        return response;
+    }
+
+    private UserLoginResponse buildUserResponse(User user) {
+        UserLoginResponse response = new UserLoginResponse();
+        response.setUserId(user.getId());
+        response.setUserAccount(user.getUserAccount());
+        response.setUserName(user.getUserName());
+        response.setUserAvatar(user.getUserAvatar());
+        response.setUserProfile(user.getUserProfile());
+        response.setUserRole(user.getUserRole());
         return response;
     }
 

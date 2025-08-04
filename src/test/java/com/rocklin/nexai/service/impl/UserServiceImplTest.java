@@ -117,4 +117,50 @@ class UserServiceImplTest {
         assertNotNull(encrypted);
         assertEquals(32, encrypted.length()); // MD5哈希长度为32位
     }
+
+    @Test
+    void testGetCurrentUserSuccess() {
+        // 设置mock行为
+        when(userMapper.selectById(1L)).thenReturn(mockUser);
+
+        // 执行测试
+        UserLoginResponse response = userService.getCurrentUser(1L);
+
+        // 验证结果
+        assertNotNull(response);
+        assertEquals(1L, response.getUserId());
+        assertEquals("testUser", response.getUserAccount());
+        assertEquals("Test User", response.getUserName());
+        assertEquals("avatar.jpg", response.getUserAvatar());
+        assertEquals("user", response.getUserRole());
+        assertNull(response.getToken()); // 获取当前用户时不返回token
+
+        // 验证mock调用
+        verify(userMapper, times(1)).selectById(1L);
+    }
+
+    @Test
+    void testGetCurrentUserNotFound() {
+        // 设置mock行为
+        when(userMapper.selectById(999L)).thenReturn(null);
+
+        // 执行测试并验证异常
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            userService.getCurrentUser(999L);
+        });
+
+        assertEquals(ErrorCode.OPERATION_ERROR.getStatusCode(), exception.getStatusCode());
+        assertEquals("用户不存在", exception.getMessage());
+    }
+
+    @Test
+    void testGetCurrentUserNullUserId() {
+        // 执行测试并验证异常
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            userService.getCurrentUser(null);
+        });
+
+        assertEquals(ErrorCode.PARAMS_ERROR.getStatusCode(), exception.getStatusCode());
+        assertEquals("用户ID不能为空", exception.getMessage());
+    }
 }

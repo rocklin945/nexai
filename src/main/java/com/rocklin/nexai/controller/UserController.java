@@ -6,15 +6,16 @@ import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.common.response.BaseResponse;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
+import com.rocklin.nexai.model.vo.UserLoginVO;
 import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static com.rocklin.nexai.common.constants.Constants.USER_ID;
 
 /**
  * @ClassName UserController
@@ -59,9 +60,12 @@ public class UserController {
      */
     @Operation(summary = "获取当前登录用户", description = "获取当前登录用户")
     @PostMapping("/getCurrentUser")
-    public BaseResponse<UserLoginResponse> getCurrentUser() {
-        //userService.getCurrentUser();
-        return BaseResponse.success();
+    public BaseResponse<UserLoginVO> getCurrentUser(@RequestAttribute(USER_ID) String userId) {
+        Assert.notNull(userId, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
+        UserLoginResponse currentUser = userService.getCurrentUser(Long.valueOf(userId));
+        UserLoginVO userLoginVO = new UserLoginVO();
+        BeanUtils.copyProperties(currentUser, userLoginVO);
+        return BaseResponse.success(userLoginVO);
     }
 
     /**

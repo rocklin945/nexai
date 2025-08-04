@@ -18,4 +18,6 @@ public interface UserMapper {
     Long insert(User user);
 
     User queryByPassword(User user);
+
+    User selectById(@Param("id") Long id);
 }

@@ -20,11 +20,15 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 // 拦截的路径
-                .addPathPatterns("/api/**")
+                .addPathPatterns("/**")
                 // 排除登录和注册接口
                 .excludePathPatterns(
                         "/user/login",
-                        "/user/register"
+                        "/user/register",
+                        "/health/**",
+                        "/doc.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**"
                 );
     }
 }
