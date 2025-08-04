@@ -5,23 +5,23 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @ClassName UserCreateRequest
- * @Description 用户创建请求
+ * @ClassName UpdateUserRequest
+ * @Description 更新用户请求
  * @Author: rocklin
- * @Date 2025/8/4 16:56
+ * @Date 2025/8/4 19:28
  * @Version 1.0
  */
 @Data
-public class UserCreateRequest implements Serializable {
+public class UpdateUserRequest implements Serializable {
+    /**
+     * id
+     */
+    private Long id;
+
     /**
      * 用户昵称
      */
     private String userName;
-
-    /**
-     * 账号
-     */
-    private String userAccount;
 
     /**
      * 用户头像
@@ -29,12 +29,12 @@ public class UserCreateRequest implements Serializable {
     private String userAvatar;
 
     /**
-     * 用户简介
+     * 简介
      */
     private String userProfile;
 
     /**
-     * 用户角色: user, admin
+     * 用户角色：user/admin
      */
     private String userRole;
 }

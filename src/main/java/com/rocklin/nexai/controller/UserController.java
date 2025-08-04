@@ -4,6 +4,7 @@ import com.rocklin.nexai.common.annotation.AuthCheck;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
+import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.common.request.UserCreateRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
@@ -36,6 +37,7 @@ import static com.rocklin.nexai.common.constants.Constants.USER_ID;
 public class UserController {
 
     private final UserService userService;
+    private final EncryptPasswordUtil encryptPasswordUtil;
 
     /**
      * 注册
@@ -98,7 +100,7 @@ public class UserController {
         BeanUtils.copyProperties(req, user);
         // 默认密码 12345678
         final String DEFAULT_PASSWORD = "12345678";
-        String encryptPassword = EncryptPasswordUtil.getEncryptPassword(DEFAULT_PASSWORD);
+        String encryptPassword = encryptPasswordUtil.getEncryptPassword(DEFAULT_PASSWORD);
         user.setUserPassword(encryptPassword);
         return BaseResponse.success(userService.createUser(user));
     }
@@ -107,16 +109,37 @@ public class UserController {
      * 管理员接口
      * 根据 id 获取用户
      */
+    @Operation(summary = "根据 id 获取用户", description = "管理员接口，根据 id 获取用户")
+    @GetMapping("/getById")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<User> getById(@RequestParam Long id) {
+        Assert.notNull(id, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
+        return BaseResponse.success(userService.getUserById(id));
+    }
 
     /**
      * 管理员接口
      * 删除用户
      */
+    @Operation(summary = "删除用户", description = "管理员接口，删除用户")
+    @PostMapping("/delete")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<Boolean> deleteUser(@RequestParam Long id) {
+        Assert.notNull(id, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
+        return BaseResponse.success(userService.deleteUser(id));
+    }
 
     /**
      * 管理员接口
      * 更新用户
      */
+    @Operation(summary = "更新用户", description = "管理员接口，更新用户")
+    @PostMapping("/update")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<Boolean> updateUser(@RequestBody @Validated UpdateUserRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "用户更新数据不能为空");
+        return BaseResponse.success(userService.updateUser(req));
+    }
 
     /**
      * 管理员接口

@@ -4,6 +4,7 @@ import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.exception.BusinessException;
+import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
@@ -22,7 +23,7 @@ import static org.springframework.web.context.request.RequestAttributes.REFERENC
 
 /**
  * @ClassName UserServiceImpl
- * @Description TODO
+ * @Description 用户服务实现类
  * @Author: rocklin
  * @Date 2025/8/3 19:10
  * @Version 1.0
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final JwtUtils jwtUtils;
+    private final EncryptPasswordUtil encryptPasswordUtil;
 
     @Override
     public Long register(UserRegisterRequest req) {
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUserAccount(req.getUserAccount());
         // 加密密码
-        user.setUserPassword(EncryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
+        user.setUserPassword(encryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
         user.setUserName("无名");
         user.setUserRole(UserRoleEnum.USER.getValue());
         user.setUserProfile("这个人很懒，什么都没有留下。");
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginResponse login(UserLoginRequest req) {
         User user = new User();
         user.setUserAccount(req.getUserAccount());
-        user.setUserPassword(EncryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
+        user.setUserPassword(encryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
         User queryUser = userMapper.queryByPassword(user);
         Assert.notNull(queryUser, ErrorCode.OPERATION_ERROR, "用户不存在或密码错误");
         
@@ -122,6 +124,23 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据库异常，用户创建失败");
         }
         return user.getId();
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        User user = userMapper.selectById(id);
+        Assert.notNull(user, ErrorCode.OPERATION_ERROR, "用户不存在");
+        return user;
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
+        return userMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public boolean updateUser(UpdateUserRequest req) {
+        return userMapper.updateById(req) > 0;
     }
 
     private UserLoginResponse buildUserResponse(User user) {

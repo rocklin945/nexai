@@ -21,13 +21,32 @@
         #{userProfile},
         #{userRole})
     </insert>
+    <update id="updateById">
+        update user set
+        <if test="userName != null">
+            userName = #{userName},
+        </if>
+        <if test="userAvatar != null">
+            userAvatar = #{userAvatar},
+        </if>
+        <if test="userProfile != null">
+            userProfile = #{userProfile},
+        </if>
+        <if test="userRole != null">
+            userRole = #{userRole}
+        </if>
+        where id = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from user where id = #{id}
+    </delete>
     <select id="query" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where userAccount = #{userAccount}
     </select>
     <select id="queryByPassword" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where userAccount = #{userAccount} and userPassword = #{userPassword}
     </select>
-    
+
     <select id="selectById" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where id = #{id}
     </select>

@@ -1,5 +1,6 @@
 package com.rocklin.nexai.service;
 
+import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.model.entity.User;
@@ -23,4 +24,10 @@ public interface UserService {
     void logout(Long userId);
 
     Long createUser(User user);
+
+    User getUserById(Long id);
+
+    boolean deleteUser(Long id);
+
+    boolean updateUser(UpdateUserRequest req);
 }

@@ -1,12 +1,13 @@
 package com.rocklin.nexai.mapper;
 
+import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.model.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * @ClassName UserMapper
- * @Description TODO
+ * @Description 用户数据库操作
  * @Author: rocklin
  * @Date 2025/8/3 19:21
  * @Version 1.0
@@ -20,4 +21,8 @@ public interface UserMapper {
     User queryByPassword(User user);
 
     User selectById(@Param("id") Long id);
+
+    Long deleteById(Long id);
+
+    Long updateById(UpdateUserRequest req);
 }

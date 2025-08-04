@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * @ClassName User
- * @Description TODO
+ * @Description  用户实体类
  * @Author: rocklin
  * @Date 2025/8/3 21:56
  * @Version 1.0
