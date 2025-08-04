@@ -70,14 +70,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginResponse getCurrentUser(Long userId) {
-        Assert.notNull(userId, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
-        
         User user = userMapper.selectById(userId);
         Assert.notNull(user, ErrorCode.OPERATION_ERROR, "用户不存在");
         
         // 构建响应对象（不返回token，因为获取当前用户时不需要重新生成token）
         UserLoginResponse response = buildUserResponse(user);
         return response;
+    }
+
+    @Override
+    public void logout(Long userId) {
+        // 在JWT无状态架构中，登出主要是客户端清除token
+        // 服务端可以记录登出日志或进行其他清理操作
+        // 这里验证用户存在即可，前端收到请求后需要清除localStorage中的token
+        User user = userMapper.selectById(userId);
+        Assert.notNull(user, ErrorCode.OPERATION_ERROR, "用户不存在");
     }
 
     private UserLoginResponse buildUserResponse(User user) {

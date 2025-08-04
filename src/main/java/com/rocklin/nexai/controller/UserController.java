@@ -69,8 +69,15 @@ public class UserController {
     }
 
     /**
-     *登出
+     * 登出
      */
+    @Operation(summary = "登出", description = "用户登出")
+    @PostMapping("/logout")
+    public BaseResponse<Void> logout(@RequestAttribute(USER_ID) String userId) {
+        Assert.notNull(userId, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
+        userService.logout(Long.valueOf(userId));
+        return BaseResponse.success();
+    }
 
     /**
      * 根据 id 获取包装类

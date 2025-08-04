@@ -10,4 +10,6 @@ public interface UserService {
     UserLoginResponse login(UserLoginRequest req);
 
     UserLoginResponse getCurrentUser(Long userId);
+
+    void logout(Long userId);
 }
