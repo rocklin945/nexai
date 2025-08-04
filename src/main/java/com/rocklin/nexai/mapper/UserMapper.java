@@ -16,4 +16,6 @@ public interface UserMapper {
     User query(@Param("userAccount") String userAccount);
 
     Long insert(User user);
+
+    User queryByPassword(User user);
 }

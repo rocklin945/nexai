@@ -2,8 +2,10 @@ package com.rocklin.nexai.controller;
 
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.exception.Assert;
+import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.common.response.BaseResponse;
+import com.rocklin.nexai.model.vo.LoginUserVO;
 import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @ClassName UserController
- * @Description TODO
+ * @Description 用户相关模块
  * @Author: rocklin
  * @Date 2025/8/3 19:08
  * @Version 1.0
@@ -35,7 +37,7 @@ public class UserController {
     @Operation(summary = "注册", description = "注册用户")
     @PostMapping("/register")
     public BaseResponse<Long> register(@RequestBody @Validated UserRegisterRequest req) {
-        Assert.isTrue(req!=null,ErrorCode.PARAMS_ERROR,"参数为空");
+        Assert.notNull(req,ErrorCode.PARAMS_ERROR,"参数为空");
         Assert.isTrue(req.getUserPassword().equals(req.getCheckPassword()),
                 ErrorCode.PARAMS_ERROR, "密码和校验密码不一致");
         userService.register(req);
@@ -45,6 +47,13 @@ public class UserController {
     /**
      * 登录
      */
+    @Operation(summary = "登录", description = "用户登录")
+    @PostMapping("/login")
+    public BaseResponse<LoginUserVO> login(@RequestBody @Validated UserLoginRequest req) {
+        Assert.notNull(req,ErrorCode.PARAMS_ERROR,"参数为空");
+        LoginUserVO loginUserVO =userService.login(req);
+        return BaseResponse.success(loginUserVO);
+    }
 
     /**
      *登出

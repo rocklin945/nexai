@@ -24,4 +24,7 @@
     <select id="query" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where userAccount = #{userAccount}
     </select>
+    <select id="queryByPassword" resultType="com.rocklin.nexai.model.entity.User">
+        select * from user where userAccount = #{userAccount} and userPassword = #{userPassword}
+    </select>
 </mapper>

@@ -4,9 +4,11 @@ import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.exception.BusinessException;
+import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.mapper.UserMapper;
 import com.rocklin.nexai.model.entity.User;
+import com.rocklin.nexai.model.vo.LoginUserVO;
 import com.rocklin.nexai.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,15 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据库异常，注册失败");
         }
         return res;
+    }
+
+    @Override
+    public LoginUserVO login(UserLoginRequest req) {
+        User user = new User();
+        user.setUserAccount(req.getUserAccount());
+        user.setUserPassword(getEncryptPassword(req.getUserPassword()));
+        User queryUser = userMapper.queryByPassword(user);
+        Assert.notNull(queryUser, ErrorCode.OPERATION_ERROR, "用户不存在");
     }
 
     private String getEncryptPassword(String userPassword) {

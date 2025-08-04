@@ -7,14 +7,14 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @ClassName UserRegisterRequest
- * @Description 用户注册请求
+ * @ClassName UserLoginRequest
+ * @Description 用户登录请求
  * @Author: rocklin
- * @Date 2025/8/3 19:24
+ * @Date 2025/8/4 8:19
  * @Version 1.0
  */
 @Data
-public class UserRegisterRequest implements Serializable {
+public class UserLoginRequest implements Serializable {
     /**
      * 账号
      */
@@ -28,11 +28,4 @@ public class UserRegisterRequest implements Serializable {
     @NotBlank(message = "密码不能为空")
     @Size(min = 8, max = 16, message = "密码长度不能小于8位，不能大于16位")
     private String userPassword;
-
-    /**
-     * 确认密码
-     */
-    @NotBlank
-    @Size(min = 8, max = 16, message = "密码长度不能小于8位，不能大于16位")
-    private String checkPassword;
 }
