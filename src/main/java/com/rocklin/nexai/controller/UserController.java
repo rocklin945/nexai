@@ -5,7 +5,7 @@ import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.common.response.BaseResponse;
-import com.rocklin.nexai.model.vo.LoginUserVO;
+import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,10 +49,10 @@ public class UserController {
      */
     @Operation(summary = "登录", description = "用户登录")
     @PostMapping("/login")
-    public BaseResponse<LoginUserVO> login(@RequestBody @Validated UserLoginRequest req) {
+    public BaseResponse<UserLoginResponse> login(@RequestBody @Validated UserLoginRequest req) {
         Assert.notNull(req,ErrorCode.PARAMS_ERROR,"参数为空");
-        LoginUserVO loginUserVO =userService.login(req);
-        return BaseResponse.success(loginUserVO);
+        UserLoginResponse userLoginResponse =userService.login(req);
+        return BaseResponse.success(userLoginResponse);
     }
 
     /**

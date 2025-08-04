@@ -6,9 +6,10 @@ import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.exception.BusinessException;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
+import com.rocklin.nexai.common.utils.JwtUtils;
 import com.rocklin.nexai.mapper.UserMapper;
 import com.rocklin.nexai.model.entity.User;
-import com.rocklin.nexai.model.vo.LoginUserVO;
+import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final JwtUtils jwtUtils;
 
     @Override
     public Long register(UserRegisterRequest req) {
@@ -50,12 +52,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginUserVO login(UserLoginRequest req) {
+    public UserLoginResponse login(UserLoginRequest req) {
         User user = new User();
         user.setUserAccount(req.getUserAccount());
         user.setUserPassword(getEncryptPassword(req.getUserPassword()));
         User queryUser = userMapper.queryByPassword(user);
-        Assert.notNull(queryUser, ErrorCode.OPERATION_ERROR, "用户不存在");
+        Assert.notNull(queryUser, ErrorCode.OPERATION_ERROR, "用户不存在或密码错误");
+        
+        // 生成JWT token
+        String token = jwtUtils.generateToken(queryUser.getId().toString(), queryUser.getUserName());
+        
+        // 构建响应对象
+        UserLoginResponse response = new UserLoginResponse();
+        response.setUserId(queryUser.getId());
+        response.setUserAccount(queryUser.getUserAccount());
+        response.setUserName(queryUser.getUserName());
+        response.setUserAvatar(queryUser.getUserAvatar());
+        response.setUserProfile(queryUser.getUserProfile());
+        response.setUserRole(queryUser.getUserRole());
+        response.setToken(token);
+        
+        return response;
     }
 
     private String getEncryptPassword(String userPassword) {

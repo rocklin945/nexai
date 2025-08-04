@@ -3,21 +3,20 @@ package com.rocklin.nexai.model.vo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * 脱敏后的登录用户信息
+ * 用户登录响应
  */
 @Data
-public class LoginUserVO implements Serializable {
+public class UserLoginResponse implements Serializable {
 
     /**
-     * 用户 id
+     * 用户id
      */
-    private Long id;
+    private Long userId;
 
     /**
-     * 账号
+     * 用户账号
      */
     private String userAccount;
 
@@ -37,17 +36,12 @@ public class LoginUserVO implements Serializable {
     private String userProfile;
 
     /**
-     * 用户角色：user/admin
+     * 用户角色
      */
     private String userRole;
 
     /**
-     * 创建时间
+     * JWT token
      */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
+    private String token;
 }
