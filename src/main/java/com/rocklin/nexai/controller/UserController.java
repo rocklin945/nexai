@@ -54,6 +54,15 @@ public class UserController {
         UserLoginResponse userLoginResponse =userService.login(req);
         return BaseResponse.success(userLoginResponse);
     }
+    /**
+     * 获取当前登录用户
+     */
+    @Operation(summary = "获取当前登录用户", description = "获取当前登录用户")
+    @PostMapping("/getCurrentUser")
+    public BaseResponse<UserLoginResponse> getCurrentUser() {
+        //userService.getCurrentUser();
+        return BaseResponse.success();
+    }
 
     /**
      *登出
