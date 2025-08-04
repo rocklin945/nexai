@@ -1,10 +1,15 @@
 package com.rocklin.nexai.controller;
 
+import com.rocklin.nexai.common.annotation.AuthCheck;
 import com.rocklin.nexai.common.enums.ErrorCode;
+import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
+import com.rocklin.nexai.common.request.UserCreateRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.common.response.BaseResponse;
+import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
+import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.model.vo.UserLoginVO;
 import com.rocklin.nexai.service.UserService;
@@ -33,12 +38,12 @@ public class UserController {
     private final UserService userService;
 
     /**
-     *注册
+     * 注册
      */
     @Operation(summary = "注册", description = "注册用户")
     @PostMapping("/register")
     public BaseResponse<Long> register(@RequestBody @Validated UserRegisterRequest req) {
-        Assert.notNull(req,ErrorCode.PARAMS_ERROR,"参数为空");
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getUserPassword().equals(req.getCheckPassword()),
                 ErrorCode.PARAMS_ERROR, "密码和校验密码不一致");
         userService.register(req);
@@ -51,10 +56,11 @@ public class UserController {
     @Operation(summary = "登录", description = "用户登录")
     @PostMapping("/login")
     public BaseResponse<UserLoginResponse> login(@RequestBody @Validated UserLoginRequest req) {
-        Assert.notNull(req,ErrorCode.PARAMS_ERROR,"参数为空");
-        UserLoginResponse userLoginResponse =userService.login(req);
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        UserLoginResponse userLoginResponse = userService.login(req);
         return BaseResponse.success(userLoginResponse);
     }
+
     /**
      * 获取当前登录用户
      */
@@ -80,13 +86,22 @@ public class UserController {
     }
 
     /**
-     * 根据 id 获取包装类
-     */
-
-    /**
      * 管理员接口
      * 创建用户
      */
+    @Operation(summary = "创建用户", description = "管理员接口，创建用户")
+    @PostMapping("/create")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<Long> createUser(@RequestBody @Validated UserCreateRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        User user = new User();
+        BeanUtils.copyProperties(req, user);
+        // 默认密码 12345678
+        final String DEFAULT_PASSWORD = "12345678";
+        String encryptPassword = EncryptPasswordUtil.getEncryptPassword(DEFAULT_PASSWORD);
+        user.setUserPassword(encryptPassword);
+        return BaseResponse.success(userService.createUser(user));
+    }
 
     /**
      * 管理员接口

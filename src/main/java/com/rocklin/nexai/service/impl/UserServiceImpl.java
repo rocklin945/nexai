@@ -6,16 +6,19 @@ import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.exception.BusinessException;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
+import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
 import com.rocklin.nexai.common.utils.JwtUtils;
 import com.rocklin.nexai.mapper.UserMapper;
 import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import java.nio.charset.StandardCharsets;
+import static com.rocklin.nexai.common.constants.Constants.USER_ID;
+import static org.springframework.web.context.request.RequestAttributes.REFERENCE_REQUEST;
 
 /**
  * @ClassName UserServiceImpl
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUserAccount(req.getUserAccount());
         // 加密密码
-        user.setUserPassword(getEncryptPassword(req.getUserPassword()));
+        user.setUserPassword(EncryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
         user.setUserName("无名");
         user.setUserRole(UserRoleEnum.USER.getValue());
         user.setUserProfile("这个人很懒，什么都没有留下。");
@@ -55,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginResponse login(UserLoginRequest req) {
         User user = new User();
         user.setUserAccount(req.getUserAccount());
-        user.setUserPassword(getEncryptPassword(req.getUserPassword()));
+        user.setUserPassword(EncryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
         User queryUser = userMapper.queryByPassword(user);
         Assert.notNull(queryUser, ErrorCode.OPERATION_ERROR, "用户不存在或密码错误");
         
@@ -77,6 +80,27 @@ public class UserServiceImpl implements UserService {
         UserLoginResponse response = buildUserResponse(user);
         return response;
     }
+    
+    @Override
+    public UserLoginResponse getCurrentUser() {
+        // 从当前请求中获取用户ID
+        String userId = getUserIdFromRequest();
+        Assert.notNull(userId, ErrorCode.UNAUTHORIZED, "用户未登录");
+        
+        // 调用已有的方法获取用户信息
+        return getCurrentUser(Long.valueOf(userId));
+    }
+    
+    /**
+     * 从当前请求中获取用户ID
+     */
+    private String getUserIdFromRequest() {
+        // 使用RequestContextHolder获取当前请求
+        HttpServletRequest request = ((HttpServletRequest) RequestContextHolder
+                .getRequestAttributes().resolveReference(REFERENCE_REQUEST));
+        // 从请求属性中获取用户ID
+        return (String) request.getAttribute(USER_ID);
+    }
 
     @Override
     public void logout(Long userId) {
@@ -85,6 +109,19 @@ public class UserServiceImpl implements UserService {
         // 这里验证用户存在即可，前端收到请求后需要清除localStorage中的token
         User user = userMapper.selectById(userId);
         Assert.notNull(user, ErrorCode.OPERATION_ERROR, "用户不存在");
+    }
+
+    @Override
+    public Long createUser(User user) {
+        //查询用户是否已存在
+        User userQuery = userMapper.query(user.getUserAccount());
+        Assert.isNull(userQuery, ErrorCode.OPERATION_ERROR, "用户已存在");
+        //插入
+        Long res = userMapper.insert(user);
+        if(res == 0){
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据库异常，用户创建失败");
+        }
+        return user.getId();
     }
 
     private UserLoginResponse buildUserResponse(User user) {
@@ -96,10 +133,5 @@ public class UserServiceImpl implements UserService {
         response.setUserProfile(user.getUserProfile());
         response.setUserRole(user.getUserRole());
         return response;
-    }
-
-    private String getEncryptPassword(String userPassword) {
-        final String SALT = "rocklin";
-        return DigestUtils.md5DigestAsHex((userPassword + SALT).getBytes(StandardCharsets.UTF_8));
     }
 }
