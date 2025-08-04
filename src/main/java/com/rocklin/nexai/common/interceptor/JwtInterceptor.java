@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import static com.rocklin.nexai.common.constants.Constants.*;
+
 /**
  * JWT拦截器
  * 用于验证用户请求的token
@@ -28,14 +30,14 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 
         // 从请求头中获取token
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(AUTHORIZATION);
         
-        if (token == null || !token.startsWith("Bearer ")) {
+        if (token == null || !token.startsWith(BEARER)) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "未提供token");
         }
 
         // 提取token,去掉Bearer
-        token = token.substring(7);
+        token = token.substring(TOKEN_START_INDEX);
         
         try {
             // 验证token
@@ -45,7 +47,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             
             // 从token中获取用户ID并设置到请求属性中
             String userId = jwtUtils.getUserIdFromToken(token);
-            request.setAttribute("userId", userId);
+            request.setAttribute(USER_ID, userId);
             
             return true;
         }catch (BusinessException e){

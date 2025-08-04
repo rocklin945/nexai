@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+import static com.rocklin.nexai.common.constants.Constants.USERNAME;
+
 /**
  * JWT工具类
  */
@@ -35,7 +37,7 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject(userId)
-                .claim("username", username)
+                .claim(USERNAME, username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -63,7 +65,7 @@ public class JwtUtils {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return (String) claims.get("username");
+        return (String) claims.get(USERNAME);
     }
 
     /**
