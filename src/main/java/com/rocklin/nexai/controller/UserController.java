@@ -4,16 +4,14 @@ import com.rocklin.nexai.common.annotation.AuthCheck;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
-import com.rocklin.nexai.common.request.UpdateUserRequest;
-import com.rocklin.nexai.common.request.UserCreateRequest;
-import com.rocklin.nexai.common.request.UserLoginRequest;
-import com.rocklin.nexai.common.request.UserRegisterRequest;
+import com.rocklin.nexai.common.request.*;
 import com.rocklin.nexai.common.response.BaseResponse;
 import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
 import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.model.vo.UserLoginVO;
 import com.rocklin.nexai.service.UserService;
+import com.rocklin.nexai.common.response.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -145,4 +143,10 @@ public class UserController {
      * 管理员接口
      * 分页获取用户封装列表
      */
+    @Operation(summary = "分页获取用户列表", description = "管理员接口，分页获取用户列表")
+    @PostMapping("/list/page")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<PageResponse<UserLoginVO>> listUserByPage(@RequestBody @Validated PageRequest pageRequest) {
+        return BaseResponse.success(userService.listUserByPage(pageRequest));
+    }
 }

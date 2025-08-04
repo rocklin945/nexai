@@ -50,4 +50,35 @@
     <select id="selectById" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where id = #{id}
     </select>
+    <select id="selectList" resultType="com.rocklin.nexai.model.entity.User">
+        select * from user order by createTime desc
+    </select>
+    <select id="countTotal" resultType="long">
+        select count(*) from user
+    </select>
+    <select id="selectListWithLimit" resultType="com.rocklin.nexai.model.entity.User">
+        select * from user 
+        <choose>
+            <when test="sortField != null and sortField != ''">
+                order by 
+                <choose>
+                    <when test="sortField == 'userId'">id</when>
+                    <when test="sortField == 'userName'">userName</when>
+                    <when test="sortField == 'userAccount'">userAccount</when>
+                    <when test="sortField == 'userRole'">userRole</when>
+                    <when test="sortField == 'createTime'">createTime</when>
+                    <when test="sortField == 'updateTime'">updateTime</when>
+                    <otherwise>updateTime</otherwise>
+                </choose>
+                <choose>
+                    <when test="sortOrder == 'asc'">ASC</when>
+                    <otherwise>DESC</otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by updateTime DESC
+            </otherwise>
+        </choose>
+        limit #{offset}, #{limit}
+    </select>
 </mapper>

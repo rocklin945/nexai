@@ -1,10 +1,13 @@
 package com.rocklin.nexai.service;
 
+import com.rocklin.nexai.common.request.PageRequest;
 import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
+import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
+import com.rocklin.nexai.model.vo.UserLoginVO;
 
 public interface UserService {
     Long register(UserRegisterRequest req);
@@ -30,4 +33,9 @@ public interface UserService {
     boolean deleteUser(Long id);
 
     boolean updateUser(UpdateUserRequest req);
+
+    /**
+     * 分页获取用户列表
+     */
+    PageResponse<UserLoginVO> listUserByPage(PageRequest pageRequest);
 }
