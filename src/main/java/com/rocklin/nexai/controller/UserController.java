@@ -146,7 +146,7 @@ public class UserController {
     @Operation(summary = "分页获取用户列表", description = "管理员接口，分页获取用户列表")
     @PostMapping("/list/page")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
-    public BaseResponse<PageResponse<UserLoginVO>> listUserByPage(@RequestBody @Validated PageRequest pageRequest) {
-        return BaseResponse.success(userService.listUserByPage(pageRequest));
+    public BaseResponse<PageResponse<UserLoginVO>> listUserByPage(@RequestBody @Validated UserPageQueryRequest req) {
+        return BaseResponse.success(userService.listUserByPageWithFilter(req));
     }
 }

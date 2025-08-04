@@ -4,6 +4,7 @@ import com.rocklin.nexai.common.request.PageRequest;
 import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
+import com.rocklin.nexai.common.request.UserPageQueryRequest;
 import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
@@ -35,7 +36,7 @@ public interface UserService {
     boolean updateUser(UpdateUserRequest req);
 
     /**
-     * 分页获取用户列表
+     * 分页获取用户列表（带过滤条件）
      */
-    PageResponse<UserLoginVO> listUserByPage(PageRequest pageRequest);
+    PageResponse<UserLoginVO> listUserByPageWithFilter(UserPageQueryRequest request);
 }

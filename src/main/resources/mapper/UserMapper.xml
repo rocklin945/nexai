@@ -21,6 +21,7 @@
         #{userProfile},
         #{userRole})
     </insert>
+
     <update id="updateById">
         update user set
         <if test="userName != null">
@@ -37,12 +38,15 @@
         </if>
         where id = #{id}
     </update>
+
     <delete id="deleteById">
         delete from user where id = #{id}
     </delete>
+
     <select id="query" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where userAccount = #{userAccount}
     </select>
+
     <select id="queryByPassword" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where userAccount = #{userAccount} and userPassword = #{userPassword}
     </select>
@@ -50,28 +54,42 @@
     <select id="selectById" resultType="com.rocklin.nexai.model.entity.User">
         select * from user where id = #{id}
     </select>
-    <select id="selectList" resultType="com.rocklin.nexai.model.entity.User">
-        select * from user order by createTime desc
-    </select>
-    <select id="countTotal" resultType="long">
-        select count(*) from user
-    </select>
+
     <select id="selectListWithLimit" resultType="com.rocklin.nexai.model.entity.User">
         select * from user 
+        <where>
+            <if test="req != null">
+                <if test="req.id != null">
+                    and id = #{req.id}
+                </if>
+                <if test="req.userRole != null and req.userRole != ''">
+                    and userRole = #{req.userRole}
+                </if>
+                <if test="req.userName != null and req.userName != ''">
+                    and userName like concat('%', #{req.userName}, '%')
+                </if>
+                <if test="req.userAccount != null and req.userAccount != ''">
+                    and userAccount like concat('%', #{req.userAccount}, '%')
+                </if>
+                <if test="req.userProfile != null and req.userProfile != ''">
+                    and userProfile like concat('%', #{req.userProfile}, '%')
+                </if>
+            </if>
+        </where>
         <choose>
-            <when test="sortField != null and sortField != ''">
+            <when test="req != null and req.sortField != null and req.sortField != ''">
                 order by 
                 <choose>
-                    <when test="sortField == 'userId'">id</when>
-                    <when test="sortField == 'userName'">userName</when>
-                    <when test="sortField == 'userAccount'">userAccount</when>
-                    <when test="sortField == 'userRole'">userRole</when>
-                    <when test="sortField == 'createTime'">createTime</when>
-                    <when test="sortField == 'updateTime'">updateTime</when>
+                    <when test="req.sortField == 'userId'">id</when>
+                    <when test="req.sortField == 'userName'">userName</when>
+                    <when test="req.sortField == 'userAccount'">userAccount</when>
+                    <when test="req.sortField == 'userRole'">userRole</when>
+                    <when test="req.sortField == 'createTime'">createTime</when>
+                    <when test="req.sortField == 'updateTime'">updateTime</when>
                     <otherwise>updateTime</otherwise>
                 </choose>
                 <choose>
-                    <when test="sortOrder == 'asc'">ASC</when>
+                    <when test="req.sortOrder == 'asc'">ASC</when>
                     <otherwise>DESC</otherwise>
                 </choose>
             </when>
@@ -80,5 +98,27 @@
             </otherwise>
         </choose>
         limit #{offset}, #{limit}
+    </select>
+    <select id="countTotal" resultType="long">
+        select count(*) from user
+        <where>
+            <if test="req != null">
+                <if test="req.id != null">
+                    and id = #{req.id}
+                </if>
+                <if test="req.userRole != null and req.userRole != ''">
+                    and userRole = #{req.userRole}
+                </if>
+                <if test="req.userName != null and req.userName != ''">
+                    and userName like concat('%', #{req.userName}, '%')
+                </if>
+                <if test="req.userAccount != null and req.userAccount != ''">
+                    and userAccount like concat('%', #{req.userAccount}, '%')
+                </if>
+                <if test="req.userProfile != null and req.userProfile != ''">
+                    and userProfile like concat('%', #{req.userProfile}, '%')
+                </if>
+            </if>
+        </where>
     </select>
 </mapper>

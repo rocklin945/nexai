@@ -8,6 +8,7 @@ import com.rocklin.nexai.common.request.PageRequest;
 import com.rocklin.nexai.common.request.UpdateUserRequest;
 import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
+import com.rocklin.nexai.common.request.UserPageQueryRequest;
 import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
 import com.rocklin.nexai.common.utils.JwtUtils;
@@ -161,23 +162,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageResponse<UserLoginVO> listUserByPage(PageRequest pageRequest) {
+    public PageResponse<UserLoginVO> listUserByPageWithFilter(UserPageQueryRequest request) {
         // 计算偏移量
-        int offset = (pageRequest.getPageNum() - 1) * pageRequest.getPageSize();
+        int offset = (request.getPageNum() - 1) * request.getPageSize();
 
-        // 查询总记录数
-        long total = userMapper.countTotal();
+        // 查询总记录数（带过滤条件）
+        long total = userMapper.countTotal(request);
 
-        // 查询用户列表
-        List<User> userList = userMapper.selectListWithLimit(offset, pageRequest.getPageSize(),
-                pageRequest.getSortField(), pageRequest.getSortOrder());
+        // 查询用户列表（带过滤条件）
+        List<User> userList = userMapper.selectListWithLimit(request, offset, request.getPageSize());
 
         // 转换为VO
         List<UserLoginVO> userLoginVOList = userList.stream()
                 .map(this::convertToUserLoginVO)
                 .collect(Collectors.toList());
 
-        return new PageResponse<>(userLoginVOList, total, pageRequest.getPageNum(), pageRequest.getPageSize());
+        return new PageResponse<>(userLoginVOList, total, request.getPageNum(), request.getPageSize());
     }
 
     private UserLoginVO convertToUserLoginVO(User user) {

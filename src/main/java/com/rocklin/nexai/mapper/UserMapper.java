@@ -1,6 +1,7 @@
 package com.rocklin.nexai.mapper;
 
 import com.rocklin.nexai.common.request.UpdateUserRequest;
+import com.rocklin.nexai.common.request.UserPageQueryRequest;
 import com.rocklin.nexai.model.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -29,20 +30,14 @@ public interface UserMapper {
     Long updateById(UpdateUserRequest req);
 
     /**
-     * 分页查询用户列表
+     * 分页查询用户列表（带过滤条件）
      */
-    List<User> selectList();
+    List<User> selectListWithLimit(@Param("req") UserPageQueryRequest req,
+            @Param("offset") int offset,
+            @Param("limit") int limit);
 
     /**
-     * 查询总记录数
+     * 查询总记录数（带过滤条件）
      */
-    long countTotal();
-
-    /**
-     * 分页查询用户列表（带限制和排序）
-     */
-    List<User> selectListWithLimit(@Param("offset") int offset,
-                                   @Param("limit") int limit,
-                                   @Param("sortField") String sortField,
-                                   @Param("sortOrder") String sortOrder);
+    long countTotal(@Param("req") UserPageQueryRequest req);
 }
