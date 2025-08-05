@@ -62,7 +62,7 @@
                 <if test="req.id != null">
                     and id = #{req.id}
                 </if>
-                <if test="req.userRole != null and req.userRole != ''">
+                <if test="req.userRole != null">
                     and userRole = #{req.userRole}
                 </if>
                 <if test="req.userName != null and req.userName != ''">
@@ -106,7 +106,7 @@
                 <if test="req.id != null">
                     and id = #{req.id}
                 </if>
-                <if test="req.userRole != null and req.userRole != ''">
+                <if test="req.userRole != null">
                     and userRole = #{req.userRole}
                 </if>
                 <if test="req.userName != null and req.userName != ''">

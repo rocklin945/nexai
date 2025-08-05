@@ -41,7 +41,7 @@
           <a-image :src="record.userAvatar" :width="120" />
         </template>
         <template v-else-if="column.dataIndex === 'userRole'">
-          <div v-if="record.userRole === 'admin'">
+          <div v-if="record.userRole === 0">
             <a-tag color="green">管理员</a-tag>
           </div>
           <div v-else>

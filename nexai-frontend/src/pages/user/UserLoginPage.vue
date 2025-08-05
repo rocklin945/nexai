@@ -7,7 +7,7 @@
         name="userAccount"
         :rules="[
           { required: true, message: '请输入账号' },
-          { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
+          { min: 3, max: 12, message: '账号长度不能小于3位，不能大于12位' },
         ]"
       >
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />
@@ -35,7 +35,7 @@
 import { reactive } from 'vue'
 import { login } from '@/api/userController.ts'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { useRouter } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 
 const formState = reactive<API.UserLoginRequest>({
@@ -43,6 +43,7 @@ const formState = reactive<API.UserLoginRequest>({
   userPassword: '',
 })
 
+const route = useRoute()
 const router = useRouter()
 const loginUserStore = useLoginUserStore()
 
@@ -62,10 +63,8 @@ const handleSubmit = async (values: any) => {
     }
     await loginUserStore.fetchLoginUser()
     message.success('登录成功')
-    router.push({
-      path: '/',
-      replace: true,
-    })
+    const redirect = route.query.redirect as string
+    router.replace(redirect || '/')
   } else {
     message.error('登录失败，' + res.data.message)
   }

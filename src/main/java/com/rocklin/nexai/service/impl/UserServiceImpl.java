@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
         int offset = (request.getPageNum() - 1) * request.getPageSize();
 
         // 查询总记录数（带过滤条件）
-        long total = userMapper.countTotal(request);
+            long total = userMapper.countTotal(request);
 
         // 查询用户列表（带过滤条件）
         List<User> userList = userMapper.selectListWithLimit(request, offset, request.getPageSize());
