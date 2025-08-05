@@ -1,41 +1,71 @@
 <template>
   <div id="userManagePage">
     <!-- 搜索表单 -->
-    <a-form layout="inline" :model="searchParams" @finish="doSearch">
-      <a-form-item label="ID">
-        <a-input v-model:value="searchParams.id" placeholder="输入ID" />
-      </a-form-item>
-      <a-form-item label="账号">
-        <a-input v-model:value="searchParams.userAccount" placeholder="输入账号" />
-      </a-form-item>
-      <a-form-item label="用户名">
-        <a-input v-model:value="searchParams.userName" placeholder="输入用户名" />
-      </a-form-item>
-      <a-form-item label="角色">
-        <a-select
-          v-model:value="searchParams.userRole"
-          placeholder="请选择角色"
-          allowClear
-        >
-          <a-select-option :value="0">管理员</a-select-option>
-          <a-select-option :value="1">普通用户</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="简介">
-        <a-input v-model:value="searchParams.userProfile" placeholder="输入简介" />
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit">搜索</a-button>
-      </a-form-item>
+    <a-form :model="searchParams" @finish="doSearch">
+      <!-- 第一行 -->
+      <a-row :gutter="40">
+        <a-col :span="6">
+          <a-form-item label="ID">
+            <a-input v-model:value="searchParams.id" placeholder="输入ID" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="账号">
+            <a-input v-model:value="searchParams.userAccount" placeholder="输入账号" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="用户名">
+            <a-input v-model:value="searchParams.userName" placeholder="输入用户名" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="角色">
+            <a-select v-model:value="searchParams.userRole" placeholder="请选择角色" allowClear>
+              <a-select-option :value="0">管理员</a-select-option>
+              <a-select-option :value="1">普通用户</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+      </a-row>
+
+      <!-- 第二行 -->
+      <a-row :gutter="40">
+        <a-col :span="6">
+          <a-form-item label="简介">
+            <a-input v-model:value="searchParams.userProfile" placeholder="输入简介" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="排序字段">
+            <a-select v-model:value="searchParams.sortField" placeholder="请选择排序字段" allowClear>
+              <a-select-option value="userId">ID</a-select-option>
+              <a-select-option value="userName">用户名</a-select-option>
+              <a-select-option value="userAccount">账号</a-select-option>
+              <a-select-option value="userRole">角色</a-select-option>
+              <a-select-option value="createTime">创建时间</a-select-option>
+              <a-select-option value="updateTime">更新时间</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="排序方式">
+            <a-select v-model:value="searchParams.sortOrder" placeholder="请选择排序方式" allowClear>
+              <a-select-option value="asc">升序</a-select-option>
+              <a-select-option value="desc">降序</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6" style="text-align: right;">
+          <a-form-item>
+            <a-button type="primary" html-type="submit" ghost>搜索</a-button>
+          </a-form-item>
+        </a-col>
+      </a-row>
     </a-form>
-    <a-divider />
+
     <!-- 表格 -->
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      :pagination="pagination"
-      @change="doTableChange"
-    >
+    <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="doTableChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'userAvatar'">
           <a-image :src="record.userAvatar" :width="120" />
@@ -55,7 +85,7 @@
           {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button danger @click="doDelete(record.id)">删除</a-button>
+          <a-button danger @click="doDelete(record.userId)">删除</a-button>
         </template>
       </template>
     </a-table>
@@ -160,7 +190,7 @@ const doDelete = async (id: string) => {
     return
   }
   const res = await deleteUser({ id })
-  if (res.data.code === 200) {
+  if (res.data.statusCode === 200) {
     message.success('删除成功')
     // 刷新数据
     fetchData()
