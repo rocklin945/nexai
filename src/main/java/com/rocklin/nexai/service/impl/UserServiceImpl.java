@@ -9,8 +9,10 @@ import com.rocklin.nexai.common.request.UserLoginRequest;
 import com.rocklin.nexai.common.request.UserPageQueryRequest;
 import com.rocklin.nexai.common.request.UserRegisterRequest;
 import com.rocklin.nexai.common.response.PageResponse;
+import com.rocklin.nexai.common.utils.AvatarUtil;
 import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
 import com.rocklin.nexai.common.utils.JwtUtils;
+import com.rocklin.nexai.common.utils.MythologyNicknameUtil;
 import com.rocklin.nexai.mapper.UserMapper;
 import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
@@ -52,8 +54,9 @@ public class UserServiceImpl implements UserService {
         user.setUserAccount(req.getUserAccount());
         // 加密密码
         user.setUserPassword(encryptPasswordUtil.getEncryptPassword(req.getUserPassword()));
-        user.setUserName("无名");
+        user.setUserName(MythologyNicknameUtil.generateNickname());
         user.setUserRole(UserRoleEnum.USER.getValue());
+        user.setUserAvatar(AvatarUtil.generateRandomAvatarUrl(req.getUserAccount()));
         user.setUserProfile("这个人很懒，什么都没有留下。");
         Long res = userMapper.insert(user);
         if (res == 0) {

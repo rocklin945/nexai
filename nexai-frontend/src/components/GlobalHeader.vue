@@ -12,17 +12,12 @@
       </a-col>
       <!-- 中间：导航菜单 -->
       <a-col flex="auto">
-        <a-menu
-          v-model:selectedKeys="selectedKeys"
-          mode="horizontal"
-          :items="menuItems"
-          @click="handleMenuClick"
-        />
+        <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" :items="menuItems" @click="handleMenuClick" />
       </a-col>
       <!-- 右侧：用户操作区域 -->
       <a-col>
         <div class="user-login-status">
-          <div v-if="loginUserStore.loginUser.id">
+          <div v-if="loginUserStore.loginUser.userId">
             <a-dropdown>
               <a-space>
                 <a-avatar :src="loginUserStore.loginUser.userAvatar" />
@@ -99,7 +94,7 @@ const filterMenus = (menus = [] as MenuProps['items']) => {
         return false
       }
     }
-    return true 
+    return true
   })
 }
 

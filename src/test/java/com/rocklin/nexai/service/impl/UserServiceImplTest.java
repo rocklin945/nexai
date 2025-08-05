@@ -47,7 +47,7 @@ class UserServiceImplTest {
         mockUser.setUserAccount("testUser");
         mockUser.setUserName("Test User");
         mockUser.setUserAvatar("avatar.jpg");
-        mockUser.setUserRole("user");
+        mockUser.setUserRole(1);
     }
 
     @Test

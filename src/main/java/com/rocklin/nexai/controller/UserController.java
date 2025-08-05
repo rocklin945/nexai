@@ -6,7 +6,9 @@ import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.request.*;
 import com.rocklin.nexai.common.response.BaseResponse;
+import com.rocklin.nexai.common.utils.AvatarUtil;
 import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
+import com.rocklin.nexai.common.utils.MythologyNicknameUtil;
 import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.model.vo.UserLoginVO;
@@ -96,10 +98,12 @@ public class UserController {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         User user = new User();
         BeanUtils.copyProperties(req, user);
+        user.setUserName(MythologyNicknameUtil.generateNickname());
         // 默认密码 12345678
         final String DEFAULT_PASSWORD = "12345678";
         String encryptPassword = encryptPasswordUtil.getEncryptPassword(DEFAULT_PASSWORD);
         user.setUserPassword(encryptPassword);
+        user.setUserAvatar(AvatarUtil.generateRandomAvatarUrl(req.getUserAccount()));
         return BaseResponse.success(userService.createUser(user));
     }
 
