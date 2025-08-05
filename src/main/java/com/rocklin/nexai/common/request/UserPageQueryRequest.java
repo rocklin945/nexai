@@ -36,7 +36,7 @@ public class UserPageQueryRequest extends PageRequest implements Serializable {
     private String userProfile;
 
     /**
-     * 用户角色：user/admin/ban
+     * 用户角色：0:管理员 1:普通用户
      */
-    private String userRole;
+    private Integer userRole;
 }

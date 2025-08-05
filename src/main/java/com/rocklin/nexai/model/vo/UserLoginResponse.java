@@ -38,7 +38,7 @@ public class UserLoginResponse implements Serializable {
     /**
      * 用户角色
      */
-    private String userRole;
+    private Integer userRole;
 
     /**
      * JWT token

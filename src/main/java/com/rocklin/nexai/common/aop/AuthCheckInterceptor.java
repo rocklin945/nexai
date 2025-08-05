@@ -28,7 +28,7 @@ public class AuthCheckInterceptor {
 
     @Around("@annotation(checkAuth)")
     public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck checkAuth) throws Throwable {
-        String role = checkAuth.enableRole().getValue();
+        Integer role = checkAuth.enableRole().getValue();
         UserLoginResponse currentUser = userService.getCurrentUser();
         UserRoleEnum currentUserRole = UserRoleEnum.getEnumByValue(currentUser.getUserRole());
         if (currentUserRole == null) {

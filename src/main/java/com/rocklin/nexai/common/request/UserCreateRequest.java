@@ -36,5 +36,5 @@ public class UserCreateRequest implements Serializable {
     /**
      * 用户角色: user, admin
      */
-    private String userRole;
+    private Integer userRole;
 }

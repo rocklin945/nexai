@@ -70,7 +70,7 @@ declare namespace API {
     userName?: string;
     userAvatar?: string;
     userProfile?: string;
-    userRole?: string;
+    userRole?: number;
   };
 
   type User = {
@@ -80,7 +80,7 @@ declare namespace API {
     userName?: string;
     userAvatar?: string;
     userProfile?: string;
-    userRole?: string;
+    userRole?: number;
     editTime?: string;
     createTime?: string;
     updateTime?: string;
@@ -92,7 +92,7 @@ declare namespace API {
     userAccount?: string;
     userAvatar?: string;
     userProfile?: string;
-    userRole?: string;
+    userRole?: number;
   };
 
   type UserLoginRequest = {
@@ -106,7 +106,7 @@ declare namespace API {
     userName?: string;
     userAvatar?: string;
     userProfile?: string;
-    userRole?: string;
+    userRole?: number;
     token?: string;
   };
 
@@ -116,7 +116,7 @@ declare namespace API {
     userAccount?: string;
     userAvatar?: string;
     userProfile?: string;
-    userRole?: string;
+    userRole?: number;
     createTime?: string;
     updateTime?: string;
   };
@@ -130,7 +130,7 @@ declare namespace API {
     userName?: string;
     userAccount?: string;
     userProfile?: string;
-    userRole?: string;
+    userRole?: number;
   };
 
   type UserRegisterRequest = {
