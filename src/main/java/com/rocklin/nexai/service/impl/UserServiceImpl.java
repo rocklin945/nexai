@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginResponse getCurrentUser() {
         // 从当前请求中获取用户ID
         String userId = getUserIdFromRequest();
-        Assert.notNull(userId, ErrorCode.UNAUTHORIZED, "用户未登录");
+        Assert.notNull(userId, ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
 
         // 调用已有的方法获取用户信息
         return getCurrentUser(Long.valueOf(userId));

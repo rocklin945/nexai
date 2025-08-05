@@ -33,6 +33,6 @@ public class UserRegisterRequest implements Serializable {
      * 确认密码
      */
     @NotBlank
-    @Size(min = 8, max = 16, message = "密码长度不能小于8位，不能大于16位")
+    @Size(min = 8, max = 16, message = "密码长度不能小于8位， 不能大于16位")
     private String checkPassword;
 }

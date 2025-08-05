@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
+    NOT_LOGIN_ERROR(666100, "未登录"),
     PARAMS_ERROR(666400, "参数错误"),
     NOT_FOUND(666404, "资源未找到"),
     UNAUTHORIZED(666401, "无权限"),

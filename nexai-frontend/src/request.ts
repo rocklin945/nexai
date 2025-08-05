@@ -12,7 +12,11 @@ const myAxios = axios.create({
 // 全局请求拦截器
 myAxios.interceptors.request.use(
   function (config) {
-    // Do something before request is sent
+    //自动带 token
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config
   },
   function (error) {
@@ -26,10 +30,10 @@ myAxios.interceptors.response.use(
   function (response) {
     const { data } = response
     // 未登录
-    if (data.code === 40100) {
+    if (data.statusCode === 666100) {
       // 不是获取用户信息的请求，并且用户目前不是已经在用户登录页面，则跳转到登录页面
       if (
-        !response.request.responseURL.includes('user/get/login') &&
+        !response.request.responseURL.includes('user/getCurrentUser') &&
         !window.location.pathname.includes('/user/login')
       ) {
         message.warning('请先登录')
@@ -39,7 +43,7 @@ myAxios.interceptors.response.use(
     return response
   },
   function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Any status statusCodes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(error)
   },

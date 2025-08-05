@@ -67,7 +67,7 @@ public class UserController {
     @Operation(summary = "获取当前登录用户", description = "获取当前登录用户")
     @PostMapping("/getCurrentUser")
     public BaseResponse<UserLoginVO> getCurrentUser(@RequestAttribute(USER_ID) String userId) {
-        Assert.notNull(userId, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
+        Assert.notNull(userId, ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
         UserLoginResponse currentUser = userService.getCurrentUser(Long.valueOf(userId));
         UserLoginVO userLoginVO = new UserLoginVO();
         BeanUtils.copyProperties(currentUser, userLoginVO);

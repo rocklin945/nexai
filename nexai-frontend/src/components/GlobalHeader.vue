@@ -6,7 +6,7 @@
         <RouterLink to="/">
           <div class="header-left">
             <img class="logo" src="@/assets/logo.png" alt="Logo" />
-            <h1 class="site-title">鱼皮应用生成</h1>
+            <h1 class="site-title">AI应用生成</h1>
           </div>
         </RouterLink>
       </a-col>
@@ -52,7 +52,7 @@ import { computed, h, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { userLogout } from '@/api/userController.ts'
+import { logout } from '@/api/userController.ts'
 import { LogoutOutlined, HomeOutlined } from '@ant-design/icons-vue'
 
 const loginUserStore = useLoginUserStore()
@@ -84,7 +84,7 @@ const originItems = [
   },
   {
     key: 'others',
-    label: h('a', { href: 'https://github.com/rocklin945/nexai', target: '_blank' }, '编程导航'),
+    label: h('a', { href: 'https://github.com/rocklin945/nexai', target: '_blank' }, '关于我'),
     title: '关于我',
   },
 ]
@@ -118,17 +118,23 @@ const handleMenuClick: MenuProps['onClick'] = (e) => {
 
 // 退出登录
 const doLogout = async () => {
-  const res = await userLogout()
-  if (res.data.code === 200) {
+  const res = await logout();
+  if (res.data.statusCode === 200) {
+    // 清除本地 JWT token
+    localStorage.removeItem('token');
+
+    // 重置用户信息
     loginUserStore.setLoginUser({
       userName: '未登录',
-    })
-    message.success('退出登录成功')
-    await router.push('/user/login')
+    });
+
+    message.success('退出登录成功');
+    await router.push('/user/login');
   } else {
-    message.error('退出登录失败，' + res.data.message)
+    message.error('退出登录失败，' + res.data.message);
   }
-}
+};
+
 </script>
 
 <style scoped>
