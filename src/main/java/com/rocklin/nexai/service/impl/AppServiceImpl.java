@@ -4,6 +4,8 @@ import com.rocklin.nexai.common.enums.ChatHistoryMessageTypeEnum;
 import com.rocklin.nexai.common.enums.CodeGenTypeEnum;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.exception.Assert;
+import com.rocklin.nexai.common.request.AppQueryPageListRequest;
+import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.core.AiCodeGeneratorFacade;
 import com.rocklin.nexai.mapper.AppMapper;
 import com.rocklin.nexai.model.entity.App;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 /**
  * @ClassName AppServiceImpl
@@ -69,5 +73,37 @@ public class AppServiceImpl implements AppService {
         Long result = appMapper.insert(app);
         Assert.isTrue(result > 0, "创建应用失败");
         return app.getId();
+    }
+
+    @Override
+    public String deployApp(Long appId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public App getAppById(Long id) {
+        return appMapper.queryAppById(id);
+    }
+
+    @Override
+    public void updateApp(App app) {
+        Long result = appMapper.update(app);
+        Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，更新应用失败");
+    }
+
+    @Override
+    public void deleteApp(Long id) {
+        Long result = appMapper.delete(id);
+        Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，删除应用失败");
+    }
+
+    @Override
+    public PageResponse<App> queryAppPageList(AppQueryPageListRequest req) {
+        int offset = (req.getPageNum() - 1) * req.getPageSize();
+        //总数据量，不是当前页数据量
+        long total = appMapper.countTotal(req);
+        //当前页数据
+        List<App> list = appMapper.listCurUserAppPage(req,offset,req.getPageSize());
+        return new PageResponse<>(list, total, req.getPageNum(), req.getPageSize());
     }
 }

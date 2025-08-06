@@ -17,7 +17,89 @@
         #{codeGenType},
         #{userId})
     </insert>
+    <update id="update">
+        update app
+        set
+        appName = #{appName},
+        cover = #{cover},
+        priority = #{priority}
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from app where id = #{id}
+    </delete>
     <select id="queryAppById" resultType="com.rocklin.nexai.model.entity.App">
         select * from app where id = #{id}
+    </select>
+    <select id="countTotal" resultType="java.lang.Long">
+        select count(*) from app
+        <where>
+            <if test="req != null">
+                <if test="req.id != null">
+                    id = #{req.id}
+                </if>
+                <if test="req.priority != null">
+                    priority = #{req.priority}
+                </if>
+                <if test="req.appName != null and req.appName != ''">
+                    and appName like concat('%', #{req.appName}, '%')
+                </if>
+                <if test="req.initPrompt != null and req.initPrompt != ''">
+                    and initPrompt like concat('%', #{req.initPrompt}, '%')
+                </if>
+                <if test="req.codeGenType != null and req.codeGenType != ''">
+                    and codeGenType = #{req.codeGenType}
+                </if>
+                <if test="req.deployKey != null and req.deployKey != ''">
+                    and deployKey like concat('%', #{req.deployKey}, '%')
+                </if>
+                <if test="req.priority != null">
+                    and priority = #{req.priority}
+                </if>
+                <if test="req.userId != null">
+                    and userId = #{req.userId}
+                </if>
+            </if>
+        </where>
+    </select>
+    <select id="listCurUserAppPage" resultType="com.rocklin.nexai.model.entity.App">
+        select * from app
+        <where>
+            <if test="req != null">
+                <if test="req.id != null">
+                    id = #{req.id}
+                </if>
+                <if test="req.priority != null">
+                    priority = #{req.priority}
+                </if>
+                <if test="req.appName != null and req.appName != ''">
+                    and appName like concat('%', #{req.appName}, '%')
+                </if>
+                <if test="req.initPrompt != null and req.initPrompt != ''">
+                    and initPrompt like concat('%', #{req.initPrompt}, '%')
+                </if>
+                <if test="req.codeGenType != null and req.codeGenType != ''">
+                    and codeGenType = #{req.codeGenType}
+                </if>
+                <if test="req.deployKey != null and req.deployKey != ''">
+                    and deployKey like concat('%', #{req.deployKey}, '%')
+                </if>
+                <if test="req.priority != null">
+                    and priority = #{req.priority}
+                </if>
+                <if test="req.userId != null">
+                    and userId = #{req.userId}
+                </if>
+            </if>
+        </where>
+        <choose>
+            <when test="req.sortField != null and req.sortField != ''">
+                order by ${req.sortField} ${req.sortOrder}
+            </when>
+            <otherwise>
+                order by updateTime DESC
+            </otherwise>
+        </choose>
+        limit #{offset}, #{pageSize}
     </select>
 </mapper>

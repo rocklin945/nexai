@@ -1,4 +1,71 @@
 declare namespace API {
+type App = {
+    id?: number;
+    appName?: string;
+    cover?: string;
+    initPrompt?: string;
+    codeGenType?: string;
+    deployKey?: string;
+    deployedTime?: string;
+    priority?: number;
+    userId?: number;
+    editTime?: string;
+    createTime?: string;
+    updateTime?: string;
+    isDelete?: number;
+  };
+
+  type AppAdminUpdateRequest = {
+    id: number;
+    appName?: string;
+    cover?: string;
+    priority?: number;
+  };
+
+  type AppCreateRequest = {
+    initPrompt: string;
+  };
+
+  type AppDeleteRequest = {
+    id: number;
+  };
+
+  type AppDeployRequest = {
+    appId: number;
+  };
+
+  type AppGetByIdRequest = {
+    id: number;
+  };
+
+  type AppQueryPageListRequest = {
+    pageNum?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    id?: number;
+    appName?: string;
+    initPrompt?: string;
+    codeGenType?: string;
+    deployKey?: string;
+    priority?: number;
+    userId?: number;
+    editTime?: string;
+    createTime?: string;
+    updateTime?: string;
+  };
+
+  type AppUpdateRequest = {
+    id: number;
+    appName: string;
+  };
+
+  type BaseResponseApp = {
+    statusCode?: number;
+    data?: App;
+    message?: string;
+  };
+
   type BaseResponseBoolean = {
     statusCode?: number;
     data?: boolean;

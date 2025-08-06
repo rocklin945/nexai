@@ -1,5 +1,6 @@
 package com.rocklin.nexai.common.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public class UpdateUserRequest implements Serializable {
     /**
      * id
      */
+    @NotNull(message = "id不能为空")
     private Long id;
 
     /**

@@ -30,9 +30,9 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    boolean deleteUser(Long id);
+    void deleteUser(Long id);
 
-    boolean updateUser(UpdateUserRequest req);
+    void updateUser(UpdateUserRequest req);
 
     /**
      * 分页获取用户列表（带过滤条件）

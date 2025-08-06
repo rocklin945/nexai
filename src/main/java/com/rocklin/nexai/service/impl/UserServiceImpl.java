@@ -59,9 +59,7 @@ public class UserServiceImpl implements UserService {
         user.setUserAvatar(AvatarUtil.generateRandomAvatarUrl(req.getUserAccount()));
         user.setUserProfile("这个人很懒，什么都没有留下。");
         Long res = userMapper.insert(user);
-        if (res == 0) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据库异常，注册失败");
-        }
+        Assert.isTrue(res > 0, ErrorCode.OPERATION_ERROR, "数据库异常，注册失败");
         return res;
     }
 
@@ -86,7 +84,6 @@ public class UserServiceImpl implements UserService {
     public UserLoginResponse getCurrentUser(Long userId) {
         User user = userMapper.selectById(userId);
         Assert.notNull(user, ErrorCode.OPERATION_ERROR, "用户不存在");
-
         // 构建响应对象（不返回token，因为获取当前用户时不需要重新生成token）
         UserLoginResponse response = buildUserResponse(user);
         return response;
@@ -97,7 +94,6 @@ public class UserServiceImpl implements UserService {
         // 从当前请求中获取用户ID
         String userId = getUserIdFromRequest();
         Assert.notNull(userId, ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
-
         // 调用已有的方法获取用户信息
         return getCurrentUser(Long.valueOf(userId));
     }
@@ -129,9 +125,7 @@ public class UserServiceImpl implements UserService {
         Assert.isNull(userQuery, ErrorCode.OPERATION_ERROR, "用户已存在");
         // 插入
         Long res = userMapper.insert(user);
-        if (res == 0) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据库异常，用户创建失败");
-        }
+        Assert.isTrue(res > 0, ErrorCode.OPERATION_ERROR, "数据库异常，用户创建失败");
         return user.getId();
     }
 
@@ -143,13 +137,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(Long id) {
-        return userMapper.deleteById(id) > 0;
+    public void deleteUser(Long id) {
+        Long result = userMapper.deleteById(id);
+        Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，用户删除失败");
     }
 
     @Override
-    public boolean updateUser(UpdateUserRequest req) {
-        return userMapper.updateById(req) > 0;
+    public void updateUser(UpdateUserRequest req) {
+        Long result = userMapper.updateById(req);
+        Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，用户更新失败");
     }
 
     private UserLoginResponse buildUserResponse(User user) {
@@ -167,13 +163,10 @@ public class UserServiceImpl implements UserService {
     public PageResponse<UserLoginVO> listUserByPageWithFilter(UserPageQueryRequest request) {
         // 计算偏移量
         int offset = (request.getPageNum() - 1) * request.getPageSize();
-
         // 查询总记录数（带过滤条件）
-            long total = userMapper.countTotal(request);
-
+        long total = userMapper.countTotal(request);
         // 查询用户列表（带过滤条件）
         List<User> userList = userMapper.selectListWithLimit(request, offset, request.getPageSize());
-
         // 转换为VO
         List<UserLoginVO> userLoginVOList = userList.stream()
                 .map(this::convertToUserLoginVO)

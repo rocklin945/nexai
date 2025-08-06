@@ -2,13 +2,16 @@ package com.rocklin.nexai.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.rocklin.nexai.common.annotation.AuthCheck;
 import com.rocklin.nexai.common.enums.CodeGenTypeEnum;
 import com.rocklin.nexai.common.enums.ErrorCode;
+import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
-import com.rocklin.nexai.common.request.AppCreateRequest;
-import com.rocklin.nexai.common.request.ChatToGenCodeRequest;
+import com.rocklin.nexai.common.request.*;
 import com.rocklin.nexai.common.response.BaseResponse;
+import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.model.entity.App;
+import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.AppService;
 import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -52,7 +52,7 @@ public class AppController {
     public BaseResponse<Long> createApp(@RequestBody @Validated AppCreateRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         // 获取当前登录用户id
-        Long userId= userService.getCurrentUser().getUserId();
+        Long userId = userService.getCurrentUser().getUserId();
         String initPrompt = req.getInitPrompt();
         // 创建应用
         App app = new App();
@@ -74,12 +74,13 @@ public class AppController {
     public Flux<ServerSentEvent<String>> chatToGenCode(@RequestBody @Validated ChatToGenCodeRequest req) {
         // 参数校验
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
-        Assert.isTrue(req.getAppId()!= null && req.getAppId() > 0,
+        Assert.isTrue(req.getAppId() != null && req.getAppId() > 0,
                 ErrorCode.PARAMS_ERROR, "应用id错误");
         // 获取当前登录用户id
-        Long userId= userService.getCurrentUser().getUserId();
+        Long userId = userService.getCurrentUser().getUserId();
         // 调用服务生成代码（SSE 流式返回）
-        Flux<String> contentFlux = appService.chatToGenCode(req.getAppId(), req.getMessage(), userId);
+        Flux<String> contentFlux = appService
+                .chatToGenCode(req.getAppId(), req.getMessage(), userId);
         return contentFlux
                 .map(chunk -> {
                     Map<String, String> wrapper = Map.of(CHUNK_DATA, chunk);
@@ -95,5 +96,138 @@ public class AppController {
                                 .data("")
                                 .build()
                 ));
+    }
+
+    /**
+     * 应用部署
+     */
+    @Operation(summary = "应用部署", description = "应用部署")
+    @PostMapping("/deploy")
+    public BaseResponse<String> deployApp(@RequestBody @Validated AppDeployRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        Long userId = userService.getCurrentUser().getUserId();
+        String deployUrl = appService.deployApp(req.getAppId(), userId);
+        // 返回部署 URL
+        return BaseResponse.success(deployUrl);
+    }
+
+    /**
+     * 更新应用（用户只能更新自己的应用名称）
+     */
+    @Operation(summary = "更新应用", description = "更新应用")
+    @PostMapping("/update")
+    public BaseResponse<Boolean> updateApp(@RequestBody @Validated AppUpdateRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        Long userId = userService.getCurrentUser().getUserId();
+        App app = appService.getAppById(req.getId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        Assert.isTrue(userId == app.getUserId(),
+                ErrorCode.UNAUTHORIZED, "只能更新自己的应用名称");
+        app.setAppName(req.getAppName());
+        appService.updateApp(app);
+        return BaseResponse.success();
+    }
+
+    /**
+     * 删除应用（用户只能删除自己的应用）
+     */
+    @Operation(summary = "删除应用", description = "删除应用")
+    @PostMapping("/delete")
+    public BaseResponse<Boolean> deleteApp(@RequestBody @Validated AppDeleteRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        UserLoginResponse currentUser = userService.getCurrentUser();
+        App app = appService.getAppById(req.getId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        Assert.isTrue(currentUser.getUserId() == app.getUserId() ||
+                        currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
+                ErrorCode.UNAUTHORIZED, "仅本人或管理员可删除");
+        appService.deleteApp(req.getId());
+        return BaseResponse.success();
+    }
+
+    /**
+     * 根据appId获取应用详情
+     */
+    @Operation(summary = "根据appId获取应用详情", description = "根据appId获取应用详情")
+    @PostMapping("/getById")
+    public BaseResponse<App> getAppById(@RequestBody @Validated AppGetByIdRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        UserLoginResponse currentUser = userService.getCurrentUser();
+        Long userId = currentUser.getUserId();
+        App app = appService.getAppById(req.getId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        Assert.isTrue(app.getUserId().equals(userId) ||
+                        currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
+                ErrorCode.UNAUTHORIZED, "无权限访问");
+        return BaseResponse.success(app);
+    }
+
+    /**
+     * 分页获取当前用户创建的应用列表
+     */
+    @Operation(summary = "分页获取当前用户应用列表", description = "分页获取当前用户应用列表")
+    @PostMapping("curUser/list/page")
+    public BaseResponse<PageResponse<App>> listCurUserAppPage(@RequestBody @Validated AppQueryPageListRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        Assert.isTrue(req.getPageSize() <= 20,
+                ErrorCode.PARAMS_ERROR, "每页最多查询 20 个应用");
+        Long userId = userService.getCurrentUser().getUserId();
+        req.setUserId(userId);
+        return BaseResponse.success(appService.queryAppPageList(req));
+    }
+
+    /**
+     * 管理员删除应用
+     */
+    @Operation(summary = "管理员删除应用", description = "管理员删除应用")
+    @PostMapping("/admin/delete")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<Boolean> deleteAppByAdmin(@RequestBody @Validated DeleteRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        App app = appService.getAppById(req.getId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        appService.deleteApp(req.getId());
+        return BaseResponse.success();
+    }
+
+    /**
+     * 管理员更新应用
+     */
+    @Operation(summary = "管理员更新应用", description = "管理员更新应用")
+    @PostMapping("/admin/update")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<Boolean> updateAppByAdmin(@RequestBody @Validated AppAdminUpdateRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        App app = appService.getAppById(req.getId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        app.setAppName(StrUtil.isBlank(req.getAppName()) ? app.getAppName() : req.getAppName());
+        app.setCover(StrUtil.isBlank(req.getCover()) ? app.getCover() : req.getCover());
+        app.setPriority(req.getPriority() == null ? app.getPriority() : req.getPriority());
+        appService.updateApp(app);
+        return BaseResponse.success();
+    }
+
+    /**
+     * 管理员分页获取应用列表
+     */
+    @Operation(summary = "管理员分页获取应用列表", description = "管理员分页获取应用列表")
+    @PostMapping("/admin/list/page")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<PageResponse<App>> listAppPageByAdmin(@RequestBody @Validated AppQueryPageListRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        return BaseResponse.success(appService.queryAppPageList(req));
+    }
+
+    /**
+     * 管理员根据 id 获取应用详情
+     */
+    @Operation(summary = "管理员根据id获取应用详情", description = "管理员根据id获取应用详情")
+    @PostMapping("/admin/getAppById")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    public BaseResponse<App> getAppVOByIdByAdmin(@RequestBody @Validated AppGetByIdRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        App app = appService.getAppById(req.getId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        return BaseResponse.success(app);
     }
 }

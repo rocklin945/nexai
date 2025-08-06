@@ -1,5 +1,7 @@
 package com.rocklin.nexai.service;
 
+import com.rocklin.nexai.common.request.AppQueryPageListRequest;
+import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.model.entity.App;
 import reactor.core.publisher.Flux;
 
@@ -14,4 +16,14 @@ public interface AppService {
     Flux<String> chatToGenCode(Long appId, String message, Long userId);
 
     Long createApp(App app);
+
+    String deployApp(Long appId, Long userId);
+
+    App getAppById(Long id);
+
+    void updateApp(App app);
+
+    void deleteApp(Long id);
+
+    PageResponse<App> queryAppPageList(AppQueryPageListRequest req);
 }

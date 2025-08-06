@@ -1,23 +1,23 @@
-package com.rocklin.nexai.model.entity;
+package com.rocklin.nexai.common.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 应用 实体类。
+ * @ClassName AppCurUserListRequest
+ * @Description 获取当前用户应用列表请求
+ * @Author: rocklin
+ * @Date 2025/8/6 16:58
+ * @Version 1.0
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class App implements Serializable {
+public class AppQueryPageListRequest extends PageRequest implements Serializable {
     /**
-     * id
+     * appId
      */
     private Long id;
 
@@ -25,11 +25,6 @@ public class App implements Serializable {
      * 应用名称
      */
     private String appName;
-
-    /**
-     * 应用封面
-     */
-    private String cover;
 
     /**
      * 应用初始化的 prompt
@@ -45,11 +40,6 @@ public class App implements Serializable {
      * 部署标识
      */
     private String deployKey;
-
-    /**
-     * 部署时间
-     */
-    private LocalDateTime deployedTime;
 
     /**
      * 优先级 默认为0 精选为1
@@ -75,10 +65,4 @@ public class App implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
-
-    /**
-     * 是否删除
-     */
-    private Integer isDelete;
-
 }

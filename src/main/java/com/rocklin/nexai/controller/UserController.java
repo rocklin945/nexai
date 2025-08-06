@@ -128,7 +128,10 @@ public class UserController {
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
     public BaseResponse<Boolean> deleteUser(@RequestParam Long id) {
         Assert.notNull(id, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
-        return BaseResponse.success(userService.deleteUser(id));
+        User userById = userService.getUserById(id);
+        Assert.notNull(userById, ErrorCode.OPERATION_ERROR, "用户不存在");
+        userService.deleteUser(id);
+        return BaseResponse.success();
     }
 
     /**
@@ -140,7 +143,10 @@ public class UserController {
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
     public BaseResponse<Boolean> updateUser(@RequestBody @Validated UpdateUserRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "用户更新数据不能为空");
-        return BaseResponse.success(userService.updateUser(req));
+        User userById = userService.getUserById(req.getId());
+        Assert.notNull(userById, ErrorCode.OPERATION_ERROR, "用户不存在");
+        userService.updateUser(req);
+        return BaseResponse.success();
     }
 
     /**
