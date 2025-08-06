@@ -1,11 +1,6 @@
 spring:
   application:
     name: nexai
-  # session ??
-  session:
-    store-type: redis
-    # session 30 ???
-    timeout: 2592000
   # mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
