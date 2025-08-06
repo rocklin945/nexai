@@ -30,13 +30,13 @@
 
 <script setup lang="ts">
 interface Props {
-  app: API.AppVO
+  app: API.App
   featured?: boolean
 }
 
 interface Emits {
   (e: 'view-chat', appId: string | number | undefined): void
-  (e: 'view-work', app: API.AppVO): void
+  (e: 'view-work', app: API.App): void
 }
 
 const props = withDefaults(defineProps<Props>(), {

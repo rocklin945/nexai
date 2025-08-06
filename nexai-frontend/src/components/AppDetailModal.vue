@@ -49,7 +49,7 @@ import { formatTime } from '@/utils/time'
 
 interface Props {
   open: boolean
-  app?: API.AppVO
+  app?: API.App
   showActions?: boolean
 }
 
