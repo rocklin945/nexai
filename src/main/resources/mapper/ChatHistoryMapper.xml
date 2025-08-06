@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rocklin.nexai.mapper.ChatHistoryMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into chat_history
+        (id,
+        message,
+        messageType,
+        appId,
+        userId)
+        values
+        (UUID_SHORT(),
+        #{message},
+        #{messageType},
+        #{appId},
+        #{userId})
+    </insert>
+    <select id="selectListByAppId" resultType="com.rocklin.nexai.model.entity.ChatHistory">
+        select * from chat_history where appId = #{appId}
+        order by createTime ASC
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+</mapper>
