@@ -76,8 +76,6 @@ public class AppController {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getAppId()!= null && req.getAppId() > 0,
                 ErrorCode.PARAMS_ERROR, "应用id错误");
-        Assert.isTrue(!StrUtil.isBlank(req.getMessage()),
-                ErrorCode.PARAMS_ERROR, "提示词不能为空");
         // 获取当前登录用户id
         Long userId= userService.getCurrentUser().getUserId();
         // 调用服务生成代码（SSE 流式返回）

@@ -42,6 +42,7 @@ public class AppServiceImpl implements AppService {
         chatHistoryService.createHistory(appId, message,
                 ChatHistoryMessageTypeEnum.USER.getValue(), userId);
         //调用 AI 生成代码（流式）
+        //todo 可选非流式
         Flux<String> contentFlux = aiCodeGeneratorFacade
                 .generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
         //收集 AI 响应的内容，并且在完成后保存记录到对话历史
