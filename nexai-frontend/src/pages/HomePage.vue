@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
-// import { addApp, listMyAppVoByPage, listGoodAppVoByPage } from '@/api/appController'
+import { createApp, listCurUserAppPage, listGoodAppByPage } from '@/api/appController'
 import { getDeployUrl } from '@/config/env'
 // import AppCard from '@/components/AppCard.vue'
 
@@ -15,7 +15,7 @@ const userPrompt = ref('')
 const creating = ref(false)
 
 // 我的应用数据
-const myApps = ref<API.AppVO[]>([])
+const myApps = ref<API.App[]>([])
 const myAppsPage = reactive({
   current: 1,
   pageSize: 6,
@@ -23,7 +23,7 @@ const myAppsPage = reactive({
 })
 
 // 精选应用数据
-const featuredApps = ref<API.AppVO[]>([])
+const featuredApps = ref<API.App[]>([])
 const featuredAppsPage = reactive({
   current: 1,
   pageSize: 6,
@@ -38,13 +38,13 @@ const setPrompt = (prompt: string) => {
 // 优化提示词功能已移除
 
 // 创建应用
-const createApp = async () => {
+const generateApp = async () => {
   if (!userPrompt.value.trim()) {
     message.warning('请输入应用描述')
     return
   }
 
-  if (!loginUserStore.loginUser.id) {
+  if (!loginUserStore.loginUser.userId) {
     message.warning('请先登录')
     await router.push('/user/login')
     return
@@ -52,11 +52,11 @@ const createApp = async () => {
 
   creating.value = true
   try {
-    const res = await addApp({
+    const res = await createApp({
       initPrompt: userPrompt.value.trim(),
     })
 
-    if (res.data.statusCode === 0 && res.data.data) {
+    if (res.data.statusCode === 200 && res.data.data) {
       message.success('应用创建成功')
       // 跳转到对话页面，确保ID是字符串类型
       const appId = String(res.data.data)
@@ -74,21 +74,21 @@ const createApp = async () => {
 
 // 加载我的应用
 const loadMyApps = async () => {
-  if (!loginUserStore.loginUser.id) {
+  if (!loginUserStore.loginUser.userId) {
     return
   }
 
   try {
-    const res = await listMyAppVoByPage({
+    const res = await listCurUserAppPage({
       pageNum: myAppsPage.current,
       pageSize: myAppsPage.pageSize,
       sortField: 'createTime',
       sortOrder: 'desc',
     })
 
-    if (res.data.statusCode === 0 && res.data.data) {
-      myApps.value = res.data.data.records || []
-      myAppsPage.total = res.data.data.totalRow || 0
+    if (res.data.statusCode === 200 && res.data.data) {
+      myApps.value = res.data.data.list || []
+      myAppsPage.total = res.data.data.total || 0
     }
   } catch (error) {
     console.error('加载我的应用失败：', error)
@@ -98,16 +98,16 @@ const loadMyApps = async () => {
 // 加载精选应用
 const loadFeaturedApps = async () => {
   try {
-    const res = await listGoodAppVoByPage({
+    const res = await listGoodAppByPage({
       pageNum: featuredAppsPage.current,
       pageSize: featuredAppsPage.pageSize,
       sortField: 'createTime',
       sortOrder: 'desc',
     })
 
-    if (res.data.statusCode === 0 && res.data.data) {
-      featuredApps.value = res.data.data.records || []
-      featuredAppsPage.total = res.data.data.totalRow || 0
+    if (res.data.statusCode === 200 && res.data.data) {
+      featuredApps.value = res.data.data.list || []
+      featuredAppsPage.total = res.data.data.total || 0
     }
   } catch (error) {
     console.error('加载精选应用失败：', error)
@@ -122,7 +122,7 @@ const viewChat = (appId: string | number | undefined) => {
 }
 
 // 查看作品
-const viewWork = (app: API.AppVO) => {
+const viewWork = (app: API.App) => {
   if (app.deployKey) {
     const url = getDeployUrl(app.deployKey)
     window.open(url, '_blank')

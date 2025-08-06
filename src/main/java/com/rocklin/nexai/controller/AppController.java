@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 import static com.rocklin.nexai.common.constants.Constants.CHUNK_DATA;
+import static com.rocklin.nexai.common.constants.Constants.GOOD_APP;
 
 /**
  * @ClassName AppController
@@ -177,8 +178,21 @@ public class AppController {
     }
 
     /**
-     * 管理员删除应用
+     * 分页获取精选的应用列表
      */
+    @Operation(summary = "分页获取精选的应用列表", description = "分页获取精选的应用列表")
+    @PostMapping("/good/list/page")
+    public BaseResponse<PageResponse<App>> listGoodAppByPage(@RequestBody @Validated AppQueryPageListRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        Assert.isTrue(req.getPageSize() <= 20,
+                ErrorCode.PARAMS_ERROR, "每页最多查询 20 个应用");
+        req.setPriority(GOOD_APP);
+        return BaseResponse.success(appService.queryAppPageList(req));
+    }
+
+        /**
+         * 管理员删除应用
+         */
     @Operation(summary = "管理员删除应用", description = "管理员删除应用")
     @PostMapping("/admin/delete")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)

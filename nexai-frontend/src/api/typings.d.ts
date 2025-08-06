@@ -78,6 +78,12 @@ type App = {
     message?: string;
   };
 
+  type BaseResponsePageResponseApp = {
+    statusCode?: number;
+    data?: PageResponseApp;
+    message?: string;
+  };
+
   type BaseResponsePageResponseUserLoginVO = {
     statusCode?: number;
     data?: PageResponseUserLoginVO;
@@ -114,12 +120,31 @@ type App = {
     message?: string;
   };
 
+  type ChatToGenCodeRequest = {
+    appId: number;
+    message: string;
+  };
+
+  type DeleteRequest = {
+    id: number;
+  };
+
   type deleteUserParams = {
     id: number;
   };
 
   type getByIdParams = {
     id: number;
+  };
+
+  type PageResponseApp = {
+    list?: App[];
+    total?: number;
+    pageNum?: number;
+    pageSize?: number;
+    pages?: number;
+    hasNext?: boolean;
+    hasPrevious?: boolean;
   };
 
   type PageResponseUserLoginVO = {
@@ -132,8 +157,10 @@ type App = {
     hasPrevious?: boolean;
   };
 
+  type ServerSentEventString = true;
+
   type UpdateUserRequest = {
-    id?: number;
+    id: number;
     userName?: string;
     userAvatar?: string;
     userProfile?: string;

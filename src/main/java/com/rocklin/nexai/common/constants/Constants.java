@@ -30,4 +30,8 @@ public final class Constants {
      */
     public static final String CODE_OUTPUT_ROOT_DIR = System.getProperty("user.dir")
                                                     + "/tmp/code_output";
+    /**
+     * 精选应用
+     */
+    public static final Integer GOOD_APP = 1;
 }

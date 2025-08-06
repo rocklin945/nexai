@@ -4,7 +4,9 @@
 // API 唯一标识：
 import * as userController from "./userController";
 import * as healthCheckController from "./healthCheckController";
+import * as appController from "./appController";
 export default {
   userController,
   healthCheckController,
+  appController
 };

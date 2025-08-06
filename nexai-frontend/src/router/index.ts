@@ -3,9 +3,9 @@ import HomePage from '@/pages/HomePage.vue'
 import UserLoginPage from '@/pages/user/UserLoginPage.vue'
 import UserRegisterPage from '@/pages/user/UserRegisterPage.vue'
 import UserManagePage from '@/pages/admin/UserManagePage.vue'
-// import AppManagePage from '@/pages/admin/AppManagePage.vue'
-// import AppChatPage from '@/pages/app/AppChatPage.vue'
-// import AppEditPage from '@/pages/app/AppEditPage.vue'
+import AppManagePage from '@/pages/admin/AppManagePage.vue'
+import AppChatPage from '@/pages/app/AppChatPage.vue'
+import AppEditPage from '@/pages/app/AppEditPage.vue'
 // import ChatManagePage from "@/pages/admin/ChatManagePage.vue";
 
 const router = createRouter({
@@ -31,26 +31,26 @@ const router = createRouter({
       name: '用户管理',
       component: UserManagePage,
     },
-    // {
-    //   path: '/admin/appManage',
-    //   name: '应用管理',
-    //   component: AppManagePage,
-    // },
+    {
+      path: '/admin/appManage',
+      name: '应用管理',
+      component: AppManagePage,
+    },
     // {
     //   path: '/admin/chatManage',
     //   name: '对话管理',
     //   component: ChatManagePage,
     // },
-    // {
-    //   path: '/app/chat/:id',
-    //   name: '应用对话',
-    //   component: AppChatPage,
-    // },
-    // {
-    //   path: '/app/edit/:id',
-    //   name: '编辑应用',
-    //   component: AppEditPage,
-    // },
+    {
+      path: '/app/chat/:id',
+      name: '应用对话',
+      component: AppChatPage,
+    },
+    {
+      path: '/app/edit/:id',
+      name: '编辑应用',
+      component: AppEditPage,
+    },
   ],
 })
 
