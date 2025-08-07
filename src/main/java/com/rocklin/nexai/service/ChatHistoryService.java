@@ -1,6 +1,11 @@
 package com.rocklin.nexai.service;
 
+import com.rocklin.nexai.common.request.ChatHistoryQueryRequest;
+import com.rocklin.nexai.common.response.PageResponse;
+import com.rocklin.nexai.model.entity.ChatHistory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+
+import java.time.LocalDateTime;
 
 /**
  * @ClassName ChatHistoryService
@@ -13,4 +18,6 @@ public interface ChatHistoryService {
     Long createHistory(Long appId, String message, String messageType, Long userId);
 
     Integer loadChatHistoryToMemory(long appId, MessageWindowChatMemory chatMemory, int maxContextSize);
+
+    PageResponse<ChatHistory> listAppChatHistoryByPage(ChatHistoryQueryRequest req);
 }

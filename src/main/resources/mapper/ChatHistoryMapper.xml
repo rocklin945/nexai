@@ -24,4 +24,20 @@
             limit #{offset}, #{limit}
         </if>
     </select>
+    <select id="selectAppChatHistoryByCursor" resultType="com.rocklin.nexai.model.entity.ChatHistory">
+        SELECT *
+        FROM chat_history
+        WHERE appId = #{req.appId}
+        <if test="req.userId != null">
+            AND userId = #{req.userId}
+        </if>
+        <if test="req.lastCreateTime != null">
+            AND createTime &lt; #{req.lastCreateTime}
+        </if>
+        <if test="req.messageType != null">
+            AND messageType = #{req.messageType}
+        </if>
+        ORDER BY createTime DESC
+        LIMIT #{req.pageSize}
+    </select>
 </mapper>

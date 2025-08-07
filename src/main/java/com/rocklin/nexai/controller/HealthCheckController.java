@@ -1,7 +1,5 @@
 package com.rocklin.nexai.controller;
 
-import com.rocklin.nexai.common.enums.ErrorCode;
-import com.rocklin.nexai.common.exception.BusinessException;
 import com.rocklin.nexai.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

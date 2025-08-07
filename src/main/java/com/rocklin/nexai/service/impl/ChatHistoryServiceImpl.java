@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.rocklin.nexai.common.enums.ChatHistoryMessageTypeEnum;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.exception.Assert;
+import com.rocklin.nexai.common.request.ChatHistoryQueryRequest;
+import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.mapper.ChatHistoryMapper;
 import com.rocklin.nexai.model.entity.ChatHistory;
 import com.rocklin.nexai.service.ChatHistoryService;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.rocklin.nexai.common.constants.Constants.OFFSET;
@@ -66,6 +69,15 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
             // 加载失败不影响系统运行，只是没有历史上下文
             return 0;
         }
+    }
+
+    @Override
+    public PageResponse<ChatHistory> listAppChatHistoryByPage(ChatHistoryQueryRequest req) {
+        List<ChatHistory> records = chatHistoryMapper.selectAppChatHistoryByCursor(req);
+        PageResponse<ChatHistory> pageResponse = new PageResponse<>();
+        pageResponse.setList(records);
+        pageResponse.setPageSize(req.getPageSize());
+        return pageResponse;
     }
 
     private static int historyToMemory(long appId, MessageWindowChatMemory chatMemory, List<ChatHistory> chatHistoryList) {

@@ -1,5 +1,6 @@
 package com.rocklin.nexai.mapper;
 
+import com.rocklin.nexai.common.request.ChatHistoryQueryRequest;
 import com.rocklin.nexai.model.entity.ChatHistory;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,4 +12,6 @@ public interface ChatHistoryMapper {
     Long insert(ChatHistory chatHistory);
 
     List<ChatHistory> selectListByAppId(@Param("appId") long appId, @Param("offset") int offset, @Param("limit") int limit);
+
+    List<ChatHistory> selectAppChatHistoryByCursor(@Param("req") ChatHistoryQueryRequest req);
 }
