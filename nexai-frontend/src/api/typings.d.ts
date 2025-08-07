@@ -239,7 +239,7 @@ type App = {
     message?: string;
   };
 
-  type UserGoodAppVo {
+  type UserGoodAppVo = {
     id: number;
     userName: string;
     userAvatar: string;
