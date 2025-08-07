@@ -116,7 +116,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
 import { getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi } from '@/api/appController'
-// import { listAppChatHistory } from '@/api/chatHistoryController'
+import { listAppChatHistory } from '@/api/chatHistoryController'
 import { CodeGenTypeEnum } from '@/utils/codeGenTypes'
 import request from '@/request'
 
@@ -191,7 +191,7 @@ const loadChatHistory = async (isLoadMore = false) => {
   if (!appId.value || loadingHistory.value) return
   loadingHistory.value = true
   try {
-    const params: API.listAppChatHistoryParams = {
+    const params: API.ChatHistoryQueryRequest = {
       appId: appId.value,
       pageSize: 10,
     }
@@ -200,8 +200,8 @@ const loadChatHistory = async (isLoadMore = false) => {
       params.lastCreateTime = lastCreateTime.value
     }
     const res = await listAppChatHistory(params)
-    if (res.data.code === 0 && res.data.data) {
-      const chatHistories = res.data.data.records || []
+    if (res.data.statusCode === 200 && res.data.data) {
+      const chatHistories = res.data.data.list || []
       if (chatHistories.length > 0) {
         // 将对话历史转换为消息格式，并按时间正序排列（老消息在前）
         const historyMessages: Message[] = chatHistories

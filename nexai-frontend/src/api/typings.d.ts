@@ -84,6 +84,12 @@ type App = {
     message?: string;
   };
 
+  type BaseResponsePageResponseChatHistory = {
+    statusCode?: number;
+    data?: PageResponseChatHistory;
+    message?: string;
+  };
+
   type BaseResponsePageResponseUserLoginVO = {
     statusCode?: number;
     data?: PageResponseUserLoginVO;
@@ -120,6 +126,30 @@ type App = {
     message?: string;
   };
 
+  type ChatHistory = {
+    id?: number;
+    message?: string;
+    messageType?: string;
+    appId?: number;
+    userId?: number;
+    createTime?: string;
+    updateTime?: string;
+    isDelete?: number;
+  };
+
+  type ChatHistoryQueryRequest = {
+    pageNum?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    id?: number;
+    message?: string;
+    messageType?: string;
+    appId: number;
+    userId?: number;
+    lastCreateTime?: string;
+  };
+
   type ChatToGenCodeRequest = {
     appId: number;
     message: string;
@@ -139,6 +169,16 @@ type App = {
 
   type PageResponseApp = {
     list?: App[];
+    total?: number;
+    pageNum?: number;
+    pageSize?: number;
+    pages?: number;
+    hasNext?: boolean;
+    hasPrevious?: boolean;
+  };
+
+  type PageResponseChatHistory = {
+    list?: ChatHistory[];
     total?: number;
     pageNum?: number;
     pageSize?: number;
