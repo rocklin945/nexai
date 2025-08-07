@@ -36,9 +36,19 @@ const featuredAppUserInfo = ref<API.UserGoodAppVo[]>([])
 
 const userMap = computed<Record<string, API.UserGoodAppVo>>(() => {
   const map: Record<string, API.UserGoodAppVo> = {}
-  featuredAppUserInfo.value.forEach(user => {
-    map[user.id] = user
-  })
+  if (featuredAppUserInfo.value && featuredAppUserInfo.value.length > 0) {
+    featuredAppUserInfo.value.forEach(user => {
+      if (user && user.id) {
+        // 确保使用正确的ID字段作为键
+        const userId = String(user.id)
+        map[userId] = user
+      } else {
+        console.warn('发现无效的用户信息数据：', user)
+      }
+    })
+  } else {
+    console.warn('featuredAppUserInfo为空，无法创建用户映射')
+  }
   return map
 })
 
@@ -129,12 +139,23 @@ const loadFeaturedApps = async () => {
 // 加载精选应用用户信息
 const loadFeaturedAppUsers = async () => {
   try {
-    console.log(featuredApps.value)
-    const res = await getGoodAppUserInfo(featuredApps.value.map((app) => app.userId))
+    if (!featuredApps.value || featuredApps.value.length === 0) {
+      console.warn('没有精选应用数据，无法加载用户信息')
+      return
+    }
+    const userIds = featuredApps.value.map((app) => app.userId).filter(id => id)
+    console.log('准备加载精选应用用户信息，用户ID列表：', userIds)
+    if (userIds.length === 0) {
+      console.warn('没有有效的用户ID，无法加载用户信息')
+      return
+    }
+    const res = await getGoodAppUserInfo(userIds)
     if (res.data.statusCode === 200 && res.data.data) {
       featuredAppUserInfo.value = res.data.data
+      console.log('用户信息数据已更新：', featuredAppUserInfo.value)
+    } else {
+      console.warn('用户信息API返回异常状态：', res.data.statusCode, res.data.message)
     }
-    console.log('featuredAppUserInfo', featuredAppUserInfo.value)
   } catch (error) {
     console.error('加载精选应用用户信息失败：', error)
   }
@@ -142,6 +163,7 @@ const loadFeaturedAppUsers = async () => {
 watch(featuredApps, (newVal) => {
   if (newVal.length > 0) {
     loadFeaturedAppUsers()
+  } else {
   }
 })
 
@@ -251,13 +273,18 @@ onMounted(() => {
       <div class="section">
         <h2 class="section-title">精选案例</h2>
         <div class="featured-grid">
-          <template v-if="featuredApps?.length && userMap && userMap.value">
-            <AppCard v-for="app in featuredApps" :key="app?.id" v-if="app && app.userId && userMap.value[app.userId]"
-              :app="app" :userName="userMap.value[app.userId]?.userName || ''"
-              :userAvatar="userMap.value[app.userId]?.userAvatar || ''" :featured="true" @view-chat="viewChat"
+          <template v-if="featuredApps?.length">
+            <AppCard v-for="app in featuredApps" :key="app?.id" 
+              :app="app" 
+              :userName="app.userId && userMap[app.userId]?.userName || '未知用户'" 
+              :userAvatar="app.userId && userMap[app.userId]?.userAvatar || ''" 
+              :featured="true" 
+              @view-chat="viewChat"
               @view-work="viewWork" />
           </template>
-
+          <div v-else class="no-data-message">
+            暂无精选案例
+          </div>
         </div>
         <div class="pagination-wrapper">
           <a-pagination v-model:current="featuredAppsPage.current" v-model:page-size="featuredAppsPage.pageSize"
