@@ -9,6 +9,8 @@ import com.rocklin.nexai.model.entity.User;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.model.vo.UserLoginVO;
 
+import java.util.List;
+
 public interface UserService {
     Long register(UserRegisterRequest req);
 
@@ -38,4 +40,6 @@ public interface UserService {
      * 分页获取用户列表（带过滤条件）
      */
     PageResponse<UserLoginVO> listUserByPageWithFilter(UserPageQueryRequest request);
+
+    List<User> batchGetUserById(List<Long> ids);
 }

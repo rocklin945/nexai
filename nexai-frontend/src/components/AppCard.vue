@@ -2,8 +2,8 @@
   <div class="app-card" :class="{ 'app-card--featured': featured }">
     <div class="app-preview">
       <img v-if="app.cover" :src="app.cover" :alt="app.appName" />
-      <div v-else class="app-placeholder">
-        <span>🤖</span>
+      <div v-else>
+        <a-empty description="暂无封面" image-style="{ height: 50, width: 80 }" />
       </div>
       <div class="app-overlay">
         <a-space>
@@ -14,14 +14,14 @@
     </div>
     <div class="app-info">
       <div class="app-info-left">
-        <a-avatar :src="app.user?.userAvatar" :size="40">
-          {{ app.user?.userName?.charAt(0) || 'U' }}
+        <a-avatar :src="userAvatar" :size="40">
+          {{ userName?.charAt(0) || 'U' }}
         </a-avatar>
       </div>
       <div class="app-info-right">
         <h3 class="app-title">{{ app.appName || '未命名应用' }}</h3>
         <p class="app-author">
-          {{ app.user?.userName || (featured ? '官方' : '未知用户') }}
+          {{ userName || (featured ? '官方' : '未知用户') }}
         </p>
       </div>
     </div>
@@ -31,6 +31,8 @@
 <script setup lang="ts">
 interface Props {
   app: API.App
+  userName: string
+  userAvatar: string
   featured?: boolean
 }
 
@@ -87,11 +89,6 @@ const handleViewWork = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.app-placeholder {
-  font-size: 48px;
-  color: #d9d9d9;
 }
 
 .app-overlay {

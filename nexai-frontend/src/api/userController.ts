@@ -122,3 +122,14 @@ export async function updateUser(
     ...(options || {}),
   });
 }
+
+/** 获取精选作品用户信息 */
+export async function getGoodAppUserInfo(ids: number[]) {
+  return request<API.BaseResponseUserList>('/user/getGoodAppUserInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: ids,
+  });
+}

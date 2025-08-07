@@ -56,7 +56,7 @@
     </select>
 
     <select id="selectListWithLimit" resultType="com.rocklin.nexai.model.entity.User">
-        select * from user 
+        select * from user
         <where>
             <if test="req != null">
                 <if test="req.id != null">
@@ -78,7 +78,7 @@
         </where>
         <choose>
             <when test="req != null and req.sortField != null and req.sortField != ''">
-                order by 
+                order by
                 <choose>
                     <when test="req.sortField == 'userId'">id</when>
                     <when test="req.sortField == 'userName'">userName</when>
@@ -118,6 +118,21 @@
                 <if test="req.userProfile != null and req.userProfile != ''">
                     and userProfile like concat('%', #{req.userProfile}, '%')
                 </if>
+            </if>
+        </where>
+    </select>
+    <select id="batchGetUserById" resultType="com.rocklin.nexai.model.entity.User">
+        select id, userName, userAvatar
+        from user
+        <where>
+            <if test="ids != null and ids.size() > 0">
+                id in
+                <foreach item="item" collection="ids" separator="," open="(" close=")" index="index">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="ids == null or ids.size() == 0">
+                1=0
             </if>
         </where>
     </select>

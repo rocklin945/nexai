@@ -56,9 +56,9 @@
             </a-select>
           </a-form-item>
         </a-col>
-        <a-col :span="6" style="text-align: right;">
+        <a-col :span="6">
           <a-form-item>
-            <a-button type="primary" html-type="submit" ghost>搜索</a-button>
+            <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
           </a-form-item>
         </a-col>
       </a-row>
@@ -85,16 +85,19 @@
           {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button danger @click="doDelete(record.userId)">删除</a-button>
+          <a-popconfirm title="确定要删除这个应用吗？" ok-text="Yes" cancel-text="No" @confirm="doDelete(record.userId)">
+            <a-button danger size="small">删除</a-button>
+          </a-popconfirm>
         </template>
       </template>
     </a-table>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, h } from 'vue'
 import { deleteUser, listUserByPage } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
 const columns = [

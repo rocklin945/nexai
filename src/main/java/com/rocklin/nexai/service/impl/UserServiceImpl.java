@@ -175,6 +175,11 @@ public class UserServiceImpl implements UserService {
         return new PageResponse<>(userLoginVOList, total, request.getPageNum(), request.getPageSize());
     }
 
+    @Override
+    public List<User> batchGetUserById(List<Long> ids) {
+        return userMapper.batchGetUserById(ids);
+    }
+
     private UserLoginVO convertToUserLoginVO(User user) {
         UserLoginVO vo = new UserLoginVO();
         vo.setUserId(user.getId());

@@ -232,4 +232,16 @@ type App = {
     userPassword: string;
     checkPassword: string;
   };
+
+  type BaseResponseUserList = {
+    statusCode?: number;
+    data?: UserGoodAppVo[];
+    message?: string;
+  };
+
+  type UserGoodAppVo {
+    id: number;
+    userName: string;
+    userAvatar: string;
+  };
 }

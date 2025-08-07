@@ -42,7 +42,7 @@ public class AppQueryPageListRequest extends PageRequest implements Serializable
     private String deployKey;
 
     /**
-     * 优先级 默认为0 精选为1
+     * 优先级 默认为0 精选为99
      */
     private Integer priority;
 

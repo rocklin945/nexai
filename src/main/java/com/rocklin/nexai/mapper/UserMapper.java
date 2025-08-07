@@ -40,4 +40,6 @@ public interface UserMapper {
      * 查询总记录数（带过滤条件）
      */
     long countTotal(@Param("req") UserPageQueryRequest req);
+
+    List<User> batchGetUserById(@Param("ids") List<Long> ids);
 }

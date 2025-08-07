@@ -1,43 +1,71 @@
 <template>
   <div id="appManagePage">
     <!-- 搜索表单 -->
-    <a-form layout="inline" :model="searchParams" @finish="doSearch">
-      <a-form-item label="应用名称">
-        <a-input v-model:value="searchParams.appName" placeholder="输入应用名称" />
-      </a-form-item>
-      <a-form-item label="创建者">
-        <a-input v-model:value="searchParams.userId" placeholder="输入用户ID" />
-      </a-form-item>
-      <a-form-item label="生成类型">
-        <a-select
-          v-model:value="searchParams.codeGenType"
-          placeholder="选择生成类型"
-          style="width: 150px"
-        >
-          <a-select-option value="">全部</a-select-option>
-          <a-select-option
-            v-for="option in CODE_GEN_TYPE_OPTIONS"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" html-type="submit">搜索</a-button>
-      </a-form-item>
+    <a-form :model="searchParams" @finish="doSearch">
+      <a-row :gutter="40">
+        <a-col :span="6">
+          <a-form-item label="ID">
+            <a-input v-model:value="searchParams.id" placeholder="输入ID" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="应用名称">
+            <a-input v-model:value="searchParams.appName" placeholder="输入应用名称" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="创建者">
+            <a-input v-model:value="searchParams.userId" placeholder="输入用户ID" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="生成类型">
+            <a-select v-model:value="searchParams.codeGenType" placeholder="选择生成类型" allowClear>
+              <a-select-option v-for="option in CODE_GEN_TYPE_OPTIONS" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-row :gutter="40">
+        <a-col :span="6">
+          <a-form-item label="初始Prompt">
+            <a-input v-model:value="searchParams.initPrompt" placeholder="输入初始Prompt" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="排序字段">
+            <a-select v-model:value="searchParams.sortField" placeholder="请选择排序字段" allowClear>
+              <a-select-option value="id">ID</a-select-option>
+              <a-select-option value="appName">应用名称</a-select-option>
+              <a-select-option value="initPrompt">初始Prompt</a-select-option>
+              <a-select-option value="codeGenType">生成类型</a-select-option>
+              <a-select-option value="priority">优先级</a-select-option>
+              <a-select-option value="createTime">创建时间</a-select-option>
+              <a-select-option value="updateTime">更新时间</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="排序方式">
+            <a-select v-model:value="searchParams.sortOrder" placeholder="请选择排序方式" allowClear>
+              <a-select-option value="asc">升序</a-select-option>
+              <a-select-option value="desc">降序</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item>
+            <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+          </a-form-item>
+        </a-col>
+      </a-row>
     </a-form>
-    <a-divider />
 
     <!-- 表格 -->
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      :pagination="pagination"
-      @change="doTableChange"
-      :scroll="{ x: 1200 }"
-    >
+    <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="doTableChange"
+      :scroll="{ x: 1200 }">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'cover'">
           <a-image v-if="record.cover" :src="record.cover" :width="80" :height="60" />
@@ -65,20 +93,16 @@
           {{ formatTime(record.createTime) }}
         </template>
         <template v-else-if="column.dataIndex === 'user'">
-          <UserInfo :user="record.user" size="small" />
+          <UserInfo v-if="userMap[record.userId]" :user="userMap[record.userId]" size="small" />
         </template>
         <template v-else-if="column.key === 'action'">
           <a-space>
-            <a-button type="primary" size="small" @click="editApp(record)"> 编辑 </a-button>
-            <a-button
-              type="default"
-              size="small"
-              @click="toggleFeatured(record)"
-              :class="{ 'featured-btn': record.priority === 99 }"
-            >
+            <a-button type="primary" size="small" @click="editApp(record)" ghost> 编辑 </a-button>
+            <a-button type="default" ghost size="small" @click="toggleFeatured(record)"
+              :class="record.priority === 99 ? 'btn-gold' : 'btn-light-green'">
               {{ record.priority === 99 ? '取消精选' : '精选' }}
             </a-button>
-            <a-popconfirm title="确定要删除这个应用吗？" @confirm="deleteApp(record.id)">
+            <a-popconfirm title="确定要删除这个应用吗？" ok-text="Yes" cancel-text="No" @confirm="deleteApp(record.id)">
               <a-button danger size="small">删除</a-button>
             </a-popconfirm>
           </a-space>
@@ -89,13 +113,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, h, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
 import { listAppPageByAdmin, deleteAppByAdmin, updateAppByAdmin } from '@/api/appController'
+import { getById } from '@/api/userController'
 import { CODE_GEN_TYPE_OPTIONS, formatCodeGenType } from '@/utils/codeGenTypes'
 import { formatTime } from '@/utils/time'
 import UserInfo from '@/components/UserInfo.vue'
+import { useEditAppStore } from '@/stores/editApp'
 
 const router = useRouter()
 
@@ -103,13 +130,13 @@ const columns = [
   {
     title: 'ID',
     dataIndex: 'id',
-    width: 80,
+    width: 100,
     fixed: 'left',
   },
   {
     title: '应用名称',
     dataIndex: 'appName',
-    width: 150,
+    width: 110,
   },
   {
     title: '封面',
@@ -134,17 +161,17 @@ const columns = [
   {
     title: '部署时间',
     dataIndex: 'deployedTime',
-    width: 160,
+    width: 150,
   },
   {
     title: '创建者',
     dataIndex: 'user',
-    width: 120,
+    width: 140,
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    width: 160,
+    width: 160
   },
   {
     title: '操作',
@@ -157,6 +184,29 @@ const columns = [
 // 数据
 const data = ref<API.App[]>([])
 const total = ref(0)
+const userMap = ref<Record<string, API.User>>({})
+
+// 获取用户信息并缓存
+async function fetchUserIfNeeded(userId: string) {
+  if (!userId || userMap.value[userId]) return
+  const res = await getById({ id: userId })
+  if (res?.data?.data) {
+    userMap.value[userId] = res.data.data
+  }
+}
+
+//监听表格数据变化，批量获取 user 信息
+watch(
+  () => data.value,
+  async (newData) => {
+    const userIds = [...new Set(
+      newData.map(item => item.userId).filter(Boolean)
+    )]
+    await Promise.all(userIds.map(id => fetchUserIfNeeded(id)))
+  },
+  { immediate: true }
+)
+
 
 // 搜索条件
 const searchParams = reactive<API.AppQueryPageListRequest>({
@@ -214,6 +264,8 @@ const doSearch = () => {
 
 // 编辑应用
 const editApp = (app: API.App) => {
+  const editAppStore = useEditAppStore()
+  editAppStore.setUser(userMap.value[String(app.userId)])
   router.push(`/app/edit/${app.id}`)
 }
 
@@ -229,7 +281,7 @@ const toggleFeatured = async (app: API.App) => {
       priority: newPriority,
     })
 
-    if (res.data.statusCode === 0) {
+    if (res.data.statusCode === 200) {
       message.success(newPriority === 99 ? '已设为精选' : '已取消精选')
       // 刷新数据
       fetchData()
@@ -248,7 +300,7 @@ const deleteApp = async (id: number | undefined) => {
 
   try {
     const res = await deleteAppByAdmin({ id })
-    if (res.data.statusCode === 0) {
+    if (res.data.statusCode === 200) {
       message.success('删除成功')
       // 刷新数据
       fetchData()
@@ -263,6 +315,26 @@ const deleteApp = async (id: number | undefined) => {
 </script>
 
 <style scoped>
+.btn-light-green {
+  border-color: #73d13d;
+  color: #73d13d;
+}
+
+.btn-light-green:hover {
+  border-color: #73d13d !important;
+  color: #73d13d !important;
+}
+
+.btn-gold {
+  border-color: #faad14;
+  color: #faad14;
+}
+
+.btn-gold:hover {
+  border-color: #faad14 !important;
+  color: #faad14 !important;
+}
+
 #appManagePage {
   padding: 24px;
   background: white;

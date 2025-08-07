@@ -6,66 +6,31 @@
 
     <div class="edit-container">
       <a-card title="基本信息" :loading="loading">
-        <a-form
-          :model="formData"
-          :rules="rules"
-          layout="vertical"
-          @finish="handleSubmit"
-          ref="formRef"
-        >
+        <a-form :model="formData" :rules="rules" layout="vertical" @finish="handleSubmit" ref="formRef">
           <a-form-item label="应用名称" name="appName">
-            <a-input
-              v-model:value="formData.appName"
-              placeholder="请输入应用名称"
-              :maxlength="50"
-              show-count
-            />
+            <a-input v-model:value="formData.appName" placeholder="请输入应用名称" :maxlength="50" show-count />
           </a-form-item>
 
-          <a-form-item
-            v-if="isAdmin"
-            label="应用封面"
-            name="cover"
-            extra="支持图片链接，建议尺寸：400x300"
-          >
+          <a-form-item v-if="isAdmin" label="应用封面" name="cover" extra="支持图片链接，建议尺寸：400x300">
             <a-input v-model:value="formData.cover" placeholder="请输入封面图片链接" />
             <div v-if="formData.cover" class="cover-preview">
-              <a-image
-                :src="formData.cover"
-                :width="200"
-                :height="150"
-                fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
-              />
+              <a-image :src="formData.cover" :width="200" :height="150"
+                fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" />
             </div>
           </a-form-item>
 
           <a-form-item v-if="isAdmin" label="优先级" name="priority" extra="设置为99表示精选应用">
-            <a-input-number
-              v-model:value="formData.priority"
-              :min="0"
-              :max="99"
-              style="width: 200px"
-            />
+            <a-input-number v-model:value="formData.priority" :min="0" :max="99" style="width: 200px" />
           </a-form-item>
 
           <a-form-item label="初始提示词" name="initPrompt">
-            <a-textarea
-              v-model:value="formData.initPrompt"
-              placeholder="请输入初始提示词"
-              :rows="4"
-              :maxlength="1000"
-              show-count
-              disabled
-            />
+            <a-textarea v-model:value="formData.initPrompt" placeholder="请输入初始提示词" :rows="4" :maxlength="1000" show-count
+              disabled />
             <div class="form-tip">初始提示词不可修改</div>
           </a-form-item>
 
           <a-form-item label="生成类型" name="codeGenType">
-            <a-input
-              :value="formatCodeGenType(formData.codeGenType)"
-              placeholder="生成类型"
-              disabled
-            />
+            <a-input :value="formatCodeGenType(formData.codeGenType)" placeholder="生成类型" disabled />
             <div class="form-tip">生成类型不可修改</div>
           </a-form-item>
 
@@ -93,7 +58,7 @@
             {{ appInfo?.id }}
           </a-descriptions-item>
           <a-descriptions-item label="创建者">
-            <UserInfo :user="appInfo?.user" size="small" />
+            <UserInfo :user="user" size="small" />
           </a-descriptions-item>
           <a-descriptions-item label="创建时间">
             {{ formatTime(appInfo?.createTime) }}
@@ -127,10 +92,13 @@ import { formatTime } from '@/utils/time'
 import UserInfo from '@/components/UserInfo.vue'
 import { getStaticPreviewUrl } from '@/config/env'
 import type { FormInstance } from 'ant-design-vue'
+import { useEditAppStore } from '@/stores/editApp'
 
 const route = useRoute()
 const router = useRouter()
 const loginUserStore = useLoginUserStore()
+const editAppStore = useEditAppStore()
+const user = computed(() => editAppStore.user)
 
 // 应用信息
 const appInfo = ref<API.App>()
@@ -228,10 +196,11 @@ const handleSubmit = async () => {
       })
     }
 
-    if (res.data.statusCode === 0) {
+    if (res.data.statusCode === 200) {
       message.success('修改成功')
       // 重新获取应用信息
       await fetchAppInfo()
+      router.push('/admin/appManage')
     } else {
       message.error('修改失败：' + res.data.message)
     }

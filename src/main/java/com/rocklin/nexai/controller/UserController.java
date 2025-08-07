@@ -10,6 +10,7 @@ import com.rocklin.nexai.common.utils.AvatarUtil;
 import com.rocklin.nexai.common.utils.EncryptPasswordUtil;
 import com.rocklin.nexai.common.utils.MythologyNicknameUtil;
 import com.rocklin.nexai.model.entity.User;
+import com.rocklin.nexai.model.vo.UserGoodAppVo;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.model.vo.UserLoginVO;
 import com.rocklin.nexai.service.UserService;
@@ -20,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.rocklin.nexai.common.constants.Constants.USER_ID;
 
@@ -158,5 +162,23 @@ public class UserController {
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
     public BaseResponse<PageResponse<UserLoginVO>> listUserByPage(@RequestBody @Validated UserPageQueryRequest req) {
         return BaseResponse.success(userService.listUserByPageWithFilter(req));
+    }
+
+    /**
+     * 获取精选作品的用户信息
+     */
+    @Operation(summary = "获取精选作品用户信息", description = "获取精选作品用户信息")
+    @PostMapping("/getGoodAppUserInfo")
+    public BaseResponse<List<UserGoodAppVo>> getGoodAppUserInfo(@RequestBody List<Long> ids) {
+        Assert.notNull(ids, ErrorCode.PARAMS_ERROR, "请求参数不能为空");
+        List<User> userByIdList = userService.batchGetUserById(ids);
+        List<UserGoodAppVo> userGoodAppVoList = userByIdList.stream().map(user -> {
+            UserGoodAppVo userGoodAppVo = new UserGoodAppVo();
+            userGoodAppVo.setId(user.getId());
+            userGoodAppVo.setUserName(user.getUserName());
+            userGoodAppVo.setUserAvatar(user.getUserAvatar());
+            return userGoodAppVo;
+        }).collect(Collectors.toList());
+        return BaseResponse.success(userGoodAppVoList);
     }
 }

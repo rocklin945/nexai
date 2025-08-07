@@ -20,7 +20,9 @@
           <div v-if="loginUserStore.loginUser.userId">
             <a-dropdown>
               <a-space>
-                <a-avatar :src="loginUserStore.loginUser.userAvatar" />
+                <a-avatar :src="loginUserStore.loginUser.userAvatar">
+                  {{ loginUserStore.loginUser?.userName?.charAt(0) || 'U' }}
+                </a-avatar>
                 {{ loginUserStore.loginUser.userName ?? '无名' }}
               </a-space>
               <template #overlay>

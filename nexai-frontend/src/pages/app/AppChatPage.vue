@@ -59,31 +59,13 @@
         <div class="input-container">
           <div class="input-wrapper">
             <a-tooltip v-if="!isOwner" title="无法在别人的作品下对话哦~" placement="top">
-              <a-textarea
-                v-model:value="userInput"
-                placeholder="请描述你想生成的网站，越详细效果越好哦"
-                :rows="4"
-                :maxlength="1000"
-                @keydown.enter.prevent="sendMessage"
-                :disabled="isGenerating || !isOwner"
-              />
+              <a-textarea v-model:value="userInput" placeholder="请描述你想生成的网站，越详细效果越好哦" :rows="4" :maxlength="1000"
+                @keydown.enter.prevent="sendMessage" :disabled="isGenerating || !isOwner" />
             </a-tooltip>
-            <a-textarea
-              v-else
-              v-model:value="userInput"
-              placeholder="请描述你想生成的网站，越详细效果越好哦"
-              :rows="4"
-              :maxlength="1000"
-              @keydown.enter.prevent="sendMessage"
-              :disabled="isGenerating"
-            />
+            <a-textarea v-else v-model:value="userInput" placeholder="请描述你想生成的网站，越详细效果越好哦" :rows="4" :maxlength="1000"
+              @keydown.enter.prevent="sendMessage" :disabled="isGenerating" />
             <div class="input-actions">
-              <a-button
-                type="primary"
-                @click="sendMessage"
-                :loading="isGenerating"
-                :disabled="!isOwner"
-              >
+              <a-button type="primary" @click="sendMessage" :loading="isGenerating" :disabled="!isOwner">
                 <template #icon>
                   <SendOutlined />
                 </template>
@@ -114,32 +96,17 @@
             <a-spin size="large" />
             <p>正在生成网站...</p>
           </div>
-          <iframe
-            v-else
-            :src="previewUrl"
-            class="preview-iframe"
-            frameborder="0"
-            @load="onIframeLoad"
-          ></iframe>
+          <iframe v-else :src="previewUrl" class="preview-iframe" frameborder="0" @load="onIframeLoad"></iframe>
         </div>
       </div>
     </div>
 
     <!-- 应用详情弹窗 -->
-    <AppDetailModal
-      v-model:open="appDetailVisible"
-      :app="appInfo"
-      :show-actions="isOwner || isAdmin"
-      @edit="editApp"
-      @delete="deleteApp"
-    />
+    <AppDetailModal v-model:open="appDetailVisible" :app="appInfo" :show-actions="isOwner || isAdmin" @edit="editApp"
+      @delete="deleteApp" />
 
     <!-- 部署成功弹窗 -->
-    <DeploySuccessModal
-      v-model:open="deployModalVisible"
-      :deploy-url="deployUrl"
-      @open-site="openDeployedSite"
-    />
+    <DeploySuccessModal v-model:open="deployModalVisible" :deploy-url="deployUrl" @open-site="openDeployedSite" />
   </div>
 </template>
 
@@ -148,7 +115,7 @@ import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
-import { getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi} from '@/api/appController'
+import { getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi } from '@/api/appController'
 // import { listAppChatHistory } from '@/api/chatHistoryController'
 import { CodeGenTypeEnum } from '@/utils/codeGenTypes'
 import request from '@/request'
@@ -286,7 +253,7 @@ const fetchAppInfo = async () => {
 
   try {
     const res = await getAppById({ id: id as unknown as number })
-    if (res.data.statusCode === 0 && res.data.data) {
+    if (res.data.statusCode === 200 && res.data.data) {
       appInfo.value = res.data.data
 
       // 先加载对话历史
