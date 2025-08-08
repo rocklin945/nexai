@@ -157,9 +157,10 @@ public class AppController {
         Long userId = currentUser.getUserId();
         App app = appService.getAppById(req.getId());
         Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
-        Assert.isTrue(app.getUserId().equals(userId) ||
-                        currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
-                ErrorCode.UNAUTHORIZED, "无权限访问");
+        boolean isGoodApp = app.getPriority() == 99;
+        Assert.isTrue(isGoodApp ||
+                        currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()) ||
+                        app.getUserId().equals(userId), ErrorCode.UNAUTHORIZED, "无权限访问");
         return BaseResponse.success(app);
     }
 

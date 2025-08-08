@@ -5,7 +5,7 @@
       <div class="app-basic-info">
         <div class="info-item">
           <span class="info-label">创建者：</span>
-          <UserInfo :user="app?.user" size="small" />
+          <UserInfo :user="user" size="small" />
         </div>
         <div class="info-item">
           <span class="info-label">创建时间：</span>
@@ -22,12 +22,7 @@
             </template>
             修改
           </a-button>
-          <a-popconfirm
-            title="确定要删除这个应用吗？"
-            @confirm="handleDelete"
-            ok-text="确定"
-            cancel-text="取消"
-          >
+          <a-popconfirm title="确定要删除这个应用吗？" @confirm="handleDelete" ok-text="确定" cancel-text="取消">
             <a-button danger>
               <template #icon>
                 <DeleteOutlined />
@@ -51,6 +46,7 @@ interface Props {
   open: boolean
   app?: API.App
   showActions?: boolean
+  user?: API.User
 }
 
 interface Emits {

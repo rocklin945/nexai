@@ -53,9 +53,11 @@ public class ChatHistoryController {
         Long userId = currentUser.getUserId();
         App app = appService.getAppById(req.getAppId());
         Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        boolean isGoodApp = app.getPriority() == 99;
         boolean isAdmin = currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue());
-        Assert.isTrue(app.getUserId().equals(userId) || isAdmin, ErrorCode.OPERATION_ERROR, "无权限");
-        if(!isAdmin){
+        Assert.isTrue(isGoodApp || isAdmin || app.getUserId().equals(userId),
+                ErrorCode.OPERATION_ERROR, "无权限");
+        if(!isAdmin && !isGoodApp){
             Assert.notNull(req.getUserId(), ErrorCode.PARAMS_ERROR, "用户id不能为空");
             req.setUserId(userId);
         }

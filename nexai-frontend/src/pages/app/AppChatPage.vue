@@ -37,7 +37,7 @@
             <div v-if="message.type === 'user'" class="user-message">
               <div class="message-content">{{ message.content }}</div>
               <div class="message-avatar">
-                <a-avatar :src="loginUserStore.loginUser.userAvatar" />
+                <a-avatar :src="userInfo?.userAvatar" />
               </div>
             </div>
             <div v-else class="ai-message">
@@ -102,8 +102,8 @@
     </div>
 
     <!-- 应用详情弹窗 -->
-    <AppDetailModal v-model:open="appDetailVisible" :app="appInfo" :show-actions="isOwner || isAdmin" @edit="editApp"
-      @delete="deleteApp" />
+    <AppDetailModal v-model:open="appDetailVisible" :app="appInfo" :user="userInfo" :show-actions="isOwner || isAdmin"
+      @edit="editApp" @delete="deleteApp" />
 
     <!-- 部署成功弹窗 -->
     <DeploySuccessModal v-model:open="deployModalVisible" :deploy-url="deployUrl" @open-site="openDeployedSite" />
@@ -115,8 +115,10 @@ import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
+import { useEditAppStore } from '@/stores/editApp'
 import { getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi } from '@/api/appController'
 import { listAppChatHistory } from '@/api/chatHistoryController'
+import { getGoodAppUserInfo } from '@/api/userController'
 import { CodeGenTypeEnum } from '@/utils/codeGenTypes'
 import request from '@/request'
 
@@ -136,10 +138,14 @@ import {
 const route = useRoute()
 const router = useRouter()
 const loginUserStore = useLoginUserStore()
+const editAppUserStore = useEditAppStore()
 
 // 应用信息
 const appInfo = ref<API.App>()
 const appId = ref<any>()
+
+//用户信息
+const userInfo = ref<API.User>()
 
 // 对话相关
 interface Message {
@@ -256,6 +262,9 @@ const fetchAppInfo = async () => {
     if (res.data.statusCode === 200 && res.data.data) {
       appInfo.value = res.data.data
 
+      // 加载用户信息
+      await fetchUserInfo()
+
       // 先加载对话历史
       await loadChatHistory()
       // 如果有至少2条对话记录，展示对应的网站
@@ -280,6 +289,20 @@ const fetchAppInfo = async () => {
     console.error('获取应用信息失败：', error)
     message.error('获取应用信息失败')
     router.push('/')
+  }
+}
+
+// 获取用户信息
+const fetchUserInfo = async () => {
+  const id = appInfo?.value?.userId || loginUserStore.loginUser.userId
+  try {
+    const res = await getGoodAppUserInfo([id as number])
+    if (res.data.data) {
+      userInfo.value = res.data.data[0]
+    }
+  } catch (error) {
+    console.error('获取用户信息失败：', error)
+    message.error('获取用户信息失败')
   }
 }
 
@@ -498,6 +521,7 @@ const onIframeLoad = () => {
 // 编辑应用
 const editApp = () => {
   if (appInfo.value?.id) {
+    editAppUserStore.setUser(userInfo.value as API.User)
     router.push(`/app/edit/${appInfo.value.id}`)
   }
 }
@@ -626,6 +650,7 @@ onUnmounted(() => {
 }
 
 .ai-message .message-content {
+  max-width: 93%;
   background: #f5f5f5;
   color: #1a1a1a;
   padding: 8px 12px;
