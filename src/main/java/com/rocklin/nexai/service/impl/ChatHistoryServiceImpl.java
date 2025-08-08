@@ -80,6 +80,15 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         return pageResponse;
     }
 
+    @Override
+    public PageResponse<ChatHistory> listAppChatHistoryByAdmin(ChatHistoryQueryRequest req) {
+        int offset = (req.getPageNum() - 1) * req.getPageSize();
+        long total = chatHistoryMapper.countTotal(req);
+        List<ChatHistory> records = chatHistoryMapper.selectAppChatHistoryByAdmin(offset, req);
+        PageResponse<ChatHistory> pageResponse = new PageResponse<>(records, total, req.getPageNum(), req.getPageSize());
+        return pageResponse;
+    }
+
     private static int historyToMemory(long appId, MessageWindowChatMemory chatMemory, List<ChatHistory> chatHistoryList) {
         // 按照时间顺序将消息添加到记忆中
         int loadedCount = 0;

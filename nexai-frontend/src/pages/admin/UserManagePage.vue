@@ -6,17 +6,17 @@
       <a-row :gutter="40">
         <a-col :span="6">
           <a-form-item label="ID">
-            <a-input v-model:value="searchParams.id" placeholder="输入ID" />
+            <a-input v-model:value="searchParams.id" placeholder="输入ID" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">
           <a-form-item label="账号">
-            <a-input v-model:value="searchParams.userAccount" placeholder="输入账号" />
+            <a-input v-model:value="searchParams.userAccount" placeholder="输入账号" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">
           <a-form-item label="用户名">
-            <a-input v-model:value="searchParams.userName" placeholder="输入用户名" />
+            <a-input v-model:value="searchParams.userName" placeholder="输入用户名" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">
@@ -33,7 +33,7 @@
       <a-row :gutter="40">
         <a-col :span="6">
           <a-form-item label="简介">
-            <a-input v-model:value="searchParams.userProfile" placeholder="输入简介" />
+            <a-input v-model:value="searchParams.userProfile" placeholder="输入简介" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">

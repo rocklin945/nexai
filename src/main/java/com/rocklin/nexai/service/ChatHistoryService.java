@@ -20,4 +20,6 @@ public interface ChatHistoryService {
     Integer loadChatHistoryToMemory(long appId, MessageWindowChatMemory chatMemory, int maxContextSize);
 
     PageResponse<ChatHistory> listAppChatHistoryByPage(ChatHistoryQueryRequest req);
+
+    PageResponse<ChatHistory> listAppChatHistoryByAdmin(ChatHistoryQueryRequest req);
 }

@@ -19,3 +19,21 @@ export async function listAppChatHistory(
     }
   );
 }
+
+/**管理员分页查询对话记录 */
+export async function listAppChatHistoryByAdmin(
+  body: API.ChatHistoryQueryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePageResponseChatHistory>(
+    "/chatHistory/admin/historyPageList",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}

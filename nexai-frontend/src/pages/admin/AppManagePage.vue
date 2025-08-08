@@ -5,17 +5,17 @@
       <a-row :gutter="40">
         <a-col :span="6">
           <a-form-item label="ID">
-            <a-input v-model:value="searchParams.id" placeholder="输入ID" />
+            <a-input v-model:value="searchParams.id" placeholder="输入ID" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">
           <a-form-item label="应用名称">
-            <a-input v-model:value="searchParams.appName" placeholder="输入应用名称" />
+            <a-input v-model:value="searchParams.appName" placeholder="输入应用名称" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">
           <a-form-item label="创建者">
-            <a-input v-model:value="searchParams.userId" placeholder="输入用户ID" />
+            <a-input v-model:value="searchParams.userId" placeholder="输入用户ID" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">
@@ -31,7 +31,7 @@
       <a-row :gutter="40">
         <a-col :span="6">
           <a-form-item label="初始Prompt">
-            <a-input v-model:value="searchParams.initPrompt" placeholder="输入初始Prompt" />
+            <a-input v-model:value="searchParams.initPrompt" placeholder="输入初始Prompt" allowClear />
           </a-form-item>
         </a-col>
         <a-col :span="6">

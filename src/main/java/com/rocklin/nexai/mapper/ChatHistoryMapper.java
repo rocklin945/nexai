@@ -11,7 +11,14 @@ import java.util.List;
 public interface ChatHistoryMapper {
     Long insert(ChatHistory chatHistory);
 
-    List<ChatHistory> selectListByAppId(@Param("appId") long appId, @Param("offset") int offset, @Param("limit") int limit);
+    List<ChatHistory> selectListByAppId(@Param("appId") long appId,
+                                        @Param("offset") int offset,
+                                        @Param("limit") int limit);
 
     List<ChatHistory> selectAppChatHistoryByCursor(@Param("req") ChatHistoryQueryRequest req);
+
+    long countTotal(@Param("req") ChatHistoryQueryRequest req);
+
+    List<ChatHistory> selectAppChatHistoryByAdmin(@Param("offset") int offset,
+                                                  @Param("req") ChatHistoryQueryRequest req);
 }

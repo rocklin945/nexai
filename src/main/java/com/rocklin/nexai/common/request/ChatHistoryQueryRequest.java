@@ -32,7 +32,6 @@ public class ChatHistoryQueryRequest extends PageRequest implements Serializable
     /**
      * 应用id
      */
-    @NotNull(message = "应用id不能为空")
     private Long appId;
 
     /**

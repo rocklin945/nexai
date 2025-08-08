@@ -40,4 +40,54 @@
         ORDER BY createTime DESC
         LIMIT #{req.pageSize}
     </select>
+    <select id="countTotal" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM chat_history
+        <where>
+            <if test="req.id != null">
+                id = #{req.id}
+            </if>
+            <if test="req.appId != null">
+                AND appId = #{req.appId}
+            </if>
+            <if test="req.message != null and req.message != ''">
+                AND message LIKE CONCAT('%', #{req.message}, '%')
+            </if>
+            <if test="req.messageType != null">
+                AND messageType = #{req.messageType}
+            </if>
+            <if test="req.userId != null">
+                AND userId = #{req.userId}
+            </if>
+        </where>
+    </select>
+    <select id="selectAppChatHistoryByAdmin" resultType="com.rocklin.nexai.model.entity.ChatHistory">
+        SELECT * FROM chat_history
+        <where>
+            <if test="req.id != null">
+                id = #{req.id}
+            </if>
+            <if test="req.appId != null">
+                AND appId = #{req.appId}
+            </if>
+            <if test="req.message != null and req.message != ''">
+                AND message LIKE CONCAT('%', #{req.message}, '%')
+            </if>
+            <if test="req.messageType != null">
+                AND messageType = #{req.messageType}
+            </if>
+            <if test="req.userId != null">
+                AND userId = #{req.userId}
+            </if>
+        </where>
+        <choose>
+            <when test="req.sortField != null and req.sortField != ''">
+                order by ${req.sortField} ${req.sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY createTime DESC
+            </otherwise>
+        </choose>
+        LIMIT #{req.pageNum}, #{req.pageSize}
+    </select>
 </mapper>

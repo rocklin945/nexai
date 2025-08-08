@@ -145,7 +145,7 @@ type App = {
     id?: number;
     message?: string;
     messageType?: string;
-    appId: number;
+    appId?: number;
     userId?: number;
     lastCreateTime?: string;
   };

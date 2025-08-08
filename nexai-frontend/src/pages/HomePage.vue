@@ -274,12 +274,9 @@ onMounted(() => {
         <h2 class="section-title">精选案例</h2>
         <div class="featured-grid">
           <template v-if="featuredApps?.length">
-            <AppCard v-for="app in featuredApps" :key="app?.id" 
-              :app="app" 
-              :userName="app.userId && userMap[app.userId]?.userName || '未知用户'" 
-              :userAvatar="app.userId && userMap[app.userId]?.userAvatar || ''" 
-              :featured="true" 
-              @view-chat="viewChat"
+            <AppCard v-for="app in featuredApps" :key="app?.id" :app="app"
+              :userName="app.userId && userMap[app.userId]?.userName || '未知用户'"
+              :userAvatar="app.userId && userMap[app.userId]?.userAvatar || ''" :featured="true" @view-chat="viewChat"
               @view-work="viewWork" />
           </template>
           <div v-else class="no-data-message">
