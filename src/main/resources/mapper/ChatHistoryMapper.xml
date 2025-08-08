@@ -88,6 +88,6 @@
                 ORDER BY createTime DESC
             </otherwise>
         </choose>
-        LIMIT #{req.pageNum}, #{req.pageSize}
+        LIMIT #{offset}, #{req.pageSize}
     </select>
 </mapper>

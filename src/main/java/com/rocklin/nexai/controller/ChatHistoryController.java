@@ -48,7 +48,6 @@ public class ChatHistoryController {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getPageSize()>0 && req.getPageSize()<=50, ErrorCode.PARAMS_ERROR,
                 "页面大小必须在1-50之间");
-        Assert.notNull(req.getUserId(), ErrorCode.PARAMS_ERROR, "用户id不能为空");
         UserLoginResponse currentUser = userService.getCurrentUser();
         Assert.notNull(currentUser, ErrorCode.NOT_LOGIN_ERROR, "未登录");
         Long userId = currentUser.getUserId();
@@ -57,6 +56,7 @@ public class ChatHistoryController {
         boolean isAdmin = currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue());
         Assert.isTrue(app.getUserId().equals(userId) || isAdmin, ErrorCode.OPERATION_ERROR, "无权限");
         if(!isAdmin){
+            Assert.notNull(req.getUserId(), ErrorCode.PARAMS_ERROR, "用户id不能为空");
             req.setUserId(userId);
         }
         PageResponse<ChatHistory> pageResponse =chatHistoryService.listAppChatHistoryByPage(req);
