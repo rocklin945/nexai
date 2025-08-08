@@ -34,4 +34,25 @@ public final class Constants {
      * 精选应用
      */
     public static final Integer GOOD_APP = 1;
+
+    /**
+     * 网站预览相关
+     */
+    public static final String STATIC_PATH ="/static/";
+    public static final String LOCATION ="Location";
+    public static final String REDIRECT ="/";
+    public static final String INDEX_HTML ="/index.html";
+
+    public static final String CONTENT_TYPE ="Content-Type";
+    public static final String HTML =".html";
+    public static final String HTML_CONTENT_TYPE ="text/html; charset=UTF-8";
+    public static final String CSS =".css";
+    public static final String CSS_CONTENT_TYPE ="text/css; charset=UTF-8";
+    public static final String JS =".js";
+    public static final String JS_CONTENT_TYPE ="application/javascript; charset=UTF-8";
+    public static final String PNG =".png";
+    public static final String PNG_CONTENT_TYPE ="image/png";
+    public static final String JPG =".jpg";
+    public static final String JPG_CONTENT_TYPE ="image/jpeg";
+    public static final String OCTET_STREAM ="application/octet-stream";
 }

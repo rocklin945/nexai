@@ -404,7 +404,6 @@ const generateCode = async (userMessage: string, aiMessageIndex: number) => {
           fullContent += content
           messages.value[aiMessageIndex].content = fullContent
           messages.value[aiMessageIndex].loading = false
-          scrollToBottom()
         }
       } catch (error) {
         console.error('解析消息失败:', error)
@@ -419,7 +418,7 @@ const generateCode = async (userMessage: string, aiMessageIndex: number) => {
       streamCompleted = true
       isGenerating.value = false
       eventSource?.close()
-
+      scrollToBottom()
       // 延迟更新预览，确保后端已完成处理
       setTimeout(async () => {
         await fetchAppInfo()
