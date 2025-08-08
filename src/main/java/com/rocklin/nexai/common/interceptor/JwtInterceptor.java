@@ -29,15 +29,27 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 从请求头中获取token
-        String token = request.getHeader(AUTHORIZATION);
-        
-        if (token == null || !token.startsWith(BEARER)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED, "未提供token");
+        String token = null;
+
+        //从 Cookie 中获取 token
+        if (request.getCookies() != null) {
+            for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
         }
 
-        // 提取token,去掉Bearer
-        token = token.substring(TOKEN_START_INDEX);
+        //兼容从 Authorization 头获取
+        if (token == null) {
+            String authHeader = request.getHeader(AUTHORIZATION);
+            if (authHeader != null && authHeader.startsWith(BEARER)) {
+                token = authHeader.substring(TOKEN_START_INDEX);
+            }else {
+                throw new BusinessException(ErrorCode.UNAUTHORIZED, "未提供token");
+            }
+        }
         
         try {
             // 验证token
