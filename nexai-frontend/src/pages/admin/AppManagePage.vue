@@ -57,7 +57,11 @@
         </a-col>
         <a-col :span="6">
           <a-form-item>
-            <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+            <a-space>
+              <a-button type="primary" @click="resetSearch" shape="circle" :icon="h(RedoOutlined)"
+                :class="'btn-light-green'" ghost />
+              <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+            </a-space>
           </a-form-item>
         </a-col>
       </a-row>
@@ -116,7 +120,7 @@
 import { computed, onMounted, reactive, ref, h, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, RedoOutlined } from '@ant-design/icons-vue'
 import { listAppPageByAdmin, deleteAppByAdmin, updateAppByAdmin } from '@/api/appController'
 import { getById } from '@/api/userController'
 import { CODE_GEN_TYPE_OPTIONS, formatCodeGenType } from '@/utils/codeGenTypes'
@@ -213,6 +217,12 @@ const searchParams = reactive<API.AppQueryPageListRequest>({
   pageNum: 1,
   pageSize: 10,
 })
+
+// 定义默认值
+const defaultSearchParams: API.AppQueryPageListRequest = {
+  pageNum: 1,
+  pageSize: 10,
+}
 
 // 获取数据
 const fetchData = async () => {
@@ -312,6 +322,15 @@ const deleteApp = async (id: number | undefined) => {
     message.error('删除失败')
   }
 }
+
+const resetSearch = () => {
+  for (const key in searchParams) {
+    delete (searchParams as any)[key]
+  }
+  Object.assign(searchParams, defaultSearchParams)
+  doSearch()
+}
+
 </script>
 
 <style scoped>

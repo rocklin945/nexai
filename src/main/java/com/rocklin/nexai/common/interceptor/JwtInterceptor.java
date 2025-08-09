@@ -34,7 +34,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         //从 Cookie 中获取 token
         if (request.getCookies() != null) {
             for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
-                if ("token".equals(cookie.getName())) {
+                if (TOKEN.equals(cookie.getName())) {
                     token = cookie.getValue();
                     break;
                 }

@@ -23,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 // 排除登录和注册接口
                 .excludePathPatterns(
+                        "/static/**",
                         "/user/login",
                         "/user/register",
                         "/health/**",

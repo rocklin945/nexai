@@ -17,7 +17,7 @@
           <a-form-item label="消息类型">
             <a-select v-model:value="searchParams.messageType" placeholder="选择消息类型" allowClear>
               <a-select-option value="user">用户消息</a-select-option>
-              <a-select-option value="assistant">AI消息</a-select-option>
+              <a-select-option value="ai">AI消息</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -56,7 +56,11 @@
         </a-col>
         <a-col :span="6">
           <a-form-item>
-            <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+            <a-space>
+              <a-button type="primary" @click="resetSearch" shape="circle" :icon="h(RedoOutlined)"
+                :class="'btn-light-green'" ghost />
+              <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+            </a-space>
           </a-form-item>
         </a-col>
       </a-row>
@@ -104,7 +108,7 @@ import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { listAppChatHistoryByAdmin } from '@/api/chatHistoryController'
 import { formatTime } from '@/utils/time'
-import { SearchOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, RedoOutlined } from '@ant-design/icons-vue'
 
 const router = useRouter()
 
@@ -162,6 +166,12 @@ const searchParams = reactive<API.ChatHistoryQueryRequest>({
   pageNum: 1,
   pageSize: 10,
 })
+
+// 定义默认值
+const defaultSearchParams: API.ChatHistoryQueryRequest = {
+  pageNum: 1,
+  pageSize: 10,
+}
 
 // 获取数据
 const fetchData = async () => {
@@ -233,9 +243,28 @@ const deleteMessage = async (id: number | undefined) => {
     message.error('删除失败')
   }
 }
+
+const resetSearch = () => {
+  for (const key in searchParams) {
+    delete (searchParams as any)[key]
+  }
+  Object.assign(searchParams, defaultSearchParams)
+  doSearch()
+}
+
 </script>
 
 <style scoped>
+.btn-light-green {
+  border-color: #73d13d;
+  color: #73d13d;
+}
+
+.btn-light-green:hover {
+  border-color: #73d13d !important;
+  color: #73d13d !important;
+}
+
 #chatManagePage {
   padding: 24px;
   background: white;

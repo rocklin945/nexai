@@ -58,7 +58,13 @@
         </a-col>
         <a-col :span="6">
           <a-form-item>
-            <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+            <a-space>
+              <!-- 重置按钮 -->
+              <a-button type="primary" @click="resetSearch" shape="circle" :icon="h(RedoOutlined)"
+                :class="'btn-light-green'" ghost />
+              <!-- 搜索按钮 -->
+              <a-button type="primary" html-type="submit" shape="circle" :icon="h(SearchOutlined)" ghost />
+            </a-space>
           </a-form-item>
         </a-col>
       </a-row>
@@ -97,7 +103,7 @@
 import { computed, onMounted, reactive, ref, h } from 'vue'
 import { deleteUser, listUserByPage } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, RedoOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
 const columns = [
@@ -149,6 +155,12 @@ const searchParams = reactive<API.UserPageQueryRequest>({
   pageSize: 10,
 })
 
+// 定义默认值
+const defaultSearchParams: API.UserPageQueryRequest = {
+  pageNum: 1,
+  pageSize: 10,
+}
+
 // 获取数据
 const fetchData = async () => {
   const res = await listUserByPage({
@@ -180,6 +192,15 @@ const doTableChange = (page: { current: number; pageSize: number }) => {
   fetchData()
 }
 
+// 重置方法
+const resetSearch = () => {
+  for (const key in searchParams) {
+    delete (searchParams as any)[key]
+  }
+  Object.assign(searchParams, defaultSearchParams)
+  doSearch()
+}
+
 // 搜索数据
 const doSearch = () => {
   // 重置页码
@@ -209,6 +230,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.btn-light-green {
+  border-color: #73d13d;
+  color: #73d13d;
+}
+
+.btn-light-green:hover {
+  border-color: #73d13d !important;
+  color: #73d13d !important;
+}
+
 #userManagePage {
   padding: 24px;
   background: white;
