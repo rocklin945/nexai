@@ -413,6 +413,7 @@ const generateCode = async (userMessage: string, aiMessageIndex: number) => {
 
     // 处理done事件
     eventSource.addEventListener('done', function () {
+      document.cookie = "token=; path=/; Secure; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       if (streamCompleted) return
 
       streamCompleted = true
