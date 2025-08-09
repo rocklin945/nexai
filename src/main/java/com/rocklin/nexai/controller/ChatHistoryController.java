@@ -45,7 +45,7 @@ public class ChatHistoryController {
      */
     @Operation(summary = "分页查询应用的对话历史", description ="分页查询应用的对话历史")
     @PostMapping("/historyPageList")
-    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 2)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<PageResponse<ChatHistory>> listAppChatHistory(@RequestBody @Validated ChatHistoryQueryRequest req){
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getPageSize()>0 && req.getPageSize()<=50, ErrorCode.PARAMS_ERROR,
@@ -73,7 +73,7 @@ public class ChatHistoryController {
     @Operation(summary = "管理员分页查询所有应用的对话历史", description ="管理员分页查询所有应用的对话历史")
     @PostMapping("/admin/historyPageList")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<PageResponse<ChatHistory>> listAllAppChatHistory(@RequestBody @Validated ChatHistoryQueryRequest req){
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         PageResponse<ChatHistory> pageResponse =chatHistoryService.listAppChatHistoryByAdmin(req);

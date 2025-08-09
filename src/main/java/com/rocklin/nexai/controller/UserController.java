@@ -124,7 +124,7 @@ public class UserController {
     @Operation(summary = "根据 id 获取用户", description = "管理员接口，根据 id 获取用户")
     @GetMapping("/getById")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<User> getById(@RequestParam Long id) {
         Assert.notNull(id, ErrorCode.PARAMS_ERROR, "用户ID不能为空");
         return BaseResponse.success(userService.getUserById(id));
@@ -169,7 +169,7 @@ public class UserController {
     @Operation(summary = "分页获取用户列表", description = "管理员接口，分页获取用户列表")
     @PostMapping("/list/page")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<PageResponse<UserLoginVO>> listUserByPage(@RequestBody @Validated UserPageQueryRequest req) {
         return BaseResponse.success(userService.listUserByPageWithFilter(req));
     }
@@ -179,7 +179,7 @@ public class UserController {
      */
     @Operation(summary = "获取精选作品用户信息", description = "获取精选作品用户信息")
     @PostMapping("/getGoodAppUserInfo")
-    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 2)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<List<UserGoodAppVo>> getGoodAppUserInfo(@RequestBody List<Long> ids) {
         Assert.notNull(ids, ErrorCode.PARAMS_ERROR, "请求参数不能为空");
         List<User> userByIdList = userService.batchGetUserById(ids);

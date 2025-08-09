@@ -51,7 +51,7 @@ public class AppController {
      */
     @Operation(summary = "创建应用", description = "创建应用")
     @PostMapping("/create")
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit()
     public BaseResponse<Long> createApp(@RequestBody @Validated AppCreateRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         // 获取当前登录用户id
@@ -157,7 +157,7 @@ public class AppController {
      */
     @Operation(summary = "根据appId获取应用详情", description = "根据appId获取应用详情")
     @PostMapping("/getById")
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<App> getAppById(@RequestBody @Validated AppGetByIdRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         UserLoginResponse currentUser = userService.getCurrentUser();
@@ -239,7 +239,7 @@ public class AppController {
     @Operation(summary = "管理员分页获取应用列表", description = "管理员分页获取应用列表")
     @PostMapping("/admin/list/page")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<PageResponse<App>> listAppPageByAdmin(@RequestBody @Validated AppQueryPageListRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         return BaseResponse.success(appService.queryAppPageList(req));
@@ -251,7 +251,7 @@ public class AppController {
     @Operation(summary = "管理员根据id获取应用详情", description = "管理员根据id获取应用详情")
     @PostMapping("/admin/getAppById")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
-    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<App> getAppVOByIdByAdmin(@RequestBody @Validated AppGetByIdRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         App app = appService.getAppById(req.getId());
