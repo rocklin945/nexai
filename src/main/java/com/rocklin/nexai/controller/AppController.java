@@ -3,6 +3,7 @@ package com.rocklin.nexai.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.rocklin.nexai.common.annotation.AuthCheck;
+import com.rocklin.nexai.common.annotation.SlidingWindowRateLimit;
 import com.rocklin.nexai.common.enums.CodeGenTypeEnum;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
@@ -50,6 +51,7 @@ public class AppController {
      */
     @Operation(summary = "创建应用", description = "创建应用")
     @PostMapping("/create")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Long> createApp(@RequestBody @Validated AppCreateRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         // 获取当前登录用户id
@@ -72,6 +74,7 @@ public class AppController {
      */
     @Operation(summary = "对话生成代码", description = "对话生成代码")
     @GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam Long appId,
                                                        @RequestParam String message) {
         // 参数校验
@@ -104,6 +107,7 @@ public class AppController {
      */
     @Operation(summary = "应用部署", description = "应用部署")
     @PostMapping("/deploy")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<String> deployApp(@RequestBody @Validated AppDeployRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Long userId = userService.getCurrentUser().getUserId();
@@ -117,6 +121,7 @@ public class AppController {
      */
     @Operation(summary = "更新应用", description = "更新应用")
     @PostMapping("/update")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Boolean> updateApp(@RequestBody @Validated AppUpdateRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Long userId = userService.getCurrentUser().getUserId();
@@ -134,6 +139,7 @@ public class AppController {
      */
     @Operation(summary = "删除应用", description = "删除应用")
     @PostMapping("/delete")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Boolean> deleteApp(@RequestBody @Validated AppDeleteRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         UserLoginResponse currentUser = userService.getCurrentUser();
@@ -151,6 +157,7 @@ public class AppController {
      */
     @Operation(summary = "根据appId获取应用详情", description = "根据appId获取应用详情")
     @PostMapping("/getById")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<App> getAppById(@RequestBody @Validated AppGetByIdRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         UserLoginResponse currentUser = userService.getCurrentUser();
@@ -169,6 +176,7 @@ public class AppController {
      */
     @Operation(summary = "分页获取当前用户应用列表", description = "分页获取当前用户应用列表")
     @PostMapping("curUser/list/page")
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<PageResponse<App>> listCurUserAppPage(@RequestBody @Validated AppQueryPageListRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getPageSize() <= 20,
@@ -183,6 +191,7 @@ public class AppController {
      */
     @Operation(summary = "分页获取精选的应用列表", description = "分页获取精选的应用列表")
     @PostMapping("/good/list/page")
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 3)
     public BaseResponse<PageResponse<App>> listGoodAppByPage(@RequestBody @Validated AppQueryPageListRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getPageSize() <= 20,
@@ -197,6 +206,7 @@ public class AppController {
     @Operation(summary = "管理员删除应用", description = "管理员删除应用")
     @PostMapping("/admin/delete")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Boolean> deleteAppByAdmin(@RequestBody @Validated DeleteRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         App app = appService.getAppById(req.getId());
@@ -211,6 +221,7 @@ public class AppController {
     @Operation(summary = "管理员更新应用", description = "管理员更新应用")
     @PostMapping("/admin/update")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Boolean> updateAppByAdmin(@RequestBody @Validated AppAdminUpdateRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         App app = appService.getAppById(req.getId());
@@ -228,6 +239,7 @@ public class AppController {
     @Operation(summary = "管理员分页获取应用列表", description = "管理员分页获取应用列表")
     @PostMapping("/admin/list/page")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<PageResponse<App>> listAppPageByAdmin(@RequestBody @Validated AppQueryPageListRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         return BaseResponse.success(appService.queryAppPageList(req));
@@ -239,6 +251,7 @@ public class AppController {
     @Operation(summary = "管理员根据id获取应用详情", description = "管理员根据id获取应用详情")
     @PostMapping("/admin/getAppById")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<App> getAppVOByIdByAdmin(@RequestBody @Validated AppGetByIdRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         App app = appService.getAppById(req.getId());

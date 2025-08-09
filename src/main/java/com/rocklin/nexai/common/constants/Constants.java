@@ -56,4 +56,13 @@ public final class Constants {
     public static final String JPG = ".jpg";
     public static final String JPG_CONTENT_TYPE = "image/jpeg";
     public static final String OCTET_STREAM = "application/octet-stream";
+
+    /**
+     * 滑动窗口限流
+     */
+    public static final String SLIDING_RATE_LIMIT_KEY_PREFIX ="sliding_rate_limit:";
+    public static final String COLON =":";
+    public static final long ONE_SECOND =1000L;
+    public static final int ZERO =0;
+    public static final String X_FORWARDED_FOR ="X-Forwarded-For";
 }

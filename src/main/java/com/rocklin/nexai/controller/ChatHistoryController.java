@@ -1,6 +1,7 @@
 package com.rocklin.nexai.controller;
 
 import com.rocklin.nexai.common.annotation.AuthCheck;
+import com.rocklin.nexai.common.annotation.SlidingWindowRateLimit;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
@@ -44,6 +45,7 @@ public class ChatHistoryController {
      */
     @Operation(summary = "分页查询应用的对话历史", description ="分页查询应用的对话历史")
     @PostMapping("/historyPageList")
+    @SlidingWindowRateLimit(windowInSeconds = 1, maxCount = 2)
     public BaseResponse<PageResponse<ChatHistory>> listAppChatHistory(@RequestBody @Validated ChatHistoryQueryRequest req){
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         Assert.isTrue(req.getPageSize()>0 && req.getPageSize()<=50, ErrorCode.PARAMS_ERROR,
@@ -58,7 +60,7 @@ public class ChatHistoryController {
         Assert.isTrue(isGoodApp || isAdmin || app.getUserId().equals(userId),
                 ErrorCode.OPERATION_ERROR, "无权限");
         if(!isAdmin && !isGoodApp){
-            Assert.notNull(req.getUserId(), ErrorCode.PARAMS_ERROR, "用户id不能为空");
+            Assert.notNull(userId, ErrorCode.PARAMS_ERROR, "用户id不能为空");
             req.setUserId(userId);
         }
         PageResponse<ChatHistory> pageResponse =chatHistoryService.listAppChatHistoryByPage(req);
@@ -71,6 +73,7 @@ public class ChatHistoryController {
     @Operation(summary = "管理员分页查询所有应用的对话历史", description ="管理员分页查询所有应用的对话历史")
     @PostMapping("/admin/historyPageList")
     @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<PageResponse<ChatHistory>> listAllAppChatHistory(@RequestBody @Validated ChatHistoryQueryRequest req){
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         PageResponse<ChatHistory> pageResponse =chatHistoryService.listAppChatHistoryByAdmin(req);
