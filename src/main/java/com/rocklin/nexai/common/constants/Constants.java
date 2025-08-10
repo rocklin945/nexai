@@ -65,4 +65,15 @@ public final class Constants {
     public static final long ONE_SECOND =1000L;
     public static final int ZERO =0;
     public static final String X_FORWARDED_FOR ="X-Forwarded-For";
+
+    /**
+     * 应用部署目录
+     */
+    public static final String CODE_DEPLOY_ROOT_DIR = System.getProperty("user.dir")
+            + "/tmp/code_deploy";
+
+    /**
+     * 应用部署域名
+     */
+    public static final String CODE_DEPLOY_HOST = "http://localhost";
 }

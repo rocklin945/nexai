@@ -17,7 +17,7 @@ public interface AppService {
 
     Long createApp(App app);
 
-    String deployApp(Long appId, Long userId);
+    String deployApp(App app);
 
     App getAppById(Long id);
 

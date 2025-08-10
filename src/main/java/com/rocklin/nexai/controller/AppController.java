@@ -110,8 +110,14 @@ public class AppController {
     @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<String> deployApp(@RequestBody @Validated AppDeployRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
-        Long userId = userService.getCurrentUser().getUserId();
-        String deployUrl = appService.deployApp(req.getAppId(), userId);
+        UserLoginResponse currentUser = userService.getCurrentUser();
+        Assert.notNull(currentUser.getUserId(), ErrorCode.NOT_LOGIN_ERROR, "未登录");
+        App app = appService.getAppById(req.getAppId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        Assert.isTrue(currentUser.getUserId().equals(app.getUserId()) ||
+                        currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
+                ErrorCode.UNAUTHORIZED, "无权限部署");
+        String deployUrl = appService.deployApp(app);
         // 返回部署 URL
         return BaseResponse.success(deployUrl);
     }
@@ -145,7 +151,7 @@ public class AppController {
         UserLoginResponse currentUser = userService.getCurrentUser();
         App app = appService.getAppById(req.getId());
         Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
-        Assert.isTrue(currentUser.getUserId() == app.getUserId() ||
+        Assert.isTrue(currentUser.getUserId().equals(app.getUserId()) ||
                         currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
                 ErrorCode.UNAUTHORIZED, "仅本人或管理员可删除");
         appService.deleteApp(req.getId());

@@ -1,4 +1,4 @@
-package com.rocklin.nexai.config;
+package com.rocklin.nexai.common.config;
 
 import com.rocklin.nexai.common.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;

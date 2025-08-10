@@ -22,4 +22,6 @@ public interface AppMapper {
     List<App> listCurUserAppPage(@Param("req") AppQueryPageListRequest req,
                                  @Param("offset") int offset,
                                  @Param("pageSize") int pageSize);
+
+    Long updateDeployAppInfo(App app);
 }

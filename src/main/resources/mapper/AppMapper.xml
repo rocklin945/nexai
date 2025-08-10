@@ -25,6 +25,13 @@
         priority = #{priority}
         where id = #{id}
     </update>
+    <update id="updateDeployAppInfo">
+        update app
+        set
+        deployedTime = #{deployedTime},
+        deployKey = #{deployKey}
+        where id = #{id}
+    </update>
     <delete id="delete">
         delete from app where id = #{id}
     </delete>
