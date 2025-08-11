@@ -2,8 +2,10 @@ package com.rocklin.nexai.service;
 
 import com.rocklin.nexai.core.result.HtmlCodeResult;
 import com.rocklin.nexai.core.result.MultiFileCodeResult;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
-import reactor.core.publisher.Flux;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.UserMessage;
 
 /**
  * @ClassName AiCodeGeneratorService
@@ -20,7 +22,7 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-html-system-prompt.txt")
-    HtmlCodeResult generateHtmlCode(String userMessage);
+    HtmlCodeResult generateHtmlCode(@MemoryId Long appId, @UserMessage String userMessage);
 
     /**
      * 非流式生成多文件代码
@@ -29,7 +31,7 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-multi-file-system-prompt.txt")
-    MultiFileCodeResult generateMultiFileCode(String userMessage);
+    MultiFileCodeResult generateMultiFileCode(@MemoryId Long appId, @UserMessage String userMessage);
 
     /**
      * 流式生成 HTML 代码
@@ -38,7 +40,7 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-html-system-prompt.txt")
-    Flux<String> generateHtmlCodeStream(String userMessage);
+    TokenStream generateHtmlCodeStream(@MemoryId Long appId, @UserMessage String userMessage);
 
     /**
      * 流式生成多文件代码
@@ -47,5 +49,5 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-multi-file-system-prompt.txt")
-    Flux<String> generateMultiFileCodeStream(String userMessage);
+    TokenStream generateMultiFileCodeStream(@MemoryId Long appId, @UserMessage String userMessage);
 }

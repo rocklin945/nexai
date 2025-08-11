@@ -10,6 +10,7 @@ import com.rocklin.nexai.common.exception.BusinessException;
 import com.rocklin.nexai.common.request.AppQueryPageListRequest;
 import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.core.AiCodeGeneratorFacade;
+import com.rocklin.nexai.core.handler.StreamHandlerExecutor;
 import com.rocklin.nexai.mapper.AppMapper;
 import com.rocklin.nexai.model.entity.App;
 import com.rocklin.nexai.service.AppService;
@@ -42,6 +43,7 @@ public class AppServiceImpl implements AppService {
     private final AppMapper appMapper;
     private final ChatHistoryService chatHistoryService;
     private final AiCodeGeneratorFacade aiCodeGeneratorFacade;
+    private final StreamHandlerExecutor streamHandlerExecutor;
 
     @Override
     public Flux<String> chatToGenCode(Long appId, String message, Long userId) {
@@ -55,26 +57,10 @@ public class AppServiceImpl implements AppService {
         chatHistoryService.createHistory(appId, message,
                 ChatHistoryMessageTypeEnum.USER.getValue(), userId);
         //调用 AI 生成代码（流式）
-        //todo 可选非流式
-        Flux<String> contentFlux = aiCodeGeneratorFacade
+        Flux<String> codeFlux = aiCodeGeneratorFacade
                 .generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
         //收集 AI 响应的内容，并且在完成后保存记录到对话历史
-        StringBuilder aiResponseBuilder = new StringBuilder();
-        return contentFlux.map(chunk -> {
-            // 实时收集 AI 响应的内容
-            aiResponseBuilder.append(chunk);
-            return chunk;
-        }).doOnComplete(() -> {
-            // 流式返回完成后，保存 AI 消息到对话历史中
-            String aiResponse = aiResponseBuilder.toString();
-            chatHistoryService.createHistory(appId, aiResponse,
-                    ChatHistoryMessageTypeEnum.AI.getValue(), userId);
-        }).doOnError(error -> {
-            // 如果 AI 回复失败，也需要保存记录到数据库中
-            String errorMessage = "AI回复失败：" + error.getMessage();
-            chatHistoryService.createHistory(appId, errorMessage,
-                    ChatHistoryMessageTypeEnum.AI.getValue(), userId);
-        });
+        return streamHandlerExecutor.doExecute(codeFlux, chatHistoryService, appId, userId, codeGenTypeEnum)
     }
 
     @Override

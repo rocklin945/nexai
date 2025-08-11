@@ -2,9 +2,11 @@ package com.rocklin.nexai.common.factory;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.rocklin.nexai.core.tools.FileWriteTool;
 import com.rocklin.nexai.service.AiCodeGeneratorService;
 import com.rocklin.nexai.service.ChatHistoryService;
 import dev.langchain4j.community.store.memory.chat.redis.RedisChatMemoryStore;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -72,6 +74,12 @@ public class AiCodeGeneratorServiceFactory {
                 .chatModel(chatModel)
                 .streamingChatModel(streamingChatModel)
                 .chatMemory(chatMemory)
+                .tools(new FileWriteTool())
+                // 处理工具调用幻觉问题
+                .hallucinatedToolNameStrategy(toolExecutionRequest ->
+                        ToolExecutionResultMessage.from(toolExecutionRequest,
+                                "Error: there is no tool called " + toolExecutionRequest.name())
+                )
                 .build();
     }
 
