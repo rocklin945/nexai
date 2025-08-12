@@ -4,11 +4,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.rocklin.nexai.common.enums.ChatHistoryMessageTypeEnum;
+import com.rocklin.nexai.common.enums.CodeGenTypeEnum;
 import com.rocklin.nexai.common.enums.StreamMessageTypeEnum;
 import com.rocklin.nexai.core.message.AiResponseMessage;
 import com.rocklin.nexai.core.message.StreamMessage;
 import com.rocklin.nexai.core.message.ToolExecutedMessage;
 import com.rocklin.nexai.core.message.ToolRequestMessage;
+import com.rocklin.nexai.core.parser.CodeParserExecutor;
+import com.rocklin.nexai.core.saver.CodeFileSaverExecutor;
 import com.rocklin.nexai.core.tools.BaseTool;
 import com.rocklin.nexai.core.tools.ToolManager;
 import com.rocklin.nexai.service.ChatHistoryService;
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,12 +42,13 @@ public class JsonMessageStreamHandler {
      * @param originFlux         原始流
      * @param chatHistoryService 聊天历史服务
      * @param appId              应用ID
-     * @param userId          登录用户ID
+     * @param userId             登录用户ID
+     * @param codeGenType
      * @return 处理后的流
      */
     public Flux<String> handle(Flux<String> originFlux,
                                ChatHistoryService chatHistoryService,
-                               Long appId, Long userId) {
+                               Long appId, Long userId, CodeGenTypeEnum codeGenType) {
         // 收集数据用于生成后端记忆格式
         StringBuilder chatHistoryStringBuilder = new StringBuilder();
         // 用于跟踪已经见过的工具ID，判断是否是第一次调用
@@ -58,6 +63,16 @@ public class JsonMessageStreamHandler {
                     // 流式响应完成后，添加 AI 消息到对话历史
                     String aiResponse = chatHistoryStringBuilder.toString();
                     chatHistoryService.createHistory(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), userId);
+                    //解析信息保存文件
+                    try {
+                        // 使用执行器解析代码
+                        Object parsedResult = CodeParserExecutor.executeParser(aiResponse, codeGenType);
+                        // 使用执行器保存代码
+                        File saveDir = CodeFileSaverExecutor.executeSaver(parsedResult, codeGenType, appId);
+                        log.info("保存成功，目录为：{}", saveDir.getAbsolutePath());
+                    } catch (Exception e) {
+                        log.error("保存失败: {}", e.getMessage());
+                    }
                 })
                 .doOnError(error -> {
                     // 如果AI回复失败，也要记录错误消息

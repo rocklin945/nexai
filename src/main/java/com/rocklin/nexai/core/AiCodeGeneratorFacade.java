@@ -8,7 +8,6 @@ import com.rocklin.nexai.common.factory.AiCodeGeneratorServiceFactory;
 import com.rocklin.nexai.core.message.AiResponseMessage;
 import com.rocklin.nexai.core.message.ToolExecutedMessage;
 import com.rocklin.nexai.core.message.ToolRequestMessage;
-import com.rocklin.nexai.core.parser.CodeParserExecutor;
 import com.rocklin.nexai.core.result.HtmlCodeResult;
 import com.rocklin.nexai.core.result.MultiFileCodeResult;
 import com.rocklin.nexai.core.saver.CodeFileSaverExecutor;
@@ -63,7 +62,7 @@ public class AiCodeGeneratorFacade {
     }
 
     /**
-     *生成代码并保存(流式)
+     *生成代码(流式)
      */
     public Flux<String> generateAndSaveCodeStream(String userMessage,
                                                   CodeGenTypeEnum codeGenTypeEnum,
@@ -76,12 +75,12 @@ public class AiCodeGeneratorFacade {
                 = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
-                TokenStream tokenStream = aiCodeGeneratorService.generateHtmlCodeStream(appId, userMessage);
-                yield processCodeStream(tokenStream, CodeGenTypeEnum.HTML, appId);
+                TokenStream tokenStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
+                yield processTokenStream(tokenStream);
             }
             case MULTI_FILE -> {
-                TokenStream tokenStream = aiCodeGeneratorService.generateMultiFileCodeStream(appId, userMessage);
-                yield processCodeStream(tokenStream, CodeGenTypeEnum.MULTI_FILE, appId);
+                TokenStream tokenStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
+                yield processTokenStream(tokenStream);
             }
             default -> {
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
@@ -98,18 +97,36 @@ public class AiCodeGeneratorFacade {
      */
     private Flux<String> processTokenStream(TokenStream tokenStream) {
         return Flux.create(sink -> {
+                    /**
+                     * 订阅 TokenStream 中的 部分回复事件。
+                     * 每当 AI 模型生成一部分文本时，构造一个 AiResponseMessage 对象封装这段文本。
+                     * 然后将该对象序列化成 JSON 字符串，通过 sink.next() 推送到 Flux 流里。
+                     */
             tokenStream.onPartialResponse((String partialResponse) -> {
                         AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
+                        log.info("aiResponseMessage: " + aiResponseMessage);
                         sink.next(JSONUtil.toJsonStr(aiResponseMessage));
                     })
+                    /**
+                     * 监听模型请求调用工具的事件（如写文件、调用API等）。
+                     * 把工具调用请求封装为 ToolRequestMessage 并转成 JSON，发送给流。
+                     * index表示这是第几个工具调用请求
+                     */
                     .onPartialToolExecutionRequest((index, toolExecutionRequest) -> {
                         ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecutionRequest);
+                        log.info("toolRequestMessage: " + toolRequestMessage);
                         sink.next(JSONUtil.toJsonStr(toolRequestMessage));
                     })
+                    /**
+                     * 监听工具执行完成事件。
+                     * 把工具执行结果封装为 ToolExecutedMessage 并转成 JSON，发送给流。
+                     */
                     .onToolExecuted((ToolExecution toolExecution) -> {
                         ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
+                        log.info("toolExecutedMessage: " + toolExecutedMessage);
                         sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
                     })
+                    //监听模型回复完成事件,触发流的结束信号
                     .onCompleteResponse((ChatResponse response) -> {
                         sink.complete();
                     })
@@ -118,30 +135,6 @@ public class AiCodeGeneratorFacade {
                         sink.error(error);
                     })
                     .start();
-        });
-    }
-
-    /**
-     * 流式代码处理方法
-     */
-    private Flux<String> processCodeStream(Flux<String> codeStream, CodeGenTypeEnum codeGenType, Long appId) {
-        // 字符串拼接器，用于当流式返回所有的代码之后，再保存代码
-        StringBuilder codeBuilder = new StringBuilder();
-        return codeStream.doOnNext(chunk -> {
-            // 实时收集代码片段
-            codeBuilder.append(chunk);
-        }).doOnComplete(() -> {
-            // 流式返回完成后，保存代码
-            try {
-                String completeCode = codeBuilder.toString();
-                // 使用执行器解析代码
-                Object parsedResult = CodeParserExecutor.executeParser(completeCode, codeGenType);
-                // 使用执行器保存代码
-                File saveDir = CodeFileSaverExecutor.executeSaver(parsedResult, codeGenType, appId);
-                log.info("保存成功，目录为：{}", saveDir.getAbsolutePath());
-            } catch (Exception e) {
-                log.error("保存失败: {}", e.getMessage());
-            }
         });
     }
 }

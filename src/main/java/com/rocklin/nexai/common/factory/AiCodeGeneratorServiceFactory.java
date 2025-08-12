@@ -3,6 +3,7 @@ package com.rocklin.nexai.common.factory;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.rocklin.nexai.core.tools.FileWriteTool;
+import com.rocklin.nexai.core.tools.ToolManager;
 import com.rocklin.nexai.service.AiCodeGeneratorService;
 import com.rocklin.nexai.service.ChatHistoryService;
 import dev.langchain4j.community.store.memory.chat.redis.RedisChatMemoryStore;
@@ -33,9 +34,10 @@ import static com.rocklin.nexai.common.constants.Constants.MAX_CONTEXT_SIZE;
 public class AiCodeGeneratorServiceFactory {
 
     private final ChatModel chatModel;
-    private final StreamingChatModel streamingChatModel;
+    private final StreamingChatModel reasoningStreamingChatModel;
     private final RedisChatMemoryStore redisChatMemoryStore;
     private final ChatHistoryService chatHistoryService;
+    private final ToolManager toolManager;
 
     /**
      * AI 服务实例缓存
@@ -72,9 +74,9 @@ public class AiCodeGeneratorServiceFactory {
         chatHistoryService.loadChatHistoryToMemory(appId, chatMemory, MAX_CONTEXT_SIZE);
         return AiServices.builder(AiCodeGeneratorService.class)
                 .chatModel(chatModel)
-                .streamingChatModel(streamingChatModel)
+                .streamingChatModel(reasoningStreamingChatModel)
                 .chatMemory(chatMemory)
-                .tools(new FileWriteTool())
+                .tools(toolManager.getAllTools())
                 // 处理工具调用幻觉问题
                 .hallucinatedToolNameStrategy(toolExecutionRequest ->
                         ToolExecutionResultMessage.from(toolExecutionRequest,

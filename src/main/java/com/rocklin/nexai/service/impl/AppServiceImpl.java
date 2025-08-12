@@ -60,7 +60,7 @@ public class AppServiceImpl implements AppService {
         Flux<String> codeFlux = aiCodeGeneratorFacade
                 .generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
         //收集 AI 响应的内容，并且在完成后保存记录到对话历史
-        return streamHandlerExecutor.doExecute(codeFlux, chatHistoryService, appId, userId, codeGenTypeEnum)
+        return streamHandlerExecutor.doExecute(codeFlux, chatHistoryService, appId, userId, codeGenTypeEnum);
     }
 
     @Override
