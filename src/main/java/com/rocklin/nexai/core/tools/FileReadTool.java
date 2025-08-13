@@ -1,12 +1,13 @@
 package com.rocklin.nexai.core.tools;
 
 import cn.hutool.json.JSONObject;
+import com.rocklin.nexai.common.utils.FolderFindUtil;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
-import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,10 +25,11 @@ public class FileReadTool extends BaseTool {
     public String readFile(
             @P("文件的路径")
             String filePath,
-            @ToolMemoryId Long appId
+            @P("appId") String appId
     ) {
         try {
-            Path path = Paths.get(filePath);
+            String folder = FolderFindUtil.findFolder(appId);
+            Path path = Paths.get(folder+ File.separator +filePath);
             if (!Files.exists(path) || !Files.isRegularFile(path)) {
                 return "错误：文件不存在或不是文件 - " + filePath;
             }

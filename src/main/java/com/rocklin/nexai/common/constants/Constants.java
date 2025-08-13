@@ -76,4 +76,10 @@ public final class Constants {
      * 应用部署域名
      */
     public static final String CODE_DEPLOY_HOST = "http://localhost";
+
+    /**
+     * 文件前缀名
+     */
+    public static final String HTML_FILE_PREFIX ="html_";
+    public static final String MULTI_FILE_FILE_PREFIX ="multi_file_";
 }

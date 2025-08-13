@@ -22,7 +22,7 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-html-system-prompt.txt")
-    HtmlCodeResult generateHtmlCode(@UserMessage String userMessage);
+    HtmlCodeResult generateHtmlCode(@UserMessage String appId, @UserMessage String userMessage);
 
     /**
      * 非流式生成多文件代码
@@ -31,7 +31,7 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-multi-file-system-prompt.txt")
-    MultiFileCodeResult generateMultiFileCode(@UserMessage String userMessage);
+    MultiFileCodeResult generateMultiFileCode(@UserMessage String appId, @UserMessage String userMessage);
 
     /**
      * 流式生成 HTML 代码
@@ -40,7 +40,7 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-html-system-prompt.txt")
-    TokenStream generateHtmlCodeStream(@UserMessage String userMessage);
+    TokenStream generateHtmlCodeStream(@UserMessage String appId, @UserMessage String userMessage);
 
     /**
      * 流式生成多文件代码
@@ -49,5 +49,5 @@ public interface AiCodeGeneratorService {
      * @return AI 的输出结果
      */
     @SystemMessage(fromResource = "prompt/codegen-multi-file-system-prompt.txt")
-    TokenStream generateMultiFileCodeStream(@UserMessage String userMessage);
+    TokenStream generateMultiFileCodeStream(@UserMessage String appId, @UserMessage String userMessage);
 }

@@ -63,16 +63,6 @@ public class JsonMessageStreamHandler {
                     // 流式响应完成后，添加 AI 消息到对话历史
                     String aiResponse = chatHistoryStringBuilder.toString();
                     chatHistoryService.createHistory(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), userId);
-                    //解析信息保存文件
-                    try {
-                        // 使用执行器解析代码
-                        Object parsedResult = CodeParserExecutor.executeParser(aiResponse, codeGenType);
-                        // 使用执行器保存代码
-                        File saveDir = CodeFileSaverExecutor.executeSaver(parsedResult, codeGenType, appId);
-                        log.info("保存成功，目录为：{}", saveDir.getAbsolutePath());
-                    } catch (Exception e) {
-                        log.error("保存失败: {}", e.getMessage());
-                    }
                 })
                 .doOnError(error -> {
                     // 如果AI回复失败，也要记录错误消息

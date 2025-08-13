@@ -47,11 +47,11 @@ public class AiCodeGeneratorFacade {
                 = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
-                HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode(userMessage);
+                HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode(String.valueOf(appId),userMessage);
                 yield CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.HTML, appId);
             }
             case MULTI_FILE -> {
-                MultiFileCodeResult result = aiCodeGeneratorService.generateMultiFileCode(userMessage);
+                MultiFileCodeResult result = aiCodeGeneratorService.generateMultiFileCode(String.valueOf(appId),userMessage);
                 yield CodeFileSaverExecutor.executeSaver(result, CodeGenTypeEnum.MULTI_FILE, appId);
             }
             default -> {
@@ -75,11 +75,11 @@ public class AiCodeGeneratorFacade {
                 = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
-                TokenStream tokenStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
+                TokenStream tokenStream = aiCodeGeneratorService.generateHtmlCodeStream(String.valueOf(appId),userMessage);
                 yield processTokenStream(tokenStream);
             }
             case MULTI_FILE -> {
-                TokenStream tokenStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
+                TokenStream tokenStream = aiCodeGeneratorService.generateMultiFileCodeStream(String.valueOf(appId),userMessage);
                 yield processTokenStream(tokenStream);
             }
             default -> {
@@ -104,7 +104,6 @@ public class AiCodeGeneratorFacade {
                      */
             tokenStream.onPartialResponse((String partialResponse) -> {
                         AiResponseMessage aiResponseMessage = new AiResponseMessage(partialResponse);
-                        log.info("aiResponseMessage: " + aiResponseMessage);
                         sink.next(JSONUtil.toJsonStr(aiResponseMessage));
                     })
                     /**

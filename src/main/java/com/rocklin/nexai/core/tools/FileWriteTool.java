@@ -2,12 +2,13 @@ package com.rocklin.nexai.core.tools;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
+import com.rocklin.nexai.common.utils.FolderFindUtil;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
-import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,12 +27,13 @@ public class FileWriteTool extends BaseTool {
     public String writeFile(
             @P("文件的路径")
             String filePath,
+            @P("appId") String appId,
             @P("要写入文件的内容")
-            String content,
-            @ToolMemoryId Long appId
+            String content
     ) {
         try {
-            Path path = Paths.get(filePath);
+            String folder = FolderFindUtil.findFolder(appId);
+            Path path = Paths.get(folder+ File.separator +filePath);
             // 创建父目录（如果不存在）
             Path parentDir = path.getParent();
             if (parentDir != null) {
