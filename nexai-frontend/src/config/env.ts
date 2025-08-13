@@ -18,5 +18,6 @@ export const getDeployUrl = (deployKey: string) => {
 
 // 获取静态资源预览URL
 export const getStaticPreviewUrl = (codeGenType: string, appId: string) => {
-  return `${STATIC_BASE_URL}/${codeGenType}_${appId}/`
+  // 使用相对路径，确保与前端同源，通过 Vite 代理到后端
+  return `/api/static/${codeGenType}_${appId}/`
 }

@@ -251,11 +251,13 @@ const toggleEditMode = () => {
     message.warning('请等待页面加载完成')
     return
   }
-  // 确保 visualEditor 已初始化
+  // 确保 iframe 内容已加载
   if (!previewReady.value) {
     message.warning('请等待页面加载完成')
     return
   }
+  // 确保 visualEditor 拿到最新 iframe 引用（冪等）
+  visualEditor.init(iframe)
   const newEditMode = visualEditor.toggleEditMode()
   isEditMode.value = newEditMode
 }
@@ -564,7 +566,8 @@ const updatePreview = () => {
     const codeGenType = appInfo.value?.codeGenType || CodeGenTypeEnum.HTML
     const newPreviewUrl = getStaticPreviewUrl(codeGenType, appId.value)
     previewUrl.value = newPreviewUrl
-    previewReady.value = true
+    // 等待 iframe onload 再置为 true，避免过早点击导致 visualEditor 未初始化
+    previewReady.value = false
   }
 }
 
