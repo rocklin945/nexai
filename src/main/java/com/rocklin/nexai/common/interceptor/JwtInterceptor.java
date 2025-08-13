@@ -1,6 +1,7 @@
 package com.rocklin.nexai.common.interceptor;
 
 import com.rocklin.nexai.common.enums.ErrorCode;
+import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.exception.BusinessException;
 import com.rocklin.nexai.common.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,40 +32,40 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         String token = null;
 
-        //从 Cookie 中获取 token
-        if (request.getCookies() != null) {
-            for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
-                if (TOKEN.equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
+        //从 Authorization 头获取
+        String authHeader = request.getHeader(AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith(BEARER)) {
+            token = authHeader.substring(TOKEN_START_INDEX);
+        }
+
+        //sse从 Cookie 中获取 token
+        if(token == null) {
+            if (request.getCookies() != null) {
+                for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                    if (TOKEN.equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
                 }
             }
         }
 
-        //兼容从 Authorization 头获取
-        if (token == null) {
-            String authHeader = request.getHeader(AUTHORIZATION);
-            if (authHeader != null && authHeader.startsWith(BEARER)) {
-                token = authHeader.substring(TOKEN_START_INDEX);
-            }else {
-                throw new BusinessException(ErrorCode.UNAUTHORIZED, "未提供token");
-            }
-        }
-        
+        Assert.notNull(token,ErrorCode.UNAUTHORIZED, "未提供token");
+
         try {
             // 验证token
             if (!jwtUtils.validateToken(token)) {
                 throw new BusinessException(ErrorCode.UNAUTHORIZED, "token无效");
             }
-            
+
             // 从token中获取用户ID并设置到请求属性中
             String userId = jwtUtils.getUserIdFromToken(token);
             request.setAttribute(USER_ID, userId);
-            
+
             return true;
-        }catch (BusinessException e){
+        } catch (BusinessException e) {
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED, "token验证失败");
         }
     }

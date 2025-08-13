@@ -530,6 +530,7 @@ const generateCode = async (userMessage: string, aiMessageIndex: number) => {
 
     // 处理错误
     eventSource.onerror = function () {
+      document.cookie = "token=; path=/; Secure; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       if (streamCompleted || !isGenerating.value) return
       // 检查是否是正常的连接关闭
       if (eventSource?.readyState === EventSource.CONNECTING) {

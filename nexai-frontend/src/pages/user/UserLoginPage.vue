@@ -3,22 +3,16 @@
     <h2 class="title">NEXAI AI应用生成 - 用户登录</h2>
     <div class="desc">不写一行代码，生成完整应用</div>
     <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
-      <a-form-item
-        name="userAccount"
-        :rules="[
-          { required: true, message: '请输入账号' },
-          { min: 3, max: 12, message: '账号长度不能小于3位，不能大于12位' },
-        ]"
-      >
+      <a-form-item name="userAccount" :rules="[
+        { required: true, message: '请输入账号' },
+        { min: 3, max: 12, message: '账号长度不能小于3位，不能大于12位' },
+      ]">
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />
       </a-form-item>
-      <a-form-item
-        name="userPassword"
-        :rules="[
-          { required: true, message: '请输入密码' },
-          { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
-        ]"
-      >
+      <a-form-item name="userPassword" :rules="[
+        { required: true, message: '请输入密码' },
+        { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
+      ]">
         <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" />
       </a-form-item>
       <div class="tips">
@@ -35,7 +29,7 @@
 import { reactive } from 'vue'
 import { login } from '@/api/userController.ts'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 
 const formState = reactive<API.UserLoginRequest>({
@@ -57,6 +51,7 @@ const handleSubmit = async (values: any) => {
   if (res.data.statusCode === 200 && res.data.data) {
     const token = res.data.data.token;
     if (token) {
+      localStorage.removeItem('token');
       localStorage.setItem('token', token);
     } else {
       message.error('登录失败，请检查用户名和密码')
