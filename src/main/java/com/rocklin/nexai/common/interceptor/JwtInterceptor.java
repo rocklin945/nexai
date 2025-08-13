@@ -50,12 +50,12 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
         }
 
-        Assert.notNull(token,ErrorCode.UNAUTHORIZED, "未提供token");
+        Assert.notNull(token,ErrorCode.UNAUTHORIZED, "登录信息失效，请登录");
 
         try {
             // 验证token
             if (!jwtUtils.validateToken(token)) {
-                throw new BusinessException(ErrorCode.UNAUTHORIZED, "token无效");
+                throw new BusinessException(ErrorCode.UNAUTHORIZED, "登录信息失效，请登录");
             }
 
             // 从token中获取用户ID并设置到请求属性中
@@ -66,7 +66,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED, "token验证失败");
+            throw new BusinessException(ErrorCode.UNAUTHORIZED, "登录信息失效，请登录");
         }
     }
 }

@@ -359,8 +359,13 @@ const fetchAppInfo = async () => {
         await sendInitialMessage(appInfo.value.initPrompt)
       }
     } else {
-      message.error('获取应用信息失败')
-      router.push('/')
+      if (loginUserStore.loginUser.userName === "未登录") {
+        message.error('请先登录')
+        router.push('/user/login')
+      } else {
+        message.error('获取应用信息失败')
+        router.push('/')
+      }
     }
   } catch (error) {
     console.error('获取应用信息失败：', error)

@@ -34,7 +34,7 @@ public final class Constants {
     /**
      * 精选应用
      */
-    public static final Integer GOOD_APP = 1;
+    public static final Integer GOOD_APP = 99;
 
     /**
      * 网站预览相关

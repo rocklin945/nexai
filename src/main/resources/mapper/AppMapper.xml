@@ -45,6 +45,9 @@
                 <if test="req.id != null">
                     id = #{req.id}
                 </if>
+                <if test="req.priority !=null">
+                    priority = #{req.priority}
+                </if>
                 <if test="req.appName != null and req.appName != ''">
                     and appName like concat('%', #{req.appName}, '%')
                 </if>
@@ -69,6 +72,9 @@
             <if test="req != null">
                 <if test="req.id != null">
                     id = #{req.id}
+                </if>
+                <if test="req.priority !=null">
+                    priority = #{req.priority}
                 </if>
                 <if test="req.appName != null and req.appName != ''">
                     and appName like concat('%', #{req.appName}, '%')

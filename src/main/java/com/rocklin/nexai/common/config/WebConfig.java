@@ -26,6 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/static/**",
                         "/user/login",
                         "/user/register",
+                        "/api/user/getGoodAppUserInfo",
                         "/app/good/list/page",
                         "/health/**",
                         "/doc.html",
