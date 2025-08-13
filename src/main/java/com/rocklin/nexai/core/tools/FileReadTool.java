@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import com.rocklin.nexai.common.utils.FolderFindUtil;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,8 @@ public class FileReadTool extends BaseTool {
     public String readFile(
             @P("文件的路径")
             String filePath,
-            @P("appId") String appId
+            @ToolMemoryId @P("应用 ID")
+            String appId
     ) {
         try {
             String folder = FolderFindUtil.findFolder(appId);

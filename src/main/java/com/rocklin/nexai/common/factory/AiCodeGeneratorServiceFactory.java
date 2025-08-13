@@ -75,7 +75,7 @@ public class AiCodeGeneratorServiceFactory {
         return AiServices.builder(AiCodeGeneratorService.class)
                 .chatModel(chatModel)
                 .streamingChatModel(reasoningStreamingChatModel)
-                .chatMemory(chatMemory)
+                .chatMemoryProvider(memoryId -> chatMemory)
                 .tools(toolManager.getAllTools())
                 // 处理工具调用幻觉问题
                 .hallucinatedToolNameStrategy(toolExecutionRequest ->

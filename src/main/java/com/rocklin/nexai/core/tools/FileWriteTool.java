@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import com.rocklin.nexai.common.utils.FolderFindUtil;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,8 @@ public class FileWriteTool extends BaseTool {
     public String writeFile(
             @P("文件的路径")
             String filePath,
-            @P("appId") String appId,
+            @ToolMemoryId @P("应用 ID")
+            String appId,
             @P("要写入文件的内容")
             String content
     ) {

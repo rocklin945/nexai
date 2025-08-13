@@ -6,6 +6,7 @@ import cn.hutool.json.JSONObject;
 import com.rocklin.nexai.common.utils.FolderFindUtil;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,8 @@ public class FileDirReadTool extends BaseTool {
     @Tool("读取目录结构，获取指定目录下的所有文件和子目录信息")
     public String readDir(@P("目录的路径，为空则读取整个项目结构")
                           String dirPath,
-                          @P("appId") String appId) {
+                          @ToolMemoryId @P("应用 ID")
+                          String appId) {
         try {
             String folder = FolderFindUtil.findFolder(appId);
             File targetDir = new File(folder);
