@@ -24,6 +24,8 @@ import java.nio.file.StandardOpenOption;
 @Component
 public class FileModifyTool extends BaseTool {
 
+    private String path;
+
     @Tool("修改文件内容，用新内容替换指定的旧内容")
     public String modifyFile(
             @P("文件的路径")
@@ -36,6 +38,7 @@ public class FileModifyTool extends BaseTool {
             String newContent
     ) {
         try {
+            path=filePath;
             String folder = FolderFindUtil.findFolder(appId);
             Path path = Paths.get(folder+File.separator +filePath);
             if (!Files.exists(path) || !Files.isRegularFile(path)) {
@@ -71,7 +74,7 @@ public class FileModifyTool extends BaseTool {
 
     @Override
     public String generateToolExecutedResult(JSONObject arguments) {
-        String filePath = arguments.getStr("filePath");
+        //String filePath = arguments.getStr("filePath");
         String oldContent = arguments.getStr("oldContent");
         String newContent = arguments.getStr("newContent");
         // 显示对比内容
@@ -87,6 +90,6 @@ public class FileModifyTool extends BaseTool {
                 ```
                 %s
                 ```
-                """, getDisplayName(), filePath, oldContent, newContent);
+                """, getDisplayName(), path, oldContent, newContent);
     }
 }

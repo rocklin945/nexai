@@ -24,6 +24,8 @@ import java.nio.file.StandardOpenOption;
 @Component
 public class FileWriteTool extends BaseTool {
 
+    private String path;
+
     @Tool("写入文件到指定路径")
     public String writeFile(
             @P("文件的路径")
@@ -34,6 +36,7 @@ public class FileWriteTool extends BaseTool {
             String content
     ) {
         try {
+            path = filePath;
             String folder = FolderFindUtil.findFolder(appId);
             Path path = Paths.get(folder+ File.separator +filePath);
             // 创建父目录（如果不存在）
@@ -77,14 +80,14 @@ public class FileWriteTool extends BaseTool {
 
     @Override
     public String generateToolExecutedResult(JSONObject arguments) {
-        String relativeFilePath = arguments.getStr("relativeFilePath");
-        String suffix = FileUtil.getSuffix(relativeFilePath);
+        //String relativeFilePath = arguments.getStr("relativeFilePath");
+        //String suffix = FileUtil.getSuffix(relativeFilePath);
         String content = arguments.getStr("content");
         return String.format("""
                         [工具调用] %s %s
                         ```%s
                         %s
                         ```
-                        """, getDisplayName(), relativeFilePath, suffix, content);
+                        """, getDisplayName(), path, content);
     }
 }

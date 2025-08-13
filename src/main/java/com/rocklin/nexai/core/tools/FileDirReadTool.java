@@ -21,6 +21,7 @@ import java.util.List;
 @Slf4j
 @Component
 public class FileDirReadTool extends BaseTool {
+    private String path;
 
     @Tool("读取目录结构，获取指定目录下的所有文件和子目录信息")
     public String readDir(@P("目录的路径，为空则读取整个项目结构")
@@ -28,6 +29,7 @@ public class FileDirReadTool extends BaseTool {
                           @ToolMemoryId @P("应用 ID")
                           String appId) {
         try {
+            path = dirPath;
             String folder = FolderFindUtil.findFolder(appId);
             File targetDir = new File(folder);
             StringBuilder structure = new StringBuilder();
@@ -76,10 +78,10 @@ public class FileDirReadTool extends BaseTool {
 
     @Override
     public String generateToolExecutedResult(JSONObject arguments) {
-        String dirPath = arguments.getStr("dirPath");
-        if (StrUtil.isEmpty(dirPath)) {
-            dirPath = "根目录";
+        //String dirPath = arguments.getStr("dirPath");
+        if (StrUtil.isEmpty(path)) {
+            path = "根目录";
         }
-        return String.format("[工具调用] %s %s", getDisplayName(), dirPath);
+        return String.format("[工具调用] %s %s", getDisplayName(), path);
     }
 } 

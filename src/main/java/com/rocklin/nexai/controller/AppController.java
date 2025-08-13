@@ -11,9 +11,11 @@ import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.request.*;
 import com.rocklin.nexai.common.response.BaseResponse;
 import com.rocklin.nexai.common.response.PageResponse;
+import com.rocklin.nexai.common.utils.WebScreenshotUtils;
 import com.rocklin.nexai.model.entity.App;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.AppService;
+import com.rocklin.nexai.service.ScreenshotService;
 import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,6 +47,7 @@ public class AppController {
 
     private final AppService appService;
     private final UserService userService;
+    private final ScreenshotService screenshotService;
 
     /**
      * 创建应用
@@ -120,6 +123,22 @@ public class AppController {
         String deployUrl = appService.deployApp(app);
         // 返回部署 URL
         return BaseResponse.success(deployUrl);
+    }
+
+    /**
+     * 截图保存封面
+     */
+    @Operation(summary = "截图保存封面", description = "截图保存封面")
+    @PostMapping("/save/cover")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    public BaseResponse<Boolean> saveCover(@RequestBody @Validated AppSaveCoverRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        String coverUrl = screenshotService.generateAndUploadScreenshot(req.getUrl());
+        Assert.notNull(coverUrl, ErrorCode.OPERATION_ERROR, "截图保存失败");
+        App app = appService.getAppById(req.getId());
+        app.setCover(coverUrl);
+        appService.updateApp(app);
+        return BaseResponse.success();
     }
 
     /**

@@ -1,5 +1,5 @@
 declare namespace API {
-type App = {
+  type App = {
     id?: number;
     appName?: string;
     cover?: string;
@@ -283,5 +283,10 @@ type App = {
     id: number;
     userName: string;
     userAvatar: string;
+  };
+
+  type AppSaveCoverRequest = {
+    id: number;
+    url: string;
   };
 }

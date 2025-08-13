@@ -22,6 +22,8 @@ import java.nio.file.Paths;
 @Component
 public class FileReadTool extends BaseTool {
 
+    private String path;
+
     @Tool("读取指定路径的文件内容")
     public String readFile(
             @P("文件的路径")
@@ -30,6 +32,7 @@ public class FileReadTool extends BaseTool {
             String appId
     ) {
         try {
+            path = filePath;
             String folder = FolderFindUtil.findFolder(appId);
             Path path = Paths.get(folder+ File.separator +filePath);
             if (!Files.exists(path) || !Files.isRegularFile(path)) {
@@ -55,7 +58,7 @@ public class FileReadTool extends BaseTool {
 
     @Override
     public String generateToolExecutedResult(JSONObject arguments) {
-        String filePath = arguments.getStr("filePath");
-        return String.format("[工具调用] %s %s", getDisplayName(), filePath);
+        //String filePath = arguments.getStr("filePath");
+        return String.format("[工具调用] %s %s", getDisplayName(), path);
     }
 } 

@@ -155,7 +155,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
 import { useEditAppStore } from '@/stores/editApp'
-import { getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi } from '@/api/appController'
+import { screenshot, getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi } from '@/api/appController'
 import { listAppChatHistory } from '@/api/chatHistoryController'
 import { getGoodAppUserInfo } from '@/api/userController'
 import { CodeGenTypeEnum } from '@/utils/codeGenTypes'
@@ -633,6 +633,25 @@ const onIframeLoad = () => {
   if (iframe) {
     visualEditor.init(iframe)
     visualEditor.onIframeLoad()
+
+    //调用截图服务保存封面
+    iframe.onload = async () => {
+      previewReady.value = true;
+      try {
+        const res = await screenshot({
+          id: appInfo.value.id,
+          url: previewUrl.value
+        });
+        if (res.data.statusCode === 200) {
+          message.success('封面保存成功');
+        } else {
+          message.error(res.data.message);
+        }
+      } catch (error) {
+        console.error('封面保存失败：', error);
+        message.error('封面保存失败');
+      }
+    };
   }
 }
 

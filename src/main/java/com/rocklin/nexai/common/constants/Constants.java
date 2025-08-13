@@ -82,4 +82,10 @@ public final class Constants {
      */
     public static final String HTML_FILE_PREFIX ="html_";
     public static final String MULTI_FILE_FILE_PREFIX ="multi_file_";
+
+    /**
+     * 截图保存路径
+     */
+    public static final String SCREENSHOT_SAVE_PATH =System.getProperty("user.dir") + "/tmp/screenshots/";
+    public static final String SCREENSHOT_COMPRESSED_SUFFIX ="_compressed.jpg";
 }

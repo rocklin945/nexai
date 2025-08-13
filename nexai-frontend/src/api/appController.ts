@@ -181,3 +181,18 @@ export async function updateApp(
     ...(options || {}),
   });
 }
+
+/** 截图保存封面 POST /app/saveCover */
+export async function screenshot(
+  body: API.AppSaveCoverRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean>("/app/saveCover", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

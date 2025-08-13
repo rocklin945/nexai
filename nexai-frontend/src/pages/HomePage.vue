@@ -220,8 +220,8 @@ onMounted(() => {
 
       <!-- 用户提示词输入框 -->
       <div class="input-section">
-        <a-textarea v-model:value="userPrompt" placeholder="帮我创建个人博客网站" :rows="4" :maxlength="1000"
-          class="prompt-input" />
+        <a-textarea v-model:value="userPrompt" @keydown.enter.prevent="generateApp" placeholder="帮我创建个人博客网站" :rows="4"
+          :maxlength="1000" class="prompt-input" />
         <div class="input-actions">
           <a-button type="primary" size="large" @click="generateApp" :loading="creating">
             <template #icon>
