@@ -54,15 +54,47 @@
             </div>
           </div>
         </div>
+        <!-- 选中元素信息展示 -->
+        <a-alert v-if="selectedElementInfo" class="selected-element-alert" type="info" closable
+          @close="clearSelectedElement">
+          <template #message>
+            <div class="selected-element-info">
+              <div class="element-header">
+                <span class="element-tag">
+                  选中元素：{{ selectedElementInfo.tagName.toLowerCase() }}
+                </span>
+                <span v-if="selectedElementInfo.id" class="element-id">
+                  #{{ selectedElementInfo.id }}
+                </span>
+                <span v-if="selectedElementInfo.className" class="element-class">
+                  .{{ selectedElementInfo.className.split(' ').join('.') }}
+                </span>
+              </div>
+              <div class="element-details">
+                <div v-if="selectedElementInfo.textContent" class="element-item">
+                  内容: {{ selectedElementInfo.textContent.substring(0, 50) }}
+                  {{ selectedElementInfo.textContent.length > 50 ? '...' : '' }}
+                </div>
+                <div v-if="selectedElementInfo.pagePath" class="element-item">
+                  页面路径: {{ selectedElementInfo.pagePath }}
+                </div>
+                <div class="element-item">
+                  选择器:
+                  <code class="element-selector-code">{{ selectedElementInfo.selector }}</code>
+                </div>
+              </div>
+            </div>
+          </template>
+        </a-alert>
 
         <!-- 用户消息输入框 -->
         <div class="input-container">
           <div class="input-wrapper">
             <a-tooltip v-if="!isOwner" title="无法在别人的作品下对话哦~" placement="top">
-              <a-textarea v-model:value="userInput" placeholder="请描述你想生成的网站，越详细效果越好哦" :rows="4" :maxlength="1000"
+              <a-textarea v-model:value="userInput" :placeholder="getInputPlaceholder()" :rows="4" :maxlength="1000"
                 @keydown.enter.prevent="sendMessage" :disabled="isGenerating || !isOwner" />
             </a-tooltip>
-            <a-textarea v-else v-model:value="userInput" placeholder="请描述你想生成的网站，越详细效果越好哦" :rows="4" :maxlength="1000"
+            <a-textarea v-else v-model:value="userInput" :placeholder="getInputPlaceholder()" :rows="4" :maxlength="1000"
               @keydown.enter.prevent="sendMessage" :disabled="isGenerating" />
             <div class="input-actions">
               <a-button type="primary" @click="sendMessage" :loading="isGenerating" :disabled="!isOwner">
@@ -226,6 +258,13 @@ const toggleEditMode = () => {
   }
   const newEditMode = visualEditor.toggleEditMode()
   isEditMode.value = newEditMode
+}
+
+const getInputPlaceholder = () => {
+  if (selectedElementInfo.value) {
+    return `正在编辑 ${selectedElementInfo.value.tagName.toLowerCase()} 元素，描述您想要的修改...`
+  }
+  return '请描述你想生成的网站，越详细效果越好哦'
 }
 
 // 加载对话历史
@@ -631,6 +670,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.code-gen-type-tag {
+  font-size: 12px;
+}
+
+.selected-element-alert {
+  margin: 0 16px;
+}
+
 #appChatPage {
   height: 100vh;
   display: flex;
@@ -867,5 +914,70 @@ onUnmounted(() => {
   .message-content {
     max-width: 85%;
   }
+}
+
+/* 选中元素信息样式 */
+.selected-element-alert {
+  margin: 0 16px;
+}
+
+.selected-element-info {
+  line-height: 1.4;
+}
+
+.element-header {
+  margin-bottom: 8px;
+}
+
+.element-details {
+  margin-top: 8px;
+}
+
+.element-item {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.element-item:last-child {
+  margin-bottom: 0;
+}
+
+.element-tag {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.element-id {
+  color: #28a745;
+  margin-left: 4px;
+}
+
+.element-class {
+  color: #ffc107;
+  margin-left: 4px;
+}
+
+.element-selector-code {
+  font-family: 'Monaco', 'Menlo', monospace;
+  background: #f6f8fa;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #d73a49;
+  border: 1px solid #e1e4e8;
+}
+
+/* 编辑模式按钮样式 */
+.edit-mode-active {
+  background-color: #52c41a !important;
+  border-color: #52c41a !important;
+  color: white !important;
+}
+
+.edit-mode-active:hover {
+  background-color: #73d13d !important;
+  border-color: #73d13d !important;
 }
 </style>
