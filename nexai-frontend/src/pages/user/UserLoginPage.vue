@@ -68,10 +68,14 @@ const handleSubmit = async (values: any) => {
 
 <style scoped>
 #userLoginPage {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   max-width: 720px;
   padding: 24px;
   margin: 24px auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -81,13 +85,13 @@ const handleSubmit = async (values: any) => {
 
 .desc {
   text-align: center;
-  color: #bbb;
+  color: #666;
   margin-bottom: 16px;
 }
 
 .tips {
   text-align: right;
-  color: #bbb;
+  color: #666;
   font-size: 13px;
   margin-bottom: 16px;
 }

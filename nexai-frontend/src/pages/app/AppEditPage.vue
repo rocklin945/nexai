@@ -248,6 +248,7 @@ onMounted(() => {
   padding: 24px;
   max-width: 1000px;
   margin: 0 auto;
+  background: transparent;
 }
 
 .page-header {
@@ -265,6 +266,13 @@ onMounted(() => {
 
 .edit-container {
   border-radius: 8px;
+}
+
+:deep(.ant-card) {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .cover-preview {
