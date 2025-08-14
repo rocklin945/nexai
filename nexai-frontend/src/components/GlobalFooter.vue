@@ -16,12 +16,13 @@
 
 <style scoped>
 .footer {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   text-align: center;
   padding: 10px;
   margin-top: 5px;
-  border-top: 1px solid rgba(102, 126, 234, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .copyright {

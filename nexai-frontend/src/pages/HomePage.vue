@@ -299,76 +299,8 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 8%, #e2e8f0 20%, #cbd5e1 100%),
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  background: transparent;
   position: relative;
-  overflow: hidden;
-}
-
-/* 科技感网格背景 */
-#homePage::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
-  background-size:
-    100px 100px,
-    100px 100px,
-    20px 20px,
-    20px 20px;
-  pointer-events: none;
-  animation: gridFloat 20s ease-in-out infinite;
-}
-
-/* 动态光效 */
-#homePage::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(59, 130, 246, 0.08) 0%,
-      rgba(139, 92, 246, 0.06) 40%,
-      transparent 80%),
-    linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.04) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(139, 92, 246, 0.04) 50%, transparent 70%);
-  pointer-events: none;
-  animation: lightPulse 8s ease-in-out infinite alternate;
-}
-
-@keyframes gridFloat {
-
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(5px, 5px);
-  }
-}
-
-@keyframes lightPulse {
-  0% {
-    opacity: 0.3;
-  }
-
-  100% {
-    opacity: 0.7;
-  }
 }
 
 .container {
@@ -390,43 +322,6 @@ onMounted(() => {
   margin-bottom: 28px;
   color: #1e293b;
   position: relative;
-  overflow: hidden;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(ellipse 800px 400px at center, rgba(59, 130, 246, 0.12) 0%, transparent 70%),
-    linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(16, 185, 129, 0.04) 50%, transparent 70%);
-  animation: heroGlow 10s ease-in-out infinite alternate;
-}
-
-@keyframes heroGlow {
-  0% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-}
-
-@keyframes rotate {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
 }
 
 .hero-title {

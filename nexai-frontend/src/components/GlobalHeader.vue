@@ -145,11 +145,11 @@ const doLogout = async () => {
   top: 0;
   z-index: 1000;
   padding: 0 24px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .header-left {

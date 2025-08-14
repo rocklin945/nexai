@@ -12,6 +12,13 @@ import BasicLayout from '@/layouts/BasicLayout.vue'
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+  background: url('@/assets/background.png') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+
 body {
   padding: 0;
   font-family:
@@ -20,9 +27,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  background: transparent;
+  min-height: 100vh;
 }
 
-html {
-  overflow-x: hidden;
+#app {
+  min-height: 100vh;
+  background: transparent;
 }
 </style>
