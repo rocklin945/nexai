@@ -276,15 +276,9 @@ const resetSearch = () => {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* 输入框毛玻璃效果 - 完全无边框版本 */
-#chatManagePage :deep(.ant-input),
+/* 输入框毛玻璃效果 - 只给最外层容器设置背景 */
 #chatManagePage :deep(.ant-input-affix-wrapper),
-#chatManagePage :deep(.ant-input-group-wrapper),
-#chatManagePage :deep(.ant-input-wrapper),
-#chatManagePage :deep(.ant-input-group),
-#chatManagePage :deep(.ant-input-group-addon),
-#chatManagePage :deep(.ant-input-suffix),
-#chatManagePage :deep(.ant-input-prefix) {
+#chatManagePage :deep(.ant-input) {
   background: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
@@ -295,6 +289,60 @@ const resetSearch = () => {
   outline: none !important;
 }
 
+/* 所有内部元素完全透明 */
+#chatManagePage :deep(.ant-input-group-wrapper),
+#chatManagePage :deep(.ant-input-wrapper),
+#chatManagePage :deep(.ant-input-group),
+#chatManagePage :deep(.ant-input-group-addon),
+#chatManagePage :deep(.ant-input-suffix),
+#chatManagePage :deep(.ant-input-prefix) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 输入框内部的实际输入元素 - 强制完全透明 */
+#chatManagePage :deep(.ant-input-affix-wrapper > input.ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper input),
+#chatManagePage :deep(.ant-input-group input),
+#chatManagePage :deep(.ant-input-affix-wrapper > .ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper .ant-input) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 修复清除按钮和后缀元素 */
+#chatManagePage :deep(.ant-input-clear-icon),
+#chatManagePage :deep(.ant-input-suffix),
+#chatManagePage :deep(.ant-input-clear-icon-has-suffix),
+#chatManagePage :deep(.ant-input-clear-icon-hidden),
+#chatManagePage :deep(.ant-input-affix-wrapper .ant-input-suffix),
+#chatManagePage :deep(.ant-input-affix-wrapper .ant-input-prefix) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+}
+
+/* 清除按钮hover效果 */
+#chatManagePage :deep(.ant-input-clear-icon:hover) {
+  color: rgba(0, 0, 0, 0.65) !important;
+  background: transparent !important;
+}
+
+/* hover状态 - 只给外层容器设置背景 */
 #chatManagePage :deep(.ant-input:hover),
 #chatManagePage :deep(.ant-input-affix-wrapper:hover) {
   background: rgba(255, 255, 255, 0.15) !important;
@@ -304,6 +352,20 @@ const resetSearch = () => {
   outline: none !important;
 }
 
+/* hover状态下的内部元素保持透明 */
+#chatManagePage :deep(.ant-input:hover input),
+#chatManagePage :deep(.ant-input-affix-wrapper:hover input),
+#chatManagePage :deep(.ant-input-affix-wrapper:hover .ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper:hover .ant-input-suffix),
+#chatManagePage :deep(.ant-input-affix-wrapper:hover .ant-input-prefix),
+#chatManagePage :deep(.ant-input-affix-wrapper:hover .ant-input-clear-icon) {
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* focus状态 - 只给外层容器设置背景 */
 #chatManagePage :deep(.ant-input:focus),
 #chatManagePage :deep(.ant-input-affix-wrapper-focused),
 #chatManagePage :deep(.ant-input-affix-wrapper:focus-within) {
@@ -314,7 +376,25 @@ const resetSearch = () => {
   outline: none !important;
 }
 
-/* 强制移除所有可能的边框 */
+/* focus状态下的内部元素保持透明 */
+#chatManagePage :deep(.ant-input:focus input),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused input),
+#chatManagePage :deep(.ant-input-affix-wrapper:focus-within input),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused .ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused .ant-input-suffix),
+#chatManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input-suffix),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused .ant-input-prefix),
+#chatManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input-prefix),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused .ant-input-clear-icon),
+#chatManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input-clear-icon) {
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 强制移除所有可能的边框和背景 - 分层处理 */
 #chatManagePage :deep(.ant-input),
 #chatManagePage :deep(.ant-input-affix-wrapper),
 #chatManagePage :deep(.ant-input:focus),
@@ -328,75 +408,50 @@ const resetSearch = () => {
   border-color: transparent !important;
 }
 
-/* 清除按钮透明化 */
-#chatManagePage :deep(.ant-input-clear-icon) {
-  background: transparent !important;
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-/* 输入框内部所有元素透明化 */
-#chatManagePage :deep(.ant-input-affix-wrapper > input.ant-input) {
-  background: transparent !important;
+/* 内部元素强制透明 */
+#chatManagePage :deep(.ant-input-affix-wrapper input),
+#chatManagePage :deep(.ant-input-affix-wrapper .ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper .ant-input-suffix),
+#chatManagePage :deep(.ant-input-affix-wrapper .ant-input-prefix) {
   border: none !important;
-  box-shadow: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
-/* 选择器毛玻璃效果 */
-#chatManagePage :deep(.ant-select-selector) {
-  background: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(15px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  border-radius: 8px !important;
+/* 确保内部input元素完全透明 - 加强版 */
+#chatManagePage :deep(.ant-input-affix-wrapper input.ant-input) {
+  background-color: transparent !important;
+  background-image: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-#chatManagePage :deep(.ant-select-selector:hover) {
-  background: rgba(255, 255, 255, 0.25) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
+/* 添加通用透明规则 - 覆盖所有可能的背景 */
+#chatManagePage :deep(.ant-input-affix-wrapper *:not(.ant-input-affix-wrapper)) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-#chatManagePage :deep(.ant-select-focused .ant-select-selector) {
-  background: rgba(255, 255, 255, 0.3) !important;
-  border-color: #40E0D0 !important;
-  box-shadow: 0 0 0 2px rgba(64, 224, 208, 0.2) !important;
+/* 修复可能的伪元素 */
+#chatManagePage :deep(.ant-input-affix-wrapper::before),
+#chatManagePage :deep(.ant-input-affix-wrapper::after),
+#chatManagePage :deep(.ant-input::before),
+#chatManagePage :deep(.ant-input::after) {
+  display: none !important;
 }
 
-/* 占位符和文字样式 */
-#chatManagePage :deep(.ant-input::placeholder),
-#chatManagePage :deep(.ant-select-selection-placeholder) {
+/* 占位符文字 */
+#chatManagePage :deep(.ant-input::placeholder) {
   color: rgba(0, 0, 0, 0.45) !important;
-}
-
-#chatManagePage :deep(.ant-select-selection-item) {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-/* 表格毛玻璃效果 */
-#chatManagePage :deep(.ant-table) {
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border-radius: 8px !important;
-}
-
-#chatManagePage :deep(.ant-table-thead > tr > th) {
-  background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-#chatManagePage :deep(.ant-table-tbody > tr > td) {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-#chatManagePage :deep(.ant-table-tbody > tr:hover > td) {
-  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .message-text {
-  max-width: 300px;
+  max-width: 420px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
