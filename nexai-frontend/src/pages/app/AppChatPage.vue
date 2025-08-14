@@ -372,6 +372,7 @@ const fetchAppInfo = async () => {
       ) {
         await sendInitialMessage(appInfo.value.initPrompt)
       }
+      scrollToBottom()
     } else {
       if (loginUserStore.loginUser.userName === "未登录") {
         message.error('请先登录')
@@ -704,11 +705,10 @@ const saveCover = async (newUrl: string) => {
     if (res.data.statusCode === 200) {
       message.success('封面保存成功');
     } else {
-      message.error(res.data.message);
+      console.error(res.data.message);
     }
   } catch (error) {
     console.error('封面保存失败：', error);
-    message.error('封面保存失败');
   }
 }
 // 编辑应用
