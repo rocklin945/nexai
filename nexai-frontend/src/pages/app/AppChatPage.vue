@@ -256,10 +256,24 @@ const toggleEditMode = () => {
     message.warning('请等待页面加载完成')
     return
   }
-  // 确保 visualEditor 拿到最新 iframe 引用（冪等）
-  visualEditor.init(iframe)
-  const newEditMode = visualEditor.toggleEditMode()
-  isEditMode.value = newEditMode
+  
+  try {
+    // 确保 iframe 已经完全加载并可访问
+    if (!iframe.contentWindow || !iframe.contentDocument) {
+      message.warning('请等待页面加载完成')
+      return
+    }
+    
+    // 确保 visualEditor 拿到最新 iframe 引用（冪等）
+    visualEditor.init(iframe)
+    const newEditMode = visualEditor.toggleEditMode()
+    isEditMode.value = newEditMode
+    
+    console.log('编辑模式切换成功:', isEditMode.value)
+  } catch (error) {
+    console.error('切换编辑模式失败:', error)
+    message.error('切换编辑模式失败，请刷新页面重试')
+  }
 }
 
 const getInputPlaceholder = () => {
@@ -569,11 +583,31 @@ const handleError = (error: unknown, aiMessageIndex: number) => {
 // 更新预览
 const updatePreview = () => {
   if (appId.value) {
+    // 先重置状态
+    previewReady.value = false
+    
+    // 如果处于编辑模式，先退出编辑模式
+    if (isEditMode.value) {
+      isEditMode.value = false
+      visualEditor.disableEditMode()
+    }
+    
+    // 更新预览URL
     const codeGenType = appInfo.value?.codeGenType || CodeGenTypeEnum.HTML
     const newPreviewUrl = getStaticPreviewUrl(codeGenType, appId.value)
-    previewUrl.value = newPreviewUrl
-    // 等待 iframe onload 再置为 true，避免过早点击导致 visualEditor 未初始化
-    previewReady.value = false
+    
+    // 如果URL没变，强制刷新iframe
+    if (previewUrl.value === newPreviewUrl) {
+      const iframe = document.querySelector('.preview-iframe') as HTMLIFrameElement
+      if (iframe) {
+        console.log('URL相同，强制刷新iframe')
+        iframe.src = newPreviewUrl + '?t=' + new Date().getTime()
+      }
+    } else {
+      previewUrl.value = newPreviewUrl
+    }
+    
+    console.log('预览URL已更新:', previewUrl.value)
   }
 }
 
@@ -628,6 +662,7 @@ const openDeployedSite = () => {
 
 // iframe加载完成
 const onIframeLoad = () => {
+  console.log('iframe加载完成')
   previewReady.value = true
   const iframe = document.querySelector('.preview-iframe') as HTMLIFrameElement
   if (iframe) {
@@ -644,7 +679,10 @@ watch(
   () => previewUrl.value,
   async (newUrl) => {
     if (!newUrl) return;
-
+    
+    // 重置预览就绪状态
+    previewReady.value = false;
+    
     if (firstChange) {
       // 第一次变化后标记为已处理
       firstChange = false;

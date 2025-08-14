@@ -36,6 +36,7 @@ export class VisualEditor {
    */
   init(iframe: HTMLIFrameElement) {
     this.iframe = iframe
+    console.log('VisualEditor初始化完成', iframe)
   }
 
   /**
@@ -75,12 +76,26 @@ export class VisualEditor {
   toggleEditMode() {
     console.log('toggleEditMode start');
     console.log('this.isEditMode', this.isEditMode);
-    if (this.isEditMode) {
-      this.disableEditMode()
-    } else {
-      this.enableEditMode()
+
+    try {
+      if (this.isEditMode) {
+        this.disableEditMode()
+      } else {
+        // 确保iframe已经准备好
+        if (!this.iframe || !this.iframe.contentWindow || !this.iframe.contentDocument) {
+          console.error('iframe未准备好，无法启用编辑模式')
+          return false
+        }
+        this.enableEditMode()
+      }
+      console.log('编辑模式切换后状态:', this.isEditMode)
+      return this.isEditMode
+    } catch (error) {
+      console.error('切换编辑模式出错:', error)
+      // 出错时确保状态一致
+      this.isEditMode = false
+      return false
     }
-    return this.isEditMode
   }
 
   /**
@@ -156,12 +171,14 @@ export class VisualEditor {
 
     const waitForIframeLoad = () => {
       console.log('等待 iframe 加载完成')
-      console.log('this.iframe.contentWindow', this.iframe.contentWindow)
-      console.log('this.iframe.contentDocument', this.iframe.contentDocument)
+      if (this.iframe) {
+        console.log('this.iframe.contentWindow', this.iframe.contentWindow)
+        console.log('this.iframe.contentDocument', this.iframe.contentDocument)
+      }
       try {
-        if (this.iframe!.contentWindow && this.iframe!.contentDocument) {
+        if (this.iframe && this.iframe.contentWindow && this.iframe.contentDocument) {
           // 检查是否已经注入过脚本
-          if (this.iframe!.contentDocument.getElementById('visual-edit-script')) {
+          if (this.iframe.contentDocument.getElementById('visual-edit-script')) {
             this.sendMessageToIframe({
               type: 'TOGGLE_EDIT_MODE',
               editMode: true,
@@ -171,14 +188,15 @@ export class VisualEditor {
 
           const script = this.generateEditScript()
           console.log('script', script)
-          const scriptElement = this.iframe!.contentDocument.createElement('script')
+          const scriptElement = this.iframe.contentDocument.createElement('script')
           scriptElement.id = 'visual-edit-script'
           scriptElement.textContent = script
-          this.iframe!.contentDocument.head.appendChild(scriptElement)
+          this.iframe.contentDocument.head.appendChild(scriptElement)
         } else {
           setTimeout(waitForIframeLoad, 100)
         }
-      } catch {
+      } catch (error) {
+        console.error('注入脚本失败:', error)
         // 静默处理注入失败
       }
     }
@@ -403,7 +421,7 @@ export class VisualEditor {
            if (document.getElementById('edit-tip')) return;
            const tip = document.createElement('div');
            tip.id = 'edit-tip';
-           tip.innerHTML = '🎯 编辑模式已开启<br/>悬浮查看元素，点击选中元素';
+           tip.innerHTML = '编辑模式已开启<br/>悬浮查看元素，点击选中元素';
            tip.style.cssText = \`
              position: fixed;
              top: 20px;
