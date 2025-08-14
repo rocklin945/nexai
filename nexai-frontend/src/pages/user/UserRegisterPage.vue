@@ -10,7 +10,8 @@
           <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
         </feComponentTransfer>
         <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-        <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lighting-color="white" result="specLight">
+        <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100"
+          lighting-color="white" result="specLight">
           <fePointLight x="-200" y="-200" z="300" />
         </feSpecularLighting>
         <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage" />
@@ -19,61 +20,32 @@
     </svg>
 
     <!-- 注册卡片 -->
-    <div
-      class="glass-component register-card"
-      ref="tiltCard"
-      @mousemove="handleMouseMove"
-      @mouseleave="handleMouseLeave"
-    >
+    <div class="glass-component register-card" ref="tiltCard" @mousemove="handleMouseMove" @mouseleave="handleMouseLeave">
       <div class="glass-effect"></div>
       <div class="glass-tint"></div>
       <div class="glass-shine"></div>
       <div class="glass-content">
-        <h2 class="register-title">NEXAI AI应用生成</h2>
+        <h2 class="register-title">NEXAI</h2>
         <div class="register-subtitle">不写一行代码，生成完整应用</div>
         <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit" class="register-form">
-          <a-form-item
-            name="userAccount"
-            :rules="[
-              { required: true, message: '请输入账号' },
-              { min: 3, max: 12, message: '账号长度不能小于3位，不能大于12位' },
-            ]"
-          >
-            <input 
-              v-model="formState.userAccount" 
-              type="text" 
-              placeholder="请输入账号" 
-              class="glass-input"
-            />
+          <a-form-item name="userAccount" :rules="[
+            { required: true, message: '请输入账号' },
+            { min: 3, max: 12, message: '账号长度不能小于3位，不能大于12位' },
+          ]">
+            <input v-model="formState.userAccount" type="text" placeholder="请输入账号" class="glass-input" />
           </a-form-item>
-          <a-form-item
-            name="userPassword"
-            :rules="[
-              { required: true, message: '请输入密码' },
-              { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
-            ]"
-          >
-            <input 
-              v-model="formState.userPassword" 
-              type="password" 
-              placeholder="请输入密码" 
-              class="glass-input"
-            />
+          <a-form-item name="userPassword" :rules="[
+            { required: true, message: '请输入密码' },
+            { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
+          ]">
+            <input v-model="formState.userPassword" type="password" placeholder="请输入密码" class="glass-input" />
           </a-form-item>
-          <a-form-item
-            name="checkPassword"
-            :rules="[
-              { required: true, message: '请确认密码' },
-              { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
-              { validator: validateCheckPassword },
-            ]"
-          >
-            <input 
-              v-model="formState.checkPassword" 
-              type="password" 
-              placeholder="请确认密码" 
-              class="glass-input"
-            />
+          <a-form-item name="checkPassword" :rules="[
+            { required: true, message: '请确认密码' },
+            { min: 8, max: 16, message: '密码长度不能小于8位，不能大于16位' },
+            { validator: validateCheckPassword },
+          ]">
+            <input v-model="formState.checkPassword" type="password" placeholder="请确认密码" class="glass-input" />
           </a-form-item>
           <div class="tips">
             已有账号？
@@ -113,19 +85,19 @@ const ripple = ref<HTMLElement>()
  */
 const handleMouseMove = (e: MouseEvent) => {
   if (!tiltCard.value) return
-  
+
   const card = tiltCard.value
   const rect = card.getBoundingClientRect()
   const x = e.clientX - rect.left
   const y = e.clientY - rect.top
   const centerX = rect.width / 2
   const centerY = rect.height / 2
-  
+
   // 最大旋转角度
   const maxTilt = 18
   const rotateY = ((x - centerX) / centerX) * maxTilt
   const rotateX = -((y - centerY) / centerY) * maxTilt
-  
+
   card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`
 }
 
@@ -134,7 +106,7 @@ const handleMouseMove = (e: MouseEvent) => {
  */
 const handleMouseLeave = () => {
   if (!tiltCard.value) return
-  
+
   const card = tiltCard.value
   card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)'
 }
@@ -144,16 +116,16 @@ const handleMouseLeave = () => {
  */
 const addRippleEffect = (e: MouseEvent) => {
   if (!ripple.value || !tiltCard.value) return
-  
+
   const rect = tiltCard.value.getBoundingClientRect()
   const x = e.clientX - rect.left
   const y = e.clientY - rect.top
-  
+
   ripple.value.style.left = x + 'px'
   ripple.value.style.top = y + 'px'
-  
+
   tiltCard.value.classList.add('clicked')
-  
+
   setTimeout(() => {
     tiltCard.value?.classList.remove('clicked')
   }, 600)
@@ -209,7 +181,7 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.08);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.10), 0 1.5px 6px 0 rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.6);
   cursor: pointer;
   background: transparent;
@@ -254,33 +226,33 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
 
 .register-title {
   text-align: center;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.8);
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
   font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   letter-spacing: -0.5px;
 }
 
 .register-subtitle {
   text-align: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.9);
   margin-bottom: 2rem;
   font-size: 0.9rem;
   font-weight: 400;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .register-form {
   .ant-form-item {
     margin-bottom: 1.2rem;
   }
-  
+
   .ant-form-item-explain-error {
     color: rgba(255, 100, 100, 0.9);
     font-size: 0.85rem;
     margin-top: 0.5rem;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -290,24 +262,24 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
   border: none;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.95);
   font-size: 1rem;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(0, 0, 0, 0.5);
   }
 
   &:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(64, 224, 208, 0.6);
-    box-shadow: 
+    box-shadow:
       0 0 0 2px rgba(64, 224, 208, 0.2),
-      inset 0 1px 3px rgba(0,0,0,0.1);
+      inset 0 1px 3px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
   }
 
@@ -323,7 +295,7 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
   border: none;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(64, 224, 208, 0.3), rgba(0, 191, 255, 0.3));
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.7);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -332,7 +304,7 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 15px rgba(64, 224, 208, 0.2);
 
   &:hover {
@@ -349,14 +321,14 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
 
 .tips {
   text-align: center;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.9);
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .login-link {
-  color: rgba(64, 224, 208, 0.9);
+  color: rgba(55, 132, 219, 0.9);
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
@@ -387,6 +359,7 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
     transform: translate(-50%, -50%) scale(0);
     opacity: 1;
   }
+
   100% {
     transform: translate(-50%, -50%) scale(3);
     opacity: 0;
@@ -404,11 +377,11 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
     width: 90%;
     max-width: 400px;
   }
-  
+
   .glass-content {
     padding: 2rem;
   }
-  
+
   .register-title {
     font-size: 1.6rem;
   }

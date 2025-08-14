@@ -180,4 +180,36 @@ const doLogout = async () => {
   border-bottom: none !important;
   background: transparent !important;
 }
+
+/* 登录按钮样式 */
+.user-login-status :deep(.ant-btn-primary) {
+  background: transparent !important;
+  border: 1px solid rgba(0, 0, 0, 0.5) !important;
+  color: #000 !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: all 0.3s ease !important;
+}
+
+.user-login-status :deep(.ant-btn-primary:hover) {
+  background: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.8) !important;
+  color: #000 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.user-login-status :deep(.ant-btn-primary:active) {
+  background: rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.user-login-status :deep(.ant-btn-primary:focus) {
+  background: transparent !important;
+  color: #000 !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
+}
 </style>
