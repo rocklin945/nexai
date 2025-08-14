@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed, watch } from 'vue'
+import { ref, reactive, onMounted, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
@@ -14,6 +14,48 @@ const loginUserStore = useLoginUserStore()
 // 用户提示词
 const userPrompt = ref('')
 const creating = ref(false)
+
+// 打字机效果相关
+const placeholderText = ref('')
+const isDeleting = ref(false)
+const loopNum = ref(0)
+const typingSpeed = ref(80)
+const deletingSpeed = ref(65)
+const pauseDelay = ref(2000)
+
+// 预设的四个文案
+const textArray = [
+  '使用NEXAI创建一个活动宣传页面，活动内容是......',
+  '使用NEXAI创建一个精美的网站，网站内容是......',
+  '使用NEXAI创建一个产品原型，产品内容是......',
+  '使用NEXAI创建一个好玩的小游戏，小游戏的规则是......'
+]
+
+// 打字机效果函数
+const typeWriter = () => {
+  const i = loopNum.value % textArray.length
+  const fullText = textArray[i]
+
+  if (isDeleting.value) {
+    placeholderText.value = fullText.substring(0, placeholderText.value.length - 1)
+  } else {
+    placeholderText.value = fullText.substring(0, placeholderText.value.length + 1)
+  }
+
+  let delta = isDeleting.value ? deletingSpeed.value : typingSpeed.value
+
+  if (!isDeleting.value && placeholderText.value === fullText) {
+    // 完成打字，暂停一段时间后开始删除
+    isDeleting.value = true
+    delta = pauseDelay.value
+  } else if (isDeleting.value && placeholderText.value === '') {
+    // 完成删除，切换到下一个文本
+    isDeleting.value = false
+    loopNum.value++
+  }
+
+  setTimeout(typeWriter, delta)
+}
 
 // 我的应用数据
 const myApps = ref<API.App[]>([])
@@ -143,7 +185,7 @@ const loadFeaturedAppUsers = async () => {
       console.warn('没有精选应用数据，无法加载用户信息')
       return
     }
-    const userIds = featuredApps.value.map((app) => app.userId).filter(id => id)
+    const userIds = featuredApps.value.map((app) => app.userId).filter(id => id !== undefined)
     console.log('准备加载精选应用用户信息，用户ID列表：', userIds)
     if (userIds.length === 0) {
       console.warn('没有有效的用户ID，无法加载用户信息')
@@ -202,6 +244,11 @@ onMounted(() => {
 
   document.addEventListener('mousemove', handleMouseMove)
 
+  // 启动打字机效果
+  nextTick(() => {
+    setTimeout(typeWriter, 1000)
+  })
+
   // 清理事件监听器
   return () => {
     document.removeEventListener('mousemove', handleMouseMove)
@@ -214,14 +261,16 @@ onMounted(() => {
     <div class="container">
       <!-- 网站标题和描述 -->
       <div class="hero-section">
-        <h1 class="hero-title">所念即所得</h1>
+        <h1 class="hero-title">
+          <span class="glassmorphism-gradient-text" data-text="所念即所得">所念即所得</span>
+        </h1>
         <p class="hero-description">一句话轻松创建网站应用</p>
       </div>
 
       <!-- 用户提示词输入框 -->
       <div class="input-section">
-        <a-textarea v-model:value="userPrompt" @keydown.enter.prevent="generateApp" placeholder="帮我创建个人博客网站" :rows="4"
-          :maxlength="1000" class="prompt-input" />
+        <a-textarea v-model:value="userPrompt" @keydown.enter.prevent="generateApp" :placeholder="placeholderText"
+          :rows="4" :maxlength="1000" class="prompt-input" />
         <div class="input-actions">
           <a-button type="primary" size="large" @click="generateApp" :loading="creating">
             <template #icon>
@@ -313,8 +362,6 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-/* 移除居中光束效果 */
-
 /* 英雄区域 */
 .hero-section {
   text-align: center;
@@ -329,15 +376,13 @@ onMounted(() => {
   font-weight: 700;
   margin: 0 0 20px;
   line-height: 1.2;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   letter-spacing: -1px;
   position: relative;
   z-index: 2;
-  animation: titleShimmer 3s ease-in-out infinite;
+  display: inline-block;
 }
+
+/* 使用外部CSS中定义的毛玻璃渐变文字效果 */
 
 @keyframes titleShimmer {
 
@@ -355,7 +400,7 @@ onMounted(() => {
   font-size: 20px;
   margin: 0;
   opacity: 0.8;
-  color: #64748b;
+  color: rgba(0, 0, 0, 0.7);
   position: relative;
   z-index: 2;
 }
