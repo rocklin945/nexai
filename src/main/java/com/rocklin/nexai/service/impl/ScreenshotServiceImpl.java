@@ -88,7 +88,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
             FileUtil.del(localFile);
             log.info("清理本地文件成功: {}", localFilePath);
         }
-        if (localFileFolder != null && !localFileFolder.isEmpty()) {
+        if (localFileFolder != null) {
             FileUtil.del(localFileFolder);
             log.info("清理本地文件成功: {}", localFileFolder);
         }

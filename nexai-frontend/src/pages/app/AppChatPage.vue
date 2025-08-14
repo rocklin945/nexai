@@ -256,19 +256,19 @@ const toggleEditMode = () => {
     message.warning('请等待页面加载完成')
     return
   }
-  
+
   try {
     // 确保 iframe 已经完全加载并可访问
     if (!iframe.contentWindow || !iframe.contentDocument) {
       message.warning('请等待页面加载完成')
       return
     }
-    
+
     // 确保 visualEditor 拿到最新 iframe 引用（冪等）
     visualEditor.init(iframe)
     const newEditMode = visualEditor.toggleEditMode()
     isEditMode.value = newEditMode
-    
+
     console.log('编辑模式切换成功:', isEditMode.value)
   } catch (error) {
     console.error('切换编辑模式失败:', error)
@@ -585,17 +585,17 @@ const updatePreview = () => {
   if (appId.value) {
     // 先重置状态
     previewReady.value = false
-    
+
     // 如果处于编辑模式，先退出编辑模式
     if (isEditMode.value) {
       isEditMode.value = false
       visualEditor.disableEditMode()
     }
-    
+
     // 更新预览URL
     const codeGenType = appInfo.value?.codeGenType || CodeGenTypeEnum.HTML
     const newPreviewUrl = getStaticPreviewUrl(codeGenType, appId.value)
-    
+
     // 如果URL没变，强制刷新iframe
     if (previewUrl.value === newPreviewUrl) {
       const iframe = document.querySelector('.preview-iframe') as HTMLIFrameElement
@@ -606,7 +606,7 @@ const updatePreview = () => {
     } else {
       previewUrl.value = newPreviewUrl
     }
-    
+
     console.log('预览URL已更新:', previewUrl.value)
   }
 }
@@ -674,15 +674,11 @@ const onIframeLoad = () => {
 // 记录是否是第一次变化
 let firstChange = true;
 
-// 监听 iframe 的 url 值
 watch(
-  () => previewUrl.value,
-  async (newUrl) => {
-    if (!newUrl) return;
-    
-    // 重置预览就绪状态
-    previewReady.value = false;
-    
+  () => previewReady.value,
+  async (newValue) => {
+    if (!newValue) return;
+
     if (firstChange) {
       // 第一次变化后标记为已处理
       firstChange = false;
@@ -694,7 +690,7 @@ watch(
     // 等待 iframe 渲染完成（短延时，确保加载）
     setTimeout(async () => {
       // 延时 1.5 秒，避免页面没渲染完
-      saveCover(newUrl);
+      saveCover(previewUrl.value);
     }, 1500);
   }
 );

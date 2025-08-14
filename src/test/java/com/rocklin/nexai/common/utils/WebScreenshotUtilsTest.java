@@ -11,7 +11,7 @@ class WebScreenshotUtilsTest {
 
     @Test
     void saveWebPageScreenshot() {
-        String testUrl = "http://localhost:5173/api/static/multi_file_101500889851756680/";
+        String testUrl = "http://www.baidu.com";
         String webPageScreenshot = WebScreenshotUtils.saveWebPageScreenshot(testUrl);
         Assertions.assertNotNull(webPageScreenshot);
     }
