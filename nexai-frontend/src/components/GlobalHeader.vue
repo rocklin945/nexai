@@ -6,7 +6,7 @@
         <RouterLink to="/">
           <div class="header-left">
             <img class="logo" src="@/assets/logo.png" alt="Logo" />
-            <h1 class="site-title">AI应用生成</h1>
+            <h1 class="site-title">NEXAI</h1>
           </div>
         </RouterLink>
       </a-col>
@@ -141,8 +141,15 @@ const doLogout = async () => {
 
 <style scoped>
 .header {
-  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   padding: 0 24px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .header-left {
@@ -158,11 +165,19 @@ const doLogout = async () => {
 
 .site-title {
   margin: 0;
-  font-size: 18px;
-  color: #1890ff;
+  font-size: 30px;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  /* 优雅现代感字体 */
+  font-weight: 650;
+  /* 半粗体，更醒目 */
+  letter-spacing: 1px;
+  /* 增加字间距 */
+  color: #222;
+  /* 比纯黑柔和 */
 }
 
 .ant-menu-horizontal {
   border-bottom: none !important;
+  background: transparent !important;
 }
 </style>
