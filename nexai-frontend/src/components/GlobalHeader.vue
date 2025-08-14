@@ -17,26 +17,32 @@
       <!-- 右侧：用户操作区域 -->
       <a-col>
         <div class="user-login-status">
-          <div v-if="loginUserStore.loginUser.userId">
-            <a-dropdown>
-              <a-space>
-                <a-avatar :src="loginUserStore.loginUser.userAvatar">
-                  {{ loginUserStore.loginUser?.userName?.charAt(0) || 'U' }}
-                </a-avatar>
-                {{ loginUserStore.loginUser.userName ?? '无名' }}
-              </a-space>
-              <template #overlay>
-                <a-menu>
-                  <a-menu-item @click="doLogout">
-                    <LogoutOutlined />
-                    退出登录
-                  </a-menu-item>
-                </a-menu>
-              </template>
-            </a-dropdown>
-          </div>
-          <div v-else>
-            <a-button type="primary" href="/user/login">登录</a-button>
+          <!-- 背景切换按钮和用户信息在同一行 -->
+          <div class="header-right-content">
+            <a-button type="primary" @click="backgroundStore.toggleBackground()">
+              切换背景
+            </a-button>
+            <div v-if="loginUserStore.loginUser.userId">
+              <a-dropdown>
+                <a-space>
+                  <a-avatar :src="loginUserStore.loginUser.userAvatar">
+                    {{ loginUserStore.loginUser?.userName?.charAt(0) || 'U' }}
+                  </a-avatar>
+                  {{ loginUserStore.loginUser.userName ?? '无名' }}
+                </a-space>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item @click="doLogout">
+                      <LogoutOutlined />
+                      退出登录
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </div>
+            <div v-else>
+              <a-button type="primary" href="/user/login">登录</a-button>
+            </div>
           </div>
         </div>
       </a-col>
@@ -49,10 +55,12 @@ import { computed, h, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
+import { useBackgroundStore } from '@/stores/background.ts'
 import { logout } from '@/api/userController.ts'
-import { LogoutOutlined, HomeOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined, HomeOutlined, PictureOutlined } from '@ant-design/icons-vue'
 
 const loginUserStore = useLoginUserStore()
+const backgroundStore = useBackgroundStore()
 const router = useRouter()
 // 当前选中菜单
 const selectedKeys = ref<string[]>(['/'])
@@ -211,5 +219,12 @@ const doLogout = async () => {
   background: transparent !important;
   color: #000 !important;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 右侧内容布局 */
+.header-right-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 </style>

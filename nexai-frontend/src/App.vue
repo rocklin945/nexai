@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import BasicLayout from '@/layouts/BasicLayout.vue'
+import { useBackgroundStore } from '@/stores/background'
+import { onMounted } from 'vue'
+
+const backgroundStore = useBackgroundStore()
+
+onMounted(() => {
+  backgroundStore.initBackground()
+})
 </script>
 
 <template>
@@ -14,8 +22,10 @@ import BasicLayout from '@/layouts/BasicLayout.vue'
 
 html {
   overflow-x: hidden;
-  background: url('@/assets/background.png') no-repeat center center fixed;
   background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
