@@ -8,6 +8,9 @@ export const DEPLOY_DOMAIN = import.meta.env.VITE_DEPLOY_DOMAIN || 'http://local
 // API 基础地址
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
 
+//反向代理地址
+export const REVERSE_PROXY_URL = import.meta.env.VITE_REVERSE_PROXY_URL || 'http://localhost:8080'
+
 // 静态资源地址
 export const STATIC_BASE_URL = `${API_BASE_URL}/static`
 

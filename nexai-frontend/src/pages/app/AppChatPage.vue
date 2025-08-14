@@ -150,7 +150,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
@@ -165,7 +165,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import AppDetailModal from '@/components/AppDetailModal.vue'
 import DeploySuccessModal from '@/components/DeploySuccessModal.vue'
 import aiAvatar from '@/assets/aiAvatar.png'
-import { API_BASE_URL, getStaticPreviewUrl } from '@/config/env'
+import { API_BASE_URL, REVERSE_PROXY_URL, getStaticPreviewUrl } from '@/config/env'
 import { VisualEditor, type ElementInfo } from '@/utils/visualEditor'
 
 import {
@@ -633,28 +633,50 @@ const onIframeLoad = () => {
   if (iframe) {
     visualEditor.init(iframe)
     visualEditor.onIframeLoad()
-
-    //调用截图服务保存封面
-    iframe.onload = async () => {
-      previewReady.value = true;
-      try {
-        const res = await screenshot({
-          id: appInfo.value.id,
-          url: previewUrl.value
-        });
-        if (res.data.statusCode === 200) {
-          message.success('封面保存成功');
-        } else {
-          message.error(res.data.message);
-        }
-      } catch (error) {
-        console.error('封面保存失败：', error);
-        message.error('封面保存失败');
-      }
-    };
   }
 }
 
+// 记录是否是第一次变化
+let firstChange = true;
+
+// 监听 iframe 的 url 值
+watch(
+  () => previewUrl.value,
+  async (newUrl) => {
+    if (!newUrl) return;
+
+    if (firstChange) {
+      // 第一次变化后标记为已处理
+      firstChange = false;
+      if (appInfo.value?.cover) {
+        // 第一次且 cover 有值 → 跳过截图
+        return;
+      }
+    }
+    // 等待 iframe 渲染完成（短延时，确保加载）
+    setTimeout(async () => {
+      // 延时 1.5 秒，避免页面没渲染完
+      saveCover(newUrl);
+    }, 1500);
+  }
+);
+
+const saveCover = async (newUrl: string) => {
+  try {
+    const res = await screenshot({
+      id: appInfo.value?.id as number,
+      url: REVERSE_PROXY_URL + newUrl,
+    });
+    if (res.data.statusCode === 200) {
+      message.success('封面保存成功');
+    } else {
+      message.error(res.data.message);
+    }
+  } catch (error) {
+    console.error('封面保存失败：', error);
+    message.error('封面保存失败');
+  }
+}
 // 编辑应用
 const editApp = () => {
   if (appInfo.value?.id) {

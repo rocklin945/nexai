@@ -88,4 +88,5 @@ public final class Constants {
      */
     public static final String SCREENSHOT_SAVE_PATH =System.getProperty("user.dir") + "/tmp/screenshots/";
     public static final String SCREENSHOT_COMPRESSED_SUFFIX ="_compressed.jpg";
+    public static final String COMMA =",";
 }

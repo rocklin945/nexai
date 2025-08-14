@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import static com.rocklin.nexai.common.constants.Constants.COMMA;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -28,7 +30,9 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     public String generateAndUploadScreenshot(String webUrl) {
         log.info("开始生成网页截图，URL：{}", webUrl);
         // 本地截图
-        String localScreenshotPath = WebScreenshotUtils.saveWebPageScreenshot(webUrl);
+        String path = WebScreenshotUtils.saveWebPageScreenshot(webUrl);
+        String[] split = path.split(COMMA);
+        String localScreenshotPath = split[0];
         Assert.isTrue(!StrUtil.isBlank(localScreenshotPath), ErrorCode.OPERATION_ERROR, "生成网页截图失败");
         // 上传图片到 COS
         try {
@@ -38,7 +42,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
             return cosUrl;
         } finally {
             // 清理本地文件
-            cleanupLocalFile(localScreenshotPath);
+            cleanupLocalFile(localScreenshotPath, split[1]);
         }
     }
 
@@ -76,12 +80,17 @@ public class ScreenshotServiceImpl implements ScreenshotService {
      * 清理本地文件
      *
      * @param localFilePath 本地文件路径
+     * localFileFolder 本地文件所在文件夹
      */
-    private void cleanupLocalFile(String localFilePath) {
+    private void cleanupLocalFile(String localFilePath ,String localFileFolder) {
         File localFile = new File(localFilePath);
         if (localFile.exists()) {
             FileUtil.del(localFile);
             log.info("清理本地文件成功: {}", localFilePath);
+        }
+        if (localFileFolder != null && !localFileFolder.isEmpty()) {
+            FileUtil.del(localFileFolder);
+            log.info("清理本地文件成功: {}", localFileFolder);
         }
     }
 }

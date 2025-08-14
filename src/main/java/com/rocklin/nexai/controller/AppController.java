@@ -129,7 +129,7 @@ public class AppController {
      * 截图保存封面
      */
     @Operation(summary = "截图保存封面", description = "截图保存封面")
-    @PostMapping("/save/cover")
+    @PostMapping("/saveCover")
     @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Boolean> saveCover(@RequestBody @Validated AppSaveCoverRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");

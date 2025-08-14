@@ -82,7 +82,7 @@ public class WebScreenshotUtils {
             log.info("压缩图片保存成功：{}", compressedImagePath);
             // 删除原始图片
             FileUtil.del(imageSavePath);
-            return compressedImagePath;
+            return compressedImagePath + COMMA + rootPath;
         } catch (Exception e) {
             log.error("网页截图失败：{}", webUrl, e);
             return null;
