@@ -267,12 +267,132 @@ const resetSearch = () => {
 
 #chatManagePage {
   padding: 24px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: 16px;
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 输入框毛玻璃效果 - 完全无边框版本 */
+#chatManagePage :deep(.ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper),
+#chatManagePage :deep(.ant-input-group-wrapper),
+#chatManagePage :deep(.ant-input-wrapper),
+#chatManagePage :deep(.ant-input-group),
+#chatManagePage :deep(.ant-input-group-addon),
+#chatManagePage :deep(.ant-input-suffix),
+#chatManagePage :deep(.ant-input-prefix) {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+#chatManagePage :deep(.ant-input:hover),
+#chatManagePage :deep(.ant-input-affix-wrapper:hover) {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+#chatManagePage :deep(.ant-input:focus),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused),
+#chatManagePage :deep(.ant-input-affix-wrapper:focus-within) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 强制移除所有可能的边框 */
+#chatManagePage :deep(.ant-input),
+#chatManagePage :deep(.ant-input-affix-wrapper),
+#chatManagePage :deep(.ant-input:focus),
+#chatManagePage :deep(.ant-input-affix-wrapper-focused) {
+  border-top: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+}
+
+/* 清除按钮透明化 */
+#chatManagePage :deep(.ant-input-clear-icon) {
+  background: transparent !important;
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* 输入框内部所有元素透明化 */
+#chatManagePage :deep(.ant-input-affix-wrapper > input.ant-input) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 选择器毛玻璃效果 */
+#chatManagePage :deep(.ant-select-selector) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+#chatManagePage :deep(.ant-select-selector:hover) {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+#chatManagePage :deep(.ant-select-focused .ant-select-selector) {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: #40E0D0 !important;
+  box-shadow: 0 0 0 2px rgba(64, 224, 208, 0.2) !important;
+}
+
+/* 占位符和文字样式 */
+#chatManagePage :deep(.ant-input::placeholder),
+#chatManagePage :deep(.ant-select-selection-placeholder) {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+#chatManagePage :deep(.ant-select-selection-item) {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* 表格毛玻璃效果 */
+#chatManagePage :deep(.ant-table) {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 8px !important;
+}
+
+#chatManagePage :deep(.ant-table-thead > tr > th) {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+#chatManagePage :deep(.ant-table-tbody > tr > td) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+#chatManagePage :deep(.ant-table-tbody > tr:hover > td) {
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .message-text {
