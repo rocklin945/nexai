@@ -504,7 +504,7 @@ onMounted(() => {
 }
 
 .circle-submit-btn {
-  border: 1px solid rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   color: rgba(0, 0, 0, 0.9);
 
   &:hover:not(:disabled) {

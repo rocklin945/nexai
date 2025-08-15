@@ -41,11 +41,12 @@
 
           <a-form-item>
             <a-space>
-              <a-button type="primary" html-type="submit" :loading="submitting">
+              <a-button style="border: 1px solid rgba(0, 0, 0, 0.4);" type="default" html-type="submit"
+                :loading="submitting">
                 保存修改
               </a-button>
-              <a-button @click="resetForm">重置</a-button>
-              <a-button type="link" @click="goToChat">进入对话</a-button>
+              <a-button style="border: 1px solid rgba(0, 0, 0, 0.4);" @click="resetForm">重置</a-button>
+              <a-button style="border: 1px solid rgba(0, 0, 0, 0.4);" type="link" @click="goToChat">进入对话</a-button>
             </a-space>
           </a-form-item>
         </a-form>
@@ -293,39 +294,29 @@ onMounted(() => {
   font-weight: 600 !important;
 }
 
-/* 卡片内容 */
-#appEditPage :deep(.ant-card-body) {
-  background: transparent !important;
+#appEditPage :deep(.ant-form) {
+  padding: 25px;
 }
 
-/* 输入框毛玻璃效果 - 只给最外层容器设置背景 */
+/* 毛玻璃只加在输入框主体，不影响按钮 */
 #appEditPage :deep(.ant-input-affix-wrapper),
 #appEditPage :deep(.ant-input),
-#appEditPage :deep(.ant-input-number),
-#appEditPage :deep(.ant-input-number-input-wrap) {
+#appEditPage :deep(.ant-input-number-input),
+#appEditPage :deep(.ant-input-number) {
   background: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 8px !important;
   color: rgba(0, 0, 0, 0.9) !important;
   box-shadow: none !important;
   outline: none !important;
 }
 
-/* 所有内部元素完全透明 */
-#appEditPage :deep(.ant-input-group-wrapper),
-#appEditPage :deep(.ant-input-wrapper),
-#appEditPage :deep(.ant-input-group),
-#appEditPage :deep(.ant-input-group-addon),
-#appEditPage :deep(.ant-input-suffix),
-#appEditPage :deep(.ant-input-prefix) {
-  background: transparent !important;
+/* 保留加减按钮样式 */
+#appEditPage :deep(.ant-input-number-handler-wrap) {
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
+  background: transparent !important;
 }
 
 /* 输入框内部的实际输入元素 - 强制完全透明 */
@@ -338,235 +329,11 @@ onMounted(() => {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
-  border: none !important;
+  border: none;
   box-shadow: none !important;
   outline: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-}
-
-/* 修复清除按钮和后缀元素 */
-#appEditPage :deep(.ant-input-clear-icon),
-#appEditPage :deep(.ant-input-suffix),
-#appEditPage :deep(.ant-input-clear-icon-has-suffix),
-#appEditPage :deep(.ant-input-clear-icon-hidden),
-#appEditPage :deep(.ant-input-affix-wrapper .ant-input-suffix),
-#appEditPage :deep(.ant-input-affix-wrapper .ant-input-prefix) {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  color: rgba(0, 0, 0, 0.45) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-}
-
-/* 清除按钮hover效果 */
-#appEditPage :deep(.ant-input-clear-icon:hover) {
-  color: rgba(0, 0, 0, 0.65) !important;
-  background: transparent !important;
-}
-
-/* hover状态 - 只给外层容器设置背景 */
-#appEditPage :deep(.ant-input:hover),
-#appEditPage :deep(.ant-input-affix-wrapper:hover),
-#appEditPage :deep(.ant-input-number:hover) {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border: none !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-/* hover状态下的内部元素保持透明 */
-#appEditPage :deep(.ant-input:hover input),
-#appEditPage :deep(.ant-input-affix-wrapper:hover input),
-#appEditPage :deep(.ant-input-affix-wrapper:hover .ant-input),
-#appEditPage :deep(.ant-input-affix-wrapper:hover .ant-input-suffix),
-#appEditPage :deep(.ant-input-affix-wrapper:hover .ant-input-prefix),
-#appEditPage :deep(.ant-input-affix-wrapper:hover .ant-input-clear-icon),
-#appEditPage :deep(.ant-input-number:hover .ant-input-number-input) {
-  background: transparent !important;
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* focus状态 - 只给外层容器设置背景 */
-#appEditPage :deep(.ant-input:focus),
-#appEditPage :deep(.ant-input-affix-wrapper-focused),
-#appEditPage :deep(.ant-input-affix-wrapper:focus-within),
-#appEditPage :deep(.ant-input-number-focused) {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: none !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-/* focus状态下的内部元素保持透明 */
-#appEditPage :deep(.ant-input:focus input),
-#appEditPage :deep(.ant-input-affix-wrapper-focused input),
-#appEditPage :deep(.ant-input-affix-wrapper:focus-within input),
-#appEditPage :deep(.ant-input-affix-wrapper-focused .ant-input),
-#appEditPage :deep(.ant-input-affix-wrapper:focus-within .ant-input),
-#appEditPage :deep(.ant-input-affix-wrapper-focused .ant-input-suffix),
-#appEditPage :deep(.ant-input-affix-wrapper:focus-within .ant-input-suffix),
-#appEditPage :deep(.ant-input-affix-wrapper-focused .ant-input-prefix),
-#appEditPage :deep(.ant-input-affix-wrapper:focus-within .ant-input-prefix),
-#appEditPage :deep(.ant-input-affix-wrapper-focused .ant-input-clear-icon),
-#appEditPage :deep(.ant-input-affix-wrapper:focus-within .ant-input-clear-icon),
-#appEditPage :deep(.ant-input-number-focused .ant-input-number-input) {
-  background: transparent !important;
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 文本域样式 */
-#appEditPage :deep(.ant-input) {
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: none !important;
-  border-radius: 8px !important;
-  color: rgba(0, 0, 0, 0.9) !important;
-}
-
-#appEditPage :deep(.ant-input:hover) {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border: none !important;
-}
-
-#appEditPage :deep(.ant-input:focus) {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* 数字输入框特殊处理 */
-#appEditPage :deep(.ant-input-number-input-wrap) {
-  background: transparent !important;
-}
-
-#appEditPage :deep(.ant-input-number-handler-wrap) {
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-#appEditPage :deep(.ant-input-number-handler) {
-  background: transparent !important;
-  border: none !important;
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-#appEditPage :deep(.ant-input-number-handler:hover) {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: rgba(0, 0, 0, 0.65) !important;
-}
-
-/* 强制移除所有可能的边框和背景 - 分层处理 */
-#appEditPage :deep(.ant-input),
-#appEditPage :deep(.ant-input-affix-wrapper),
-#appEditPage :deep(.ant-input:focus),
-#appEditPage :deep(.ant-input-affix-wrapper-focused),
-#appEditPage :deep(.ant-input-number) {
-  border-top: none !important;
-  border-right: none !important;
-  border-bottom: none !important;
-  border-left: none !important;
-  border-width: 0 !important;
-  border-style: none !important;
-  border-color: transparent !important;
-}
-
-/* 内部元素强制透明 */
-#appEditPage :deep(.ant-input-affix-wrapper input),
-#appEditPage :deep(.ant-input-affix-wrapper .ant-input),
-#appEditPage :deep(.ant-input-affix-wrapper .ant-input-suffix),
-#appEditPage :deep(.ant-input-affix-wrapper .ant-input-prefix) {
-  border: none !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-}
-
-/* 添加通用透明规则 - 覆盖所有可能的背景 */
-#appEditPage :deep(.ant-input-affix-wrapper *:not(.ant-input-affix-wrapper)) {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 占位符文字 */
-#appEditPage :deep(.ant-input::placeholder) {
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-/* 按钮毛玻璃效果 */
-#appEditPage :deep(.ant-btn) {
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  border-radius: 8px !important;
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-#appEditPage :deep(.ant-btn-primary) {
-  background: rgba(24, 144, 255, 0.8) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(24, 144, 255, 0.9) !important;
-  color: #fff !important;
-}
-
-#appEditPage :deep(.ant-btn:hover) {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-}
-
-#appEditPage :deep(.ant-btn-primary:hover) {
-  background: rgba(24, 144, 255, 0.9) !important;
-  border-color: rgba(24, 144, 255, 1) !important;
-}
-
-#appEditPage :deep(.ant-btn-link) {
-  background: transparent !important;
-  border: none !important;
-  color: #1890ff !important;
-}
-
-/* 描述列表毛玻璃效果 */
-#appEditPage :deep(.ant-descriptions) {
-  background: transparent !important;
-}
-
-#appEditPage :deep(.ant-descriptions-item-label) {
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: rgba(0, 0, 0, 0.85) !important;
-  font-weight: 500 !important;
-}
-
-#appEditPage :deep(.ant-descriptions-item-content) {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-/* 表单标签 */
-#appEditPage :deep(.ant-form-item-label > label) {
-  color: rgba(0, 0, 0, 0.85) !important;
-  font-weight: 500 !important;
 }
 
 /* 封面预览区域 */
@@ -592,14 +359,8 @@ onMounted(() => {
   background: rgba(0, 0, 0, 0.04) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
-  color: rgba(0, 0, 0, 0.25) !important;
+  color: rgba(0, 0, 0, 0.5) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   cursor: not-allowed !important;
-}
-
-/* 计数器样式 */
-#appEditPage :deep(.ant-input-show-count-suffix) {
-  background: transparent !important;
-  color: rgba(0, 0, 0, 0.45) !important;
 }
 </style>

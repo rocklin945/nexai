@@ -102,7 +102,10 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <a-space>
-            <a-button type="primary" size="small" @click="editApp(record)" ghost> 编辑 </a-button>
+            <a-button type="primary" size="small" ghost @click="viewAppChat(record.id)">
+              查看对话
+            </a-button>
+            <a-button type="primary" size="small" @click="editApp(record)" ghost class="edit-button"> 编辑 </a-button>
             <a-button type="default" ghost size="small" @click="toggleFeatured(record)"
               :class="record.priority === 99 ? 'btn-gold' : 'btn-light-green'">
               {{ record.priority === 99 ? '取消精选' : '精选' }}
@@ -135,48 +138,48 @@ const columns = [
   {
     title: 'ID',
     dataIndex: 'id',
-    width: 100,
+    width: 75,
     fixed: 'left',
   },
   {
     title: '应用名称',
     dataIndex: 'appName',
-    width: 110,
+    width: 100,
   },
   {
     title: '封面',
     dataIndex: 'cover',
-    width: 100,
+    width: 70,
   },
   {
     title: '初始提示词',
     dataIndex: 'initPrompt',
-    width: 200,
+    width: 150,
   },
   {
     title: '生成类型',
     dataIndex: 'codeGenType',
-    width: 100,
+    width: 70,
   },
   {
     title: '优先级',
     dataIndex: 'priority',
-    width: 80,
+    width: 55,
   },
   {
     title: '部署时间',
     dataIndex: 'deployedTime',
-    width: 150,
+    width: 100,
   },
   {
     title: '创建者',
     dataIndex: 'user',
-    width: 140,
+    width: 80,
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    width: 160
+    width: 100
   },
   {
     title: '操作',
@@ -223,6 +226,13 @@ const searchParams = reactive<API.AppQueryPageListRequest>({
 const defaultSearchParams: API.AppQueryPageListRequest = {
   pageNum: 1,
   pageSize: 10,
+}
+
+// 查看应用对话
+const viewAppChat = (appId: number | undefined) => {
+  if (appId) {
+    router.push(`/app/chat/${appId}`)
+  }
 }
 
 // 获取数据
@@ -341,8 +351,8 @@ const resetSearch = () => {
 }
 
 .btn-light-green:hover {
-  border-color: #73d13d !important;
-  color: #73d13d !important;
+  border-color: #81dd4c !important;
+  color: #81dd4c !important;
 }
 
 .btn-gold {
@@ -351,8 +361,18 @@ const resetSearch = () => {
 }
 
 .btn-gold:hover {
-  border-color: #faad14 !important;
-  color: #faad14 !important;
+  border-color: #f4bf55 !important;
+  color: #f4bf55 !important;
+}
+
+.edit-button {
+  border-color: #ba69ef;
+  color: #ba69ef;
+}
+
+.edit-button:hover {
+  border-color: #c079ef !important;
+  color: #c079ef !important;
 }
 
 #appManagePage {

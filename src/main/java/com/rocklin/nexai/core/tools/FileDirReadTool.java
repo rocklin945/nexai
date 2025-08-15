@@ -79,7 +79,7 @@ public class FileDirReadTool extends BaseTool {
     @Override
     public String generateToolExecutedResult(JSONObject arguments) {
         //String dirPath = arguments.getStr("dirPath");
-        if (StrUtil.isEmpty(path)) {
+        if (StrUtil.isEmpty(path) || ".".equals(path)) {
             path = "根目录";
         }
         return String.format("[工具调用] %s %s", getDisplayName(), path);

@@ -12,7 +12,7 @@
           </template>
           应用详情
         </a-button>
-        <a-button type="primary" @click="deployApp" :loading="deploying">
+        <a-button type="default" @click="deployApp" :loading="deploying">
           <template #icon>
             <CloudUploadOutlined />
           </template>
@@ -97,9 +97,10 @@
             <a-textarea v-else v-model:value="userInput" :placeholder="getInputPlaceholder()" :rows="4" :maxlength="1000"
               @keydown.enter.prevent="sendMessage" :disabled="isGenerating" />
             <div class="input-actions">
-              <a-button type="primary" @click="sendMessage" :loading="isGenerating" :disabled="!isOwner">
+              <a-button type="primary" @click="sendMessage" :loading="isGenerating" :disabled="!isOwner"
+                class="submit-btn">
                 <template #icon>
-                  <SendOutlined />
+                  <SendOutlined style="color: rgba(43, 201, 188, 0.8)" />
                 </template>
               </a-button>
             </div>
@@ -754,6 +755,17 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.submit-btn {
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  transform: rotate(-90deg);
+
+  &:hover:not(:disabled) {
+    color: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1) rotate(-135deg);
+    box-shadow: 0 8px 30px rgba(54, 125, 90, 0.6);
+  }
+}
+
 .code-gen-type-tag {
   font-size: 12px;
 }
@@ -766,7 +778,7 @@ onUnmounted(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 10px;
   background: transparent;
 }
 
@@ -775,7 +787,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 1px 16px 5px 16px;
 }
 
 .header-left {
@@ -801,7 +813,6 @@ onUnmounted(() => {
   flex: 1;
   display: flex;
   gap: 16px;
-  padding: 8px;
   overflow: hidden;
 }
 
@@ -824,6 +835,23 @@ onUnmounted(() => {
   padding: 16px;
   overflow-y: auto;
   scroll-behavior: smooth;
+}
+
+.messages-container::-webkit-scrollbar {
+  width: 10px;
+  /* 滚动条宽度，必须声明 */
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+  /* 滚动条轨道透明 */
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  /* 滑块颜色 */
+  border-radius: 4px;
+  /* 圆角 */
 }
 
 .message-item {
