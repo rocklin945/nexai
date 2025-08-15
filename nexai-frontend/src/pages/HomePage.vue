@@ -352,6 +352,72 @@ onMounted(() => {
   position: relative;
 }
 
+.glassmorphism-gradient-text {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 3.5rem;
+  color: transparent;
+  background: linear-gradient(120deg,
+      #ffeaa7,
+      /* 温暖黄 */
+      #fab1a0,
+      /* 珊瑚橙 */
+      #fd79a8,
+      /* 甜蜜粉 */
+      #fdcb6e,
+      /* 金橙色 */
+      #6c5ce7,
+      /* 柔紫色 */
+      #a29bfe,
+      /* 淡紫色 */
+      #fd79a8,
+      /* 甜蜜粉 */
+      #00b894,
+      /* 翡翠绿 */
+      #00cec9,
+      /* 青绿色 */
+      #0984e3,
+      /* 海洋蓝 */
+      #ffeaa7
+      /* 回到起点 */
+    );
+  background-size: 600% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: dreamyFlow 12s ease-in-out infinite;
+}
+
+@keyframes dreamyFlow {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+    filter: saturate(1.1) brightness(1.1);
+  }
+
+  20% {
+    background-position: 80% 20%;
+    filter: saturate(1.3) brightness(1.2);
+  }
+
+  40% {
+    background-position: 160% 80%;
+    filter: saturate(0.9) brightness(1);
+  }
+
+  60% {
+    background-position: 240% 30%;
+    filter: saturate(1.2) brightness(1.15);
+  }
+
+  80% {
+    background-position: 320% 70%;
+    filter: saturate(1.4) brightness(1.1);
+  }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
