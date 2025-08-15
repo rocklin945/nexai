@@ -366,150 +366,31 @@ const resetSearch = () => {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+#appManagePage :deep(.ant-row) {
+  margin-top: 7px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
 /* 输入框毛玻璃效果 - 只给最外层容器设置背景 */
 #appManagePage :deep(.ant-input-affix-wrapper),
 #appManagePage :deep(.ant-input) {
   background: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: none !important;
+  border: none;
   border-radius: 8px !important;
   color: rgba(0, 0, 0, 0.9) !important;
   box-shadow: none !important;
   outline: none !important;
 }
 
-/* 所有内部元素完全透明 */
-#appManagePage :deep(.ant-input-group-wrapper),
-#appManagePage :deep(.ant-input-wrapper),
-#appManagePage :deep(.ant-input-group),
-#appManagePage :deep(.ant-input-group-addon),
-#appManagePage :deep(.ant-input-suffix),
-#appManagePage :deep(.ant-input-prefix) {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-/* 输入框内部的实际输入元素 - 强制完全透明 */
-#appManagePage :deep(.ant-input-affix-wrapper > input.ant-input),
-#appManagePage :deep(.ant-input-affix-wrapper input),
-#appManagePage :deep(.ant-input-group input),
-#appManagePage :deep(.ant-input-affix-wrapper > .ant-input),
-#appManagePage :deep(.ant-input-affix-wrapper .ant-input) {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 修复清除按钮和后缀元素 */
-#appManagePage :deep(.ant-input-clear-icon),
-#appManagePage :deep(.ant-input-suffix),
-#appManagePage :deep(.ant-input-clear-icon-has-suffix),
-#appManagePage :deep(.ant-input-clear-icon-hidden),
-#appManagePage :deep(.ant-input-affix-wrapper .ant-input-suffix),
-#appManagePage :deep(.ant-input-affix-wrapper .ant-input-prefix) {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  color: rgba(0, 0, 0, 0.45) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-}
-
-/* 清除按钮hover效果 */
-#appManagePage :deep(.ant-input-clear-icon:hover) {
-  color: rgba(0, 0, 0, 0.65) !important;
-  background: transparent !important;
-}
-
-/* hover状态 - 只给外层容器设置背景 */
-#appManagePage :deep(.ant-input:hover),
-#appManagePage :deep(.ant-input-affix-wrapper:hover) {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border: none !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-/* hover状态下的内部元素保持透明 */
-#appManagePage :deep(.ant-input:hover input),
-#appManagePage :deep(.ant-input-affix-wrapper:hover input),
-#appManagePage :deep(.ant-input-affix-wrapper:hover .ant-input),
-#appManagePage :deep(.ant-input-affix-wrapper:hover .ant-input-suffix),
-#appManagePage :deep(.ant-input-affix-wrapper:hover .ant-input-prefix),
-#appManagePage :deep(.ant-input-affix-wrapper:hover .ant-input-clear-icon) {
-  background: transparent !important;
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* focus状态 - 只给外层容器设置背景 */
-#appManagePage :deep(.ant-input:focus),
-#appManagePage :deep(.ant-input-affix-wrapper-focused),
-#appManagePage :deep(.ant-input-affix-wrapper:focus-within) {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: none !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-/* focus状态下的内部元素保持透明 */
-#appManagePage :deep(.ant-input:focus input),
-#appManagePage :deep(.ant-input-affix-wrapper-focused input),
-#appManagePage :deep(.ant-input-affix-wrapper:focus-within input),
-#appManagePage :deep(.ant-input-affix-wrapper-focused .ant-input),
-#appManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input),
-#appManagePage :deep(.ant-input-affix-wrapper-focused .ant-input-suffix),
-#appManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input-suffix),
-#appManagePage :deep(.ant-input-affix-wrapper-focused .ant-input-prefix),
-#appManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input-prefix),
-#appManagePage :deep(.ant-input-affix-wrapper-focused .ant-input-clear-icon),
-#appManagePage :deep(.ant-input-affix-wrapper:focus-within .ant-input-clear-icon) {
-  background: transparent !important;
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 强制移除所有可能的边框和背景 - 分层处理 */
-#appManagePage :deep(.ant-input),
 #appManagePage :deep(.ant-input-affix-wrapper),
-#appManagePage :deep(.ant-input:focus),
-#appManagePage :deep(.ant-input-affix-wrapper-focused) {
-  border-top: none !important;
-  border-right: none !important;
-  border-bottom: none !important;
-  border-left: none !important;
-  border-width: 0 !important;
-  border-style: none !important;
-  border-color: transparent !important;
+#appManagePage :deep(.ant-select-selector) {
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-/* 内部元素强制透明 */
-#appManagePage :deep(.ant-input-affix-wrapper input),
-#appManagePage :deep(.ant-input-affix-wrapper .ant-input),
-#appManagePage :deep(.ant-input-affix-wrapper .ant-input-suffix),
-#appManagePage :deep(.ant-input-affix-wrapper .ant-input-prefix) {
-  border: none !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-}
-
-/* 确保内部input元素完全透明 - 加强版 */
+/* 确保内部input元素完全透明 */
 #appManagePage :deep(.ant-input-affix-wrapper input.ant-input) {
   background-color: transparent !important;
   background-image: none !important;
@@ -518,26 +399,10 @@ const resetSearch = () => {
   -webkit-backdrop-filter: none !important;
 }
 
-/* 添加通用透明规则 - 覆盖所有可能的背景 */
-#appManagePage :deep(.ant-input-affix-wrapper *:not(.ant-input-affix-wrapper)) {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 修复可能的伪元素 */
-#appManagePage :deep(.ant-input-affix-wrapper::before),
-#appManagePage :deep(.ant-input-affix-wrapper::after),
-#appManagePage :deep(.ant-input::before),
-#appManagePage :deep(.ant-input::after) {
-  display: none !important;
-}
-
 /* 占位符文字 */
-#appManagePage :deep(.ant-input::placeholder) {
-  color: rgba(0, 0, 0, 0.45) !important;
+#appManagePage :deep(.ant-input::placeholder),
+#appManagePage :deep(.ant-select-selection-placeholder) {
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 
 .no-cover {

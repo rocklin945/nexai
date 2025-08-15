@@ -272,7 +272,7 @@ onMounted(() => {
         <a-textarea v-model:value="userPrompt" @keydown.enter.prevent="generateApp" :placeholder="placeholderText"
           :rows="4" :maxlength="1000" class="prompt-input" />
         <div class="input-actions">
-          <a-button type="primary" size="large" @click="generateApp" :loading="creating">
+          <a-button class="circle-submit-btn" type="primary" size="large" @click="generateApp" :loading="creating">
             <template #icon>
               <span>↑</span>
             </template>
@@ -501,6 +501,17 @@ onMounted(() => {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.circle-submit-btn {
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.9);
+
+  &:hover:not(:disabled) {
+    color: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 8px 30px rgba(79, 70, 229, 0.6);
+  }
 }
 
 /* 快捷按钮 */

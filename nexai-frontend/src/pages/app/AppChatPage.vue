@@ -128,7 +128,7 @@
         </div>
         <div class="preview-content">
           <div v-if="!previewUrl && !isGenerating" class="preview-placeholder">
-            <div class="placeholder-icon">🌐</div>
+            <img :src="aiAvatar" alt="占位图" class="placeholder-icon" />
             <p>网站文件生成完成后将在这里展示</p>
           </div>
           <div v-else-if="isGenerating" class="preview-loading">
@@ -950,12 +950,19 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #666;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: large;
 }
 
 .placeholder-icon {
-  font-size: 48px;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  opacity: 0.8;
   margin-bottom: 16px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  z-index: 1;
+  position: relative;
 }
 
 .preview-loading {

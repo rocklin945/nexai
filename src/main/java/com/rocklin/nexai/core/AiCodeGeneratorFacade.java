@@ -121,7 +121,6 @@ public class AiCodeGeneratorFacade {
                      */
                     .onToolExecuted((ToolExecution toolExecution) -> {
                         ToolExecutedMessage toolExecutedMessage = new ToolExecutedMessage(toolExecution);
-                        log.info("toolExecutedMessage: " + toolExecutedMessage);
                         sink.next(JSONUtil.toJsonStr(toolExecutedMessage));
                     })
                     //监听模型回复完成事件,触发流的结束信号
