@@ -703,7 +703,7 @@ const saveCover = async (newUrl: string) => {
       url: REVERSE_PROXY_URL + newUrl,
     });
     if (res.data.statusCode === 200) {
-      message.success('封面保存成功');
+      console.info('封面保存成功');
     } else {
       console.error(res.data.message);
     }

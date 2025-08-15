@@ -113,7 +113,6 @@ public class AiCodeGeneratorFacade {
                      */
                     .onPartialToolExecutionRequest((index, toolExecutionRequest) -> {
                         ToolRequestMessage toolRequestMessage = new ToolRequestMessage(toolExecutionRequest);
-                        log.info("toolRequestMessage: " + toolRequestMessage);
                         sink.next(JSONUtil.toJsonStr(toolRequestMessage));
                     })
                     /**
@@ -131,6 +130,7 @@ public class AiCodeGeneratorFacade {
                     })
                     .onError((Throwable error) -> {
                         error.printStackTrace();
+                        log.error("error: {}", error.getMessage());
                         sink.error(error);
                     })
                     .start();

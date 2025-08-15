@@ -11,7 +11,6 @@ import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.request.*;
 import com.rocklin.nexai.common.response.BaseResponse;
 import com.rocklin.nexai.common.response.PageResponse;
-import com.rocklin.nexai.common.utils.WebScreenshotUtils;
 import com.rocklin.nexai.model.entity.App;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.AppService;
@@ -20,6 +19,7 @@ import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +40,7 @@ import static com.rocklin.nexai.common.constants.Constants.GOOD_APP;
  * @Version 1.0
  */
 @Tag(name = "应用生成", description = "应用生成相关接口")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app")
@@ -133,11 +134,20 @@ public class AppController {
     @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
     public BaseResponse<Boolean> saveCover(@RequestBody @Validated AppSaveCoverRequest req) {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
-        String coverUrl = screenshotService.generateAndUploadScreenshot(req.getUrl());
-        Assert.notNull(coverUrl, ErrorCode.OPERATION_ERROR, "截图保存失败");
-        App app = appService.getAppById(req.getId());
-        app.setCover(coverUrl);
-        appService.updateApp(app);
+        // 使用虚拟线程并执行
+        Thread.startVirtualThread(() -> {
+            // 调用截图服务生成截图并上传
+            try {
+                String coverUrl = screenshotService.generateAndUploadScreenshot(req.getUrl());
+                Assert.notNull(coverUrl, ErrorCode.OPERATION_ERROR, "截图保存失败");
+                App app = appService.getAppById(req.getId());
+                app.setCover(coverUrl);
+                appService.updateApp(app);
+                log.info("封面更新成功，appId={}, url={}", req.getId(), coverUrl);
+            }catch (Exception e) {
+                log.error("异步保存封面失败, appId={}", req.getId(), e);
+            }
+        });
         return BaseResponse.success();
     }
 
