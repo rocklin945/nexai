@@ -66,6 +66,7 @@ public class JsonMessageStreamHandler {
                 })
                 .doOnError(error -> {
                     // 如果AI回复失败，也要记录错误消息
+                    log.info(error.toString());
                     String errorMessage = "AI回复失败: " + error.getMessage();
                     chatHistoryService.createHistory(appId, errorMessage, ChatHistoryMessageTypeEnum.AI.getValue(), userId);
                 });

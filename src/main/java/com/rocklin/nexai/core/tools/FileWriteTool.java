@@ -85,7 +85,7 @@ public class FileWriteTool extends BaseTool {
         String content = arguments.getStr("content");
         return String.format("""
                         [工具调用] %s %s
-                        ```%s
+                        ```
                         %s
                         ```
                         """, getDisplayName(), path, content);
