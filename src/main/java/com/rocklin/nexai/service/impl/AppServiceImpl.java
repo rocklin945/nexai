@@ -15,9 +15,11 @@ import com.rocklin.nexai.mapper.AppMapper;
 import com.rocklin.nexai.model.entity.App;
 import com.rocklin.nexai.service.AppService;
 import com.rocklin.nexai.service.ChatHistoryService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.util.FileUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -44,6 +46,9 @@ public class AppServiceImpl implements AppService {
     private final ChatHistoryService chatHistoryService;
     private final AiCodeGeneratorFacade aiCodeGeneratorFacade;
     private final StreamHandlerExecutor streamHandlerExecutor;
+
+    @Value("${deploy.host}")
+    private String deployHost;
 
     @Override
     public Flux<String> chatToGenCode(Long appId, String message, Long userId) {
@@ -95,7 +100,7 @@ public class AppServiceImpl implements AppService {
         app.setDeployedTime(LocalDateTime.now());
         Long result = appMapper.updateDeployAppInfo(app);
         Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，更新应用失败");
-        return String.format("%s/%s", CODE_DEPLOY_HOST, deployKey);
+        return String.format("%s/%s", deployHost, deployKey);
     }
 
     @Override

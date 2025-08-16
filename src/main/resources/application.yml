@@ -68,3 +68,7 @@ cos:
     secretKey: your-secret-key
     region: ap-shanghai
     bucket: your-bucket-name
+
+#部署域名
+deploy:
+  host: http://localhost

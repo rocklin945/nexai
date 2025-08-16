@@ -73,11 +73,6 @@ public final class Constants {
             + "/tmp/code_deploy";
 
     /**
-     * 应用部署域名
-     */
-    public static final String CODE_DEPLOY_HOST = "http://localhost";
-
-    /**
      * 文件前缀名
      */
     public static final String HTML_FILE_PREFIX ="html_";
@@ -89,4 +84,9 @@ public final class Constants {
     public static final String SCREENSHOT_SAVE_PATH =System.getProperty("user.dir") + "/tmp/screenshots/";
     public static final String SCREENSHOT_COMPRESSED_SUFFIX ="_compressed.jpg";
     public static final String COMMA =",";
+
+    /**
+     * redis如果设置密码一定要给一个用户名
+     */
+    public static final String REDIS_USER_NAME ="default";
 }

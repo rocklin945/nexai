@@ -16,17 +16,15 @@ public class ReasoningStreamingChatModelConfig {
 
     private String apiKey;
 
+    private String modelName;
+
+    private int maxTokens;
+
     /**
      * 推理流式模型（带工具调用）
      */
     @Bean
     public StreamingChatModel reasoningStreamingChatModel() {
-        // 为了测试方便临时修改
-        final String modelName = "Qwen/Qwen3-Coder-480B-A35B-Instruct";
-        final int maxTokens = 65535;
-        // 生产环境使用
-        // final String modelName = "deepseek-reasoner";
-        // final int maxTokens = 32768;
         return OpenAiStreamingChatModel.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
