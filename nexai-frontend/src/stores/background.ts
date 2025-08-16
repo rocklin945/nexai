@@ -15,12 +15,14 @@ const RANDOM_BACKGROUNDS = [
   '/src/assets/randomBackground/background7.png',
   '/src/assets/randomBackground/background8.png',
   '/src/assets/randomBackground/background9.png',
+  '/src/assets/randomBackground/background10.png',
+  '/src/assets/randomBackground/background11.png',
 ]
 
 export const useBackgroundStore = defineStore('background', () => {
   // 当前背景图路径
   const currentBackground = ref(DEFAULT_BACKGROUND)
-  
+
   // 是否使用随机背景
   const isRandomBackground = ref(false)
 
