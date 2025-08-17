@@ -46,6 +46,30 @@ body {
   background: transparent;
 }
 
+/* 针对 Chrome / Edge / Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  /* 滚动条宽度 */
+  height: 8px;
+  /* 横向滚动条高度 */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* 滚动条轨道透明 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(54, 52, 52, 0.3);
+  /* 滚动条滑块半透明 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  /* 悬停时更明显 */
+}
+
 /* 全局透明背景设置 */
 .ant-layout,
 .ant-layout-content,
@@ -156,19 +180,19 @@ body {
   background: transparent !important;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   background: rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.ant-table-tbody > tr > td {
+.ant-table-tbody>tr>td {
   background: rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.ant-table-tbody > tr:hover > td {
+.ant-table-tbody>tr:hover>td {
   background: rgba(255, 255, 255, 0.15) !important;
 }
 

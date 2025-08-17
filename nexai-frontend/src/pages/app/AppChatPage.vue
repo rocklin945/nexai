@@ -494,7 +494,7 @@ const generateCode = async (userMessage: string, aiMessageIndex: number) => {
 
     const token = localStorage.getItem('token');
     if (token) {
-      document.cookie = `token=${token}; path=/; SameSite=Lax`;
+      document.cookie = `token=${token}; path=/; Secure; SameSite=Strict`;
     }
 
     // 构建URL参数

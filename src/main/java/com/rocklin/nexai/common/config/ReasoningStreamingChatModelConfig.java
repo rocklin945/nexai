@@ -20,6 +20,10 @@ public class ReasoningStreamingChatModelConfig {
 
     private int maxTokens;
 
+    private boolean logRequests;
+
+    private boolean logResponses;
+
     /**
      * 推理流式模型（带工具调用）
      */
@@ -30,8 +34,8 @@ public class ReasoningStreamingChatModelConfig {
                 .baseUrl(baseUrl)
                 .modelName(modelName)
                 .maxTokens(maxTokens)
-                .logRequests(true)
-                .logResponses(true)
+                .logRequests(logRequests)
+                .logResponses(logResponses)
                 .build();
     }
 }

@@ -50,15 +50,15 @@ langchain4j:
       strict-json-schema: true
       response-format: json_object
       max-tokens: 8192
-      log-requests: true
-      log-responses: true
+      log-requests: false
+      log-responses: false
     streaming-chat-model:
       base-url: https://api.deepseek.com
       api-key: <your api key>
       model-name: deepseek-chat
       max-tokens: 8192
-      log-requests: true
-      log-responses: true
+      log-requests: false
+      log-responses: false
 
 # 添加 COS 对象存储配置（需要从腾讯云获取）
 cos:
