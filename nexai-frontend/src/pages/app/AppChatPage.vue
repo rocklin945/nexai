@@ -494,7 +494,7 @@ const generateCode = async (userMessage: string, aiMessageIndex: number) => {
 
     const token = localStorage.getItem('token');
     if (token) {
-      document.cookie = `token=${token}; path=/; Secure; SameSite=Strict`;
+      document.cookie = `token=${token}; path=/; SameSite=Lax`;
     }
 
     // 构建URL参数
@@ -764,6 +764,10 @@ onUnmounted(() => {
     transform: scale(1.1) rotate(-135deg);
     box-shadow: 0 8px 30px rgba(54, 125, 90, 0.6);
   }
+}
+
+.submit-btn ::v-deep(.anticon-loading) {
+  color: rgba(41, 46, 46, 0.8);
 }
 
 .code-gen-type-tag {
