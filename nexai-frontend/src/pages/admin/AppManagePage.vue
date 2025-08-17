@@ -110,7 +110,8 @@
               :class="record.priority === 99 ? 'btn-gold' : 'btn-light-green'">
               {{ record.priority === 99 ? '取消精选' : '精选' }}
             </a-button>
-            <a-popconfirm title="确定要删除这个应用吗？" ok-text="Yes" cancel-text="No" @confirm="deleteApp(record.id)">
+            <a-popconfirm title="确定要删除这个应用吗？" ok-text="Yes" cancel-text="No" :ok-button-props="{ type: 'default' }"
+              @confirm="deleteApp(record.id)">
               <a-button danger size="small">删除</a-button>
             </a-popconfirm>
           </a-space>

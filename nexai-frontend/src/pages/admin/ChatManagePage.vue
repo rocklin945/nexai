@@ -92,7 +92,8 @@
             <a-button type="primary" size="small" ghost @click="viewAppChat(record.appId)">
               查看对话
             </a-button>
-            <a-popconfirm title="确定要删除这条消息吗？" ok-text="Yes" cancel-text="No" @confirm="deleteMessage(record.id)">
+            <a-popconfirm title="确定要删除这条消息吗？" ok-text="Yes" cancel-text="No" :ok-button-props="{ type: 'default' }"
+              @confirm="deleteMessage(record.id)">
               <a-button danger size="small">删除</a-button>
             </a-popconfirm>
           </a-space>

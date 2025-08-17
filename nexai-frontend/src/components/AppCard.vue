@@ -156,19 +156,9 @@ const handleViewWork = () => {
   will-change: transform;
   background: transparent;
 
-  // 特色卡片额外样式
+  // 特色卡片样式与普通卡片保持一致
   &--featured {
-    .glass-tint {
-      background: rgba(255, 215, 0, 0.08);
-    }
-
-    .glass-shine {
-      border-color: rgba(255, 215, 0, 0.3);
-      box-shadow:
-        inset 1px 1px 12px 0 rgba(255, 215, 0, 0.15),
-        inset -1px -1px 8px 0 rgba(255, 255, 255, 0.08),
-        0 4px 24px 0 rgba(255, 215, 0, 0.15);
-    }
+    // 移除特殊样式，保持与普通卡片一致
   }
 }
 

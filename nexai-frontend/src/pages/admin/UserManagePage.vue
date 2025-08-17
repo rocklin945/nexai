@@ -92,7 +92,8 @@
           {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-popconfirm title="确定要删除这个应用吗？" ok-text="Yes" cancel-text="No" @confirm="doDelete(record.userId)">
+          <a-popconfirm title="确定要删除这个应用吗？" ok-text="Yes" cancel-text="No" :ok-button-props="{ type: 'default' }"
+            @confirm="doDelete(record.userId)">
             <a-button danger size="small">删除</a-button>
           </a-popconfirm>
         </template>
