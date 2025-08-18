@@ -15,7 +15,6 @@ import com.rocklin.nexai.mapper.AppMapper;
 import com.rocklin.nexai.model.entity.App;
 import com.rocklin.nexai.service.AppService;
 import com.rocklin.nexai.service.ChatHistoryService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.util.FileUtil;
@@ -128,5 +127,25 @@ public class AppServiceImpl implements AppService {
         //当前页数据
         List<App> list = appMapper.listCurUserAppPage(req,offset,req.getPageSize());
         return new PageResponse<>(list, total, req.getPageNum(), req.getPageSize());
+    }
+
+    @Override
+    public void appCancleDeploy(App app) {
+        String deployKey = app.getDeployKey();
+        Assert.isTrue(StrUtil.isNotBlank(deployKey), ErrorCode.OPERATION_ERROR, "应用未部署");
+        String deployDirPath = CODE_DEPLOY_ROOT_DIR + File.separator + deployKey;
+        File deployDir = new File(deployDirPath);
+        if (deployDir.exists()) {
+            try {
+                // 删除整个部署目录
+                cn.hutool.core.io.FileUtil.del(deployDir);
+                log.info("应用 [{}] 已取消部署，目录已删除：{}", app.getAppName(), deployDirPath);
+            } catch (Exception e) {
+                log.error("取消部署失败，目录删除异常：{}", deployDirPath, e);
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "取消部署失败");
+            }
+        } else {
+            log.warn("应用 [{}] 部署目录不存在，无需取消部署：{}", app.getAppName(), deployDirPath);
+        }
     }
 }

@@ -127,6 +127,25 @@ public class AppController {
     }
 
     /**
+     * 取消部署
+     */
+    @Operation(summary = "取消部署", description = "取消部署")
+    @PostMapping("/cancelDeploy")
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    public BaseResponse<Boolean> cancelDeploy(@RequestBody @Validated AppCancelDeployRequest req) {
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        UserLoginResponse currentUser = userService.getCurrentUser();
+        Assert.notNull(currentUser.getUserId(), ErrorCode.NOT_LOGIN_ERROR, "未登录");
+        App app = appService.getAppById(req.getAppId());
+        Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
+        Assert.isTrue(currentUser.getUserId().equals(app.getUserId()) ||
+                        currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
+                ErrorCode.UNAUTHORIZED, "无权限取消部署");
+        appService.appCancleDeploy(app);
+        return BaseResponse.success();
+    }
+
+    /**
      * 截图保存封面
      */
     @Operation(summary = "截图保存封面", description = "截图保存封面")

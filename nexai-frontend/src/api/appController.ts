@@ -137,6 +137,21 @@ export async function deployApp(
   });
 }
 
+/** 取消应用部署 取消应用部署 POST /app/cancelDeploy */
+export async function cancelDeployApp(
+  body: API.AppCancelDeployRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean>("/app/cancelDeploy", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 根据appId获取应用详情 根据appId获取应用详情 POST /app/getById */
 export async function getAppById(
   body: API.AppGetByIdRequest,

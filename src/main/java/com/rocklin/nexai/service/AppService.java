@@ -26,4 +26,6 @@ public interface AppService {
     void deleteApp(Long id);
 
     PageResponse<App> queryAppPageList(AppQueryPageListRequest req);
+
+    void appCancleDeploy(App app);
 }

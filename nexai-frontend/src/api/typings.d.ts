@@ -289,4 +289,8 @@ declare namespace API {
     id: number;
     url: string;
   };
+
+  type AppCancelDeployRequest = {
+    deployKey: string;
+  };
 }

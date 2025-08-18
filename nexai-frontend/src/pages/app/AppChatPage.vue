@@ -146,7 +146,8 @@
       @edit="editApp" @delete="deleteApp" />
 
     <!-- 部署成功弹窗 -->
-    <DeploySuccessModal v-model:open="deployModalVisible" :deploy-url="deployUrl" @open-site="openDeployedSite" />
+    <DeploySuccessModal v-model:open="deployModalVisible" :deploy-url="deployUrl" @open-site="openDeployedSite"
+      @cancel-deploy="cancelDeploy" />
   </div>
 </template>
 
@@ -156,7 +157,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser'
 import { useEditAppStore } from '@/stores/editApp'
-import { screenshot, getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi } from '@/api/appController'
+import { screenshot, getAppById, deployApp as deployAppApi, deleteApp as deleteAppApi, cancelDeployApp } from '@/api/appController'
 import { listAppChatHistory } from '@/api/chatHistoryController'
 import { getGoodAppUserInfo } from '@/api/userController'
 import { CodeGenTypeEnum } from '@/utils/codeGenTypes'
@@ -675,6 +676,31 @@ const openInNewTab = () => {
 const openDeployedSite = () => {
   if (deployUrl.value) {
     window.open(deployUrl.value, '_blank')
+  }
+}
+
+// 取消部署
+const cancelDeploy = async () => {
+  if (!appId.value) {
+    message.error('应用ID不存在')
+    return
+  }
+
+  try {
+    const res = await cancelDeployApp({
+      appId: appId.value as unknown as number
+    })
+
+    if (res.data.statusCode === 200) {
+      message.success('取消部署成功')
+      // 更新应用信息，清除deployKey
+      await fetchAppInfo()
+    } else {
+      message.error('取消部署失败：' + res.data.message)
+    }
+  } catch (error) {
+    console.error('取消部署失败：', error)
+    message.error('取消部署失败，请重试')
   }
 }
 
