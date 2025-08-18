@@ -12,11 +12,11 @@
           </template>
           应用详情
         </a-button>
-        <a-button type="default" @click="deployApp" :loading="deploying">
+        <a-button type="default" @click="handleDeployAction" :loading="deploying">
           <template #icon>
             <CloudUploadOutlined />
           </template>
-          部署
+          {{ appInfo?.deployKey ? '查看部署' : '部署' }}
         </a-button>
       </div>
     </div>
@@ -166,7 +166,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import AppDetailModal from '@/components/AppDetailModal.vue'
 import DeploySuccessModal from '@/components/DeploySuccessModal.vue'
 import aiAvatar from '@/assets/aiAvatar.png'
-import { API_BASE_URL, REVERSE_PROXY_URL, getStaticPreviewUrl } from '@/config/env'
+import { API_BASE_URL, REVERSE_PROXY_URL, getStaticPreviewUrl, DEPLOY_REDIRECT_URL } from '@/config/env'
 import { VisualEditor, type ElementInfo } from '@/utils/visualEditor'
 
 import {
@@ -620,13 +620,26 @@ const scrollToBottom = () => {
   }
 }
 
-// 部署应用
-const deployApp = async () => {
+// 处理部署按钮点击
+const handleDeployAction = async () => {
   if (!appId.value) {
     message.error('应用ID不存在')
     return
   }
 
+  // 如果已经有deployKey，直接显示部署成功弹窗
+  if (appInfo.value?.deployKey) {
+    deployUrl.value = DEPLOY_REDIRECT_URL + appInfo.value.deployKey
+    deployModalVisible.value = true
+    return
+  }
+
+  // 否则执行部署操作
+  await deployApp()
+}
+
+// 部署应用
+const deployApp = async () => {
   deploying.value = true
   try {
     const res = await deployAppApi({
@@ -637,6 +650,9 @@ const deployApp = async () => {
       deployUrl.value = res.data.data
       deployModalVisible.value = true
       message.success('部署成功')
+
+      // 更新应用信息，确保deployKey被保存
+      await fetchAppInfo()
     } else {
       message.error('部署失败：' + res.data.message)
     }
