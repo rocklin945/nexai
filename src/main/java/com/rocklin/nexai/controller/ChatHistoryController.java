@@ -5,6 +5,7 @@ import com.rocklin.nexai.common.annotation.SlidingWindowRateLimit;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.enums.UserRoleEnum;
 import com.rocklin.nexai.common.exception.Assert;
+import com.rocklin.nexai.common.request.ChatHistoryDeleteRequest;
 import com.rocklin.nexai.common.request.ChatHistoryQueryRequest;
 import com.rocklin.nexai.common.response.BaseResponse;
 import com.rocklin.nexai.common.response.PageResponse;
@@ -78,5 +79,18 @@ public class ChatHistoryController {
         Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
         PageResponse<ChatHistory> pageResponse =chatHistoryService.listAppChatHistoryByAdmin(req);
         return BaseResponse.success(pageResponse);
+    }
+
+    /**
+     * 管理员删除聊天记录
+     */
+    @Operation(summary = "管理员删除聊天记录", description ="管理员删除聊天记录")
+    @PostMapping("/admin/delete")
+    @AuthCheck(enableRole = UserRoleEnum.ADMIN)
+    @SlidingWindowRateLimit(windowInSeconds = 10, maxCount = 3)
+    public BaseResponse<Boolean> deleteChatHistoryById(@RequestBody @Validated ChatHistoryDeleteRequest req){
+        Assert.notNull(req, ErrorCode.PARAMS_ERROR, "参数为空");
+        chatHistoryService.deleteChatHistoryById(req.getId());
+        return BaseResponse.success();
     }
 }

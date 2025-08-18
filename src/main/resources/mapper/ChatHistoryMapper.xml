@@ -17,6 +17,12 @@
         #{appId},
         #{userId})
     </insert>
+    <delete id="deleteChatHistoryByAppId">
+        delete from chat_history where appId = #{appId}
+    </delete>
+    <delete id="deleteChatHistoryById">
+        delete from chat_history where id = #{id}
+    </delete>
     <select id="selectListByAppId" resultType="com.rocklin.nexai.model.entity.ChatHistory">
         select * from chat_history where appId = #{appId}
         order by createTime ASC

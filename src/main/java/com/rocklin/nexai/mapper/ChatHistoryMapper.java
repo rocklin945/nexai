@@ -21,4 +21,8 @@ public interface ChatHistoryMapper {
 
     List<ChatHistory> selectAppChatHistoryByAdmin(@Param("offset") int offset,
                                                   @Param("req") ChatHistoryQueryRequest req);
+
+    Long deleteChatHistoryByAppId(Long id);
+
+    Long deleteChatHistoryById(Long id);
 }

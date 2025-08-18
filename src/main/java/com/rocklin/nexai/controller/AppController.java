@@ -1,5 +1,6 @@
 package com.rocklin.nexai.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.rocklin.nexai.common.annotation.AuthCheck;
@@ -14,6 +15,7 @@ import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.model.entity.App;
 import com.rocklin.nexai.model.vo.UserLoginResponse;
 import com.rocklin.nexai.service.AppService;
+import com.rocklin.nexai.service.ChatHistoryService;
 import com.rocklin.nexai.service.ScreenshotService;
 import com.rocklin.nexai.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +51,7 @@ public class AppController {
     private final AppService appService;
     private final UserService userService;
     private final ScreenshotService screenshotService;
+    private final ChatHistoryService chatHistoryService;
 
     /**
      * 创建应用
@@ -142,6 +145,10 @@ public class AppController {
                         currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
                 ErrorCode.UNAUTHORIZED, "无权限取消部署");
         appService.appCancelDeploy(app);
+        //更新app信息
+        app.setDeployKey(null);
+        app.setDeployedTime(null);
+        appService.updateApp(app);
         return BaseResponse.success();
     }
 
@@ -203,6 +210,10 @@ public class AppController {
                         currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
                 ErrorCode.UNAUTHORIZED, "仅本人或管理员可删除");
         appService.deleteApp(req.getId());
+        chatHistoryService.deleteChatHistoryByAppId(app.getId());
+        //删除网站生成和部署文件
+        appService.appOutputDelete(app);
+        appService.appCancelDeploy(app);
         return BaseResponse.success();
     }
 
@@ -266,6 +277,10 @@ public class AppController {
         App app = appService.getAppById(req.getId());
         Assert.notNull(app, ErrorCode.OPERATION_ERROR, "应用不存在");
         appService.deleteApp(req.getId());
+        chatHistoryService.deleteChatHistoryByAppId(app.getId());
+        //删除网站生成和部署文件
+        appService.appOutputDelete(app);
+        appService.appCancelDeploy(app);
         return BaseResponse.success();
     }
 

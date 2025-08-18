@@ -37,3 +37,18 @@ export async function listAppChatHistoryByAdmin(
     }
   );
 }
+
+/** 管理员删除聊天记录 POST /chatHistory/admin/delete */
+export async function deleteChatHistoryByAdmin(
+  body: API.DeleteRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean>("/chatHistory/admin/delete", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

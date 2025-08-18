@@ -140,17 +140,31 @@ public class AppServiceImpl implements AppService {
                 // 删除整个部署目录
                 cn.hutool.core.io.FileUtil.del(deployDir);
                 log.info("应用 [{}] 已取消部署，目录已删除：{}", app.getAppName(), deployDirPath);
-                //更新app信息
-                app.setDeployKey(StrUtil.EMPTY);
-                app.setDeployedTime(null);
-                Long result = appMapper.updateDeployAppInfo(app);
-                Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，更新应用失败");
-            } catch (Exception e) {
+                } catch (Exception e) {
                 log.error("取消部署失败，目录删除异常：{}", deployDirPath, e);
                 throw new BusinessException(ErrorCode.OPERATION_ERROR, "取消部署失败");
             }
         } else {
             log.warn("应用 [{}] 部署目录不存在，无需取消部署：{}", app.getAppName(), deployDirPath);
+        }
+    }
+
+    @Override
+    public void appOutputDelete(App app) {
+        String folderName = app.getCodeGenType() + UNDERLINE + app.getId();
+        String rootDirPath = CODE_OUTPUT_ROOT_DIR + File.separator + folderName;
+        File outputDir = new File(rootDirPath);
+        if (outputDir.exists()) {
+            try {
+                // 删除整个目录
+                cn.hutool.core.io.FileUtil.del(outputDir);
+                log.info("应用 [{}] 目录已删除：{}", app.getAppName(), rootDirPath);
+            } catch (Exception e) {
+                log.error("删除失败，目录删除异常：{}", rootDirPath, e);
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "删除失败");
+            }
+        } else {
+            log.warn("应用 [{}] 目录不存在，无需删除：{}", app.getAppName(), rootDirPath);
         }
     }
 }

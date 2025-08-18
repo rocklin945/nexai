@@ -89,6 +89,18 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
         return pageResponse;
     }
 
+    @Override
+    public void deleteChatHistoryByAppId(Long id) {
+        Long result = chatHistoryMapper.deleteChatHistoryByAppId(id);
+        Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库错误，删除聊天记录失败");
+    }
+
+    @Override
+    public void deleteChatHistoryById(Long id) {
+        Long result = chatHistoryMapper.deleteChatHistoryById(id);
+        Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库错误，删除聊天记录失败");
+    }
+
     private static int historyToMemory(long appId, MessageWindowChatMemory chatMemory, List<ChatHistory> chatHistoryList) {
         // 按照时间顺序将消息添加到记忆中
         int loadedCount = 0;

@@ -5,8 +5,6 @@ import com.rocklin.nexai.common.response.PageResponse;
 import com.rocklin.nexai.model.entity.ChatHistory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 
-import java.time.LocalDateTime;
-
 /**
  * @ClassName ChatHistoryService
  * @Description 聊天记录服务
@@ -22,4 +20,8 @@ public interface ChatHistoryService {
     PageResponse<ChatHistory> listAppChatHistoryByPage(ChatHistoryQueryRequest req);
 
     PageResponse<ChatHistory> listAppChatHistoryByAdmin(ChatHistoryQueryRequest req);
+
+    void deleteChatHistoryByAppId(Long id);
+
+    void deleteChatHistoryById(Long id);
 }

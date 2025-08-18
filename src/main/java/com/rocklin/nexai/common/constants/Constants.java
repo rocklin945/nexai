@@ -77,6 +77,7 @@ public final class Constants {
      */
     public static final String HTML_FILE_PREFIX ="html_";
     public static final String MULTI_FILE_FILE_PREFIX ="multi_file_";
+    public static final String UNDERLINE ="_";
 
     /**
      * 截图保存路径
