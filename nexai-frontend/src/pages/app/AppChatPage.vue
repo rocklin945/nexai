@@ -26,7 +26,7 @@
       <!-- 左侧对话区域 -->
       <div class="chat-section">
         <!-- 消息区域 -->
-        <div class="messages-container" ref="messagesContainer">
+        <div class="messages-container" ref="messagesContainer" @scroll="handleScroll">
           <!-- 加载更多按钮 -->
           <div v-if="hasMoreHistory" class="load-more-container">
             <a-button type="link" @click="loadMoreHistory" :loading="loadingHistory" size="small">
@@ -53,6 +53,18 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- 跳转到最新对话按钮 -->
+        <div v-if="showScrollToBottomBtn" class="scroll-to-bottom-btn" @click="scrollToBottom">
+          <a-button type="primary" shape="circle" size="small">
+            <template #icon>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"
+                style="display: flex; align-items: center; justify-content: center;">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+              </svg>
+            </template>
+          </a-button>
         </div>
         <!-- 选中元素信息展示 -->
         <a-alert v-if="selectedElementInfo" class="selected-element-alert" type="info" closable
@@ -175,7 +187,8 @@ import {
   SendOutlined,
   ExportOutlined,
   InfoCircleOutlined,
-  EditOutlined
+  EditOutlined,
+  DownOutlined
 } from '@ant-design/icons-vue'
 
 const route = useRoute()
@@ -208,6 +221,9 @@ const loadingHistory = ref(false)
 const hasMoreHistory = ref(false)
 const lastCreateTime = ref<string>()
 const historyLoaded = ref(false)
+
+// 滚动到底部按钮相关
+const showScrollToBottomBtn = ref(false)
 
 // 预览相关
 const previewUrl = ref('')
@@ -614,10 +630,21 @@ const updatePreview = () => {
   }
 }
 
+// 处理滚动事件
+const handleScroll = () => {
+  if (!messagesContainer.value) return
+
+  const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value
+  // 当距离底部超过100px时显示按钮
+  const isNearBottom = scrollHeight - scrollTop - clientHeight < 100
+  showScrollToBottomBtn.value = !isNearBottom && messages.value.length > 0
+}
+
 // 滚动到底部
 const scrollToBottom = () => {
   if (messagesContainer.value) {
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    showScrollToBottomBtn.value = false
   }
 }
 
@@ -1153,5 +1180,67 @@ onUnmounted(() => {
 .edit-mode-active:hover {
   background-color: #73d13d !important;
   border-color: #73d13d !important;
+}
+
+/* 跳转到最新对话按钮样式 */
+.scroll-to-bottom-btn {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.scroll-to-bottom-btn .ant-btn {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #d9d9d9;
+  background: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 可调整的图标位置变量 */
+  --icon-offset-x: -0.3px;
+  --icon-offset-y: 1px;
+}
+
+.scroll-to-bottom-btn .ant-btn:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border-color: #40a9ff;
+}
+
+.scroll-to-bottom-btn .ant-btn .anticon,
+.scroll-to-bottom-btn .ant-btn svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  /* 使用CSS变量来调整图标位置 */
+  transform: translate(var(--icon-offset-x), var(--icon-offset-y));
+}
+
+/* 
+  如果您想调整图标位置，可以修改下面的CSS变量：
+  --icon-offset-x: 向右移动使用正值(如 2px)，向左移动使用负值(如 -2px)
+  --icon-offset-y: 向下移动使用正值(如 2px)，向上移动使用负值(如 -2px)
+  
+  示例：如果图标需要向右移动2px，向上移动1px：
+  --icon-offset-x: 2px;
+  --icon-offset-y: -1px;
+*/
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 </style>
