@@ -11,8 +11,8 @@ class WebScreenshotUtilsTest {
 
     @Test
     void saveWebPageScreenshot() {
-        String testUrl = "http://www.baidu.com";
-        String webPageScreenshot = WebScreenshotUtils.saveWebPageScreenshot(testUrl);
+        String testUrl = "http://nexai.rocklin.top/dist/mzgewb";
+        String webPageScreenshot = ScreenshotUtils.saveWebPageScreenshot(testUrl);
         Assertions.assertNotNull(webPageScreenshot);
     }
 }

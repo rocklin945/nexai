@@ -5,9 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.rocklin.nexai.common.enums.ErrorCode;
 import com.rocklin.nexai.common.exception.Assert;
 import com.rocklin.nexai.common.utils.CosManager;
-import com.rocklin.nexai.common.utils.WebScreenshotUtils;
+import com.rocklin.nexai.common.utils.ScreenshotUtils;
 import com.rocklin.nexai.service.ScreenshotService;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,19 +29,23 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     public String generateAndUploadScreenshot(String webUrl) {
         log.info("开始生成网页截图，URL：{}", webUrl);
         // 本地截图
-        String path = WebScreenshotUtils.saveWebPageScreenshot(webUrl);
-        String[] split = path.split(COMMA);
-        String localScreenshotPath = split[0];
-        Assert.isTrue(!StrUtil.isBlank(localScreenshotPath), ErrorCode.OPERATION_ERROR, "生成网页截图失败");
-        // 上传图片到 COS
-        try {
-            String cosUrl = uploadScreenshotToCos(localScreenshotPath);
-            Assert.isTrue(!StrUtil.isBlank(cosUrl), ErrorCode.OPERATION_ERROR, "上传截图到对象存储失败");
-            log.info("截图上传成功，URL：{}", cosUrl);
-            return cosUrl;
-        } finally {
-            // 清理本地文件
-            cleanupLocalFile(localScreenshotPath, split[1]);
+        String path = ScreenshotUtils.saveWebPageScreenshot(webUrl);
+        if(!StrUtil.isBlank(path)){
+            String[] split = path.split(COMMA);
+            String localScreenshotPath = split[0];
+            Assert.isTrue(!StrUtil.isBlank(localScreenshotPath), ErrorCode.OPERATION_ERROR, "生成网页截图失败");
+            // 上传图片到 COS
+            try {
+                String cosUrl = uploadScreenshotToCos(localScreenshotPath);
+                Assert.isTrue(!StrUtil.isBlank(cosUrl), ErrorCode.OPERATION_ERROR, "上传截图到对象存储失败");
+                log.info("截图上传成功，URL：{}", cosUrl);
+                return cosUrl;
+            } finally {
+                // 清理本地文件
+                cleanupLocalFile(localScreenshotPath, split[1]);
+            }
+        }else {
+            return null;
         }
     }
 
