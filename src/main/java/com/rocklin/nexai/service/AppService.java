@@ -27,5 +27,5 @@ public interface AppService {
 
     PageResponse<App> queryAppPageList(AppQueryPageListRequest req);
 
-    void appCancleDeploy(App app);
+    void appCancelDeploy(App app);
 }

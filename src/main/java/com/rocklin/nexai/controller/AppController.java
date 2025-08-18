@@ -141,7 +141,7 @@ public class AppController {
         Assert.isTrue(currentUser.getUserId().equals(app.getUserId()) ||
                         currentUser.getUserRole().equals(UserRoleEnum.ADMIN.getValue()),
                 ErrorCode.UNAUTHORIZED, "无权限取消部署");
-        appService.appCancleDeploy(app);
+        appService.appCancelDeploy(app);
         return BaseResponse.success();
     }
 

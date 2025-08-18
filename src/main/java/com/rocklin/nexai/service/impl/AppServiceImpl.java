@@ -130,7 +130,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public void appCancleDeploy(App app) {
+    public void appCancelDeploy(App app) {
         String deployKey = app.getDeployKey();
         Assert.isTrue(StrUtil.isNotBlank(deployKey), ErrorCode.OPERATION_ERROR, "应用未部署");
         String deployDirPath = CODE_DEPLOY_ROOT_DIR + File.separator + deployKey;
@@ -140,6 +140,11 @@ public class AppServiceImpl implements AppService {
                 // 删除整个部署目录
                 cn.hutool.core.io.FileUtil.del(deployDir);
                 log.info("应用 [{}] 已取消部署，目录已删除：{}", app.getAppName(), deployDirPath);
+                //更新app信息
+                app.setDeployKey(StrUtil.EMPTY);
+                app.setDeployedTime(null);
+                Long result = appMapper.updateDeployAppInfo(app);
+                Assert.isTrue(result > 0, ErrorCode.OPERATION_ERROR, "数据库异常，更新应用失败");
             } catch (Exception e) {
                 log.error("取消部署失败，目录删除异常：{}", deployDirPath, e);
                 throw new BusinessException(ErrorCode.OPERATION_ERROR, "取消部署失败");
