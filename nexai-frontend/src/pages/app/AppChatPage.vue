@@ -679,6 +679,8 @@ const deployApp = async () => {
       deployModalVisible.value = true
       message.success('部署成功')
 
+      // 标记为部署操作，避免触发截图
+      isDeployAction.value = true
       // 更新应用信息，确保deployKey被保存
       await fetchAppInfo()
     } else {
@@ -720,6 +722,8 @@ const cancelDeploy = async () => {
 
     if (res.data.statusCode === 200) {
       message.success('取消部署成功')
+      // 标记为部署操作，避免触发截图
+      isDeployAction.value = true
       // 更新应用信息，清除deployKey
       await fetchAppInfo()
     } else {
@@ -744,11 +748,19 @@ const onIframeLoad = () => {
 
 // 记录是否是第一次变化
 let firstChange = true;
+// 是否是部署或取消部署操作引起的预览更新
+const isDeployAction = ref(false);
 
 watch(
   () => previewReady.value,
   async (newValue) => {
     if (!newValue) return;
+    
+    // 如果是部署相关操作引起的预览更新，不进行截图
+    if (isDeployAction.value) {
+      console.log('部署相关操作，跳过截图');
+      return;
+    }
 
     if (firstChange) {
       // 第一次变化后标记为已处理

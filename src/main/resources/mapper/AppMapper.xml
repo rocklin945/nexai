@@ -22,7 +22,9 @@
         set
         appName = #{appName},
         cover = #{cover},
-        priority = #{priority}
+        priority = #{priority},
+        deployKey = #{deployKey},
+        deployedTime = #{deployedTime}
         where id = #{id}
     </update>
     <update id="updateDeployAppInfo">

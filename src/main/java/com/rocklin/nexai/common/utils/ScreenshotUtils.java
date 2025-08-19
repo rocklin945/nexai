@@ -15,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import static com.rocklin.nexai.common.constants.Constants.*;
@@ -22,7 +24,6 @@ import static com.rocklin.nexai.common.constants.Constants.*;
 @Slf4j
 public class ScreenshotUtils {
     private static final String MICROLINK_API = "https://api.microlink.io?url=";
-    private static final int MAX_RETRY = 3; // 最大重试次数
 
     /**
      * 保存网页截图到本地
@@ -39,12 +40,14 @@ public class ScreenshotUtils {
         String rootPath = SCREENSHOT_SAVE_PATH + UUID.randomUUID().toString().substring(0, 8);
         FileUtil.mkdir(rootPath);
 
-        for (int attempt = 1; attempt <= MAX_RETRY; attempt++) {
             try {
                 String apiUrl = MICROLINK_API + webUrl
                         + "&screenshot=true"
                         + "&waitUntil=networkidle2"
-                        + "&waitForSelector=img";
+                        + "&waitForSelector=img"
+                        + "&viewport.width=1600"
+                        + "&viewport.height=900"
+                        + "&waitForTimeout=8000";
                 String jsonResponse = httpGet(apiUrl);
 
                 JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
@@ -97,11 +100,9 @@ public class ScreenshotUtils {
                 return compressedImagePath + COMMA + rootPath;
 
             } catch (Exception e) {
-                log.warn("截图尝试 {} 失败：{}", attempt, e.getMessage());
+                log.warn("截图失败：{}", e.getMessage());
                 try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
             }
-        }
-
         log.error("网页截图最终失败：{}", webUrl);
         FileUtil.del(rootPath);
         return null;
