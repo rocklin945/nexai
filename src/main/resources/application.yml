@@ -28,8 +28,6 @@ server:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.rocklin.nexai.model.entity
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 # springdoc-openapi
 springdoc:
   group-configs:
