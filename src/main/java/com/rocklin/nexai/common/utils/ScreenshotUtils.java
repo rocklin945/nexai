@@ -15,8 +15,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import static com.rocklin.nexai.common.constants.Constants.*;
@@ -47,7 +45,10 @@ public class ScreenshotUtils {
                         + "&waitForSelector=img"
                         + "&viewport.width=1600"
                         + "&viewport.height=900"
-                        + "&waitForTimeout=8000";
+                        + "&waitForTimeout=8000"
+                        + "&viewport.deviceScaleFactor=1"
+                        + "&viewport.isMobile=false"
+                        + "&scale=1";
                 String jsonResponse = httpGet(apiUrl);
 
                 JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();

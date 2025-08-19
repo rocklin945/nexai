@@ -216,6 +216,7 @@ const handleViewWork = () => {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center; /* 修改这里，让图片从顶部开始显示 */
     transition: transform 0.4s ease;
   }
 
